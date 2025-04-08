@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laser source</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background: #0A0F19;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .content {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 20px;
+        }
+        .header {
+            font-size: 24px;
+            text-align: left;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            color: #1E90FF;
+            font-weight: bold;
+            width: 87.8%;
+            background: white;
+            box-shadow: 0px 0px 15px rgba(240, 240, 240, 0.6);
+        }
+        .panel {
+            background: white;
+            padding: 40px;
+            color: black;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 1300px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.6);
+        }
+        /* .panel.blue {
+            background: #1E90FF;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+        } */
+        .panel.blue {
+    background: #1E90FF;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 40px; /* Matches danger panel */
+    border-radius: 8px; /* Matches danger panel */
+    text-align: center;
+    max-width: 1300px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 15px rgba(30, 144, 255, 0.8); /* Matches style but in blue */
+    margin-bottom: 20px; /* Ensures same spacing */
+}
+
+        .warning {
+            color: red;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .right-sidebar {
+            width: 180px;
+            background: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .sidebar-button, .buttons button {
+            flex: 1;
+            padding: 20px;
+            background: #444;
+            color: white;
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            border-bottom: 1px solid #555;
+        }
+        .sidebar-button:hover, .buttons button:hover {
+            background: #555;
+        }
+        .danger-panel {
+            background: white;
+            color: black;
+            text-align: center;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 1300px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+        .danger-text {
+            color: red;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .danger-image {
+            width: 100%;
+            max-width: 700px;
+            margin-top: 10px;
+        }
+        .danger-description {
+            font-size: 20px;
+            color: #333;
+        }
+        #timestamp {
+            font-size: 16px;
+            color: #1E90FF;
+            z-index: 10;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .right-sidebar {
+                width: 100%;
+                position: relative;
+                top: auto;
+                right: auto;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .sidebar-button {
+                flex: none;
+                width: 45%;
+                margin: 5px;
+            }
+            .header {
+                width: 100%;
+            }
+        }
+        /* .danger-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            color: red;
+            position: relative;
+        }
+        .danger-icon {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            position: relative;
+            margin-right: 10px;
+        }
+        .danger-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .danger-line {
+            width: 100px;
+            height: 5px;
+            background-color: red;
+            margin-left: 10px;
+        } */
+
+        .danger-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    color: red;
+    position: relative;
+    text-align: center;
+}
+
+.danger-symbol {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.danger-icon {
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 10px;
+}
+
+.danger-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.danger-line {
+    width: 100px;
+    height: 5px;
+    background-color: red;
+}
+/* 
+
+.blue-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.blue-symbol {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.blue-icon {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 10px;
+}
+
+.blue-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: #1E90FF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.blue-line {
+    width: 100px;
+    height: 5px;
+    background-color: white;
+} */
+.blue-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.blue-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers items horizontally */
+    width: 100%; /* Ensures full width for centering */
+    margin-top: 10px;
+}
+
+.blue-icon {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 10px;
+}
+
+.blue-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: #1E90FF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.blue-line {
+    width: 100px;
+    height: 5px;
+    background-color: white;
+    margin-right: 10px;
+}
+
+.blue-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="header">
+                <span>VFL</span>
+                <span id="timestamp"></span>
+            </div>
+            
+            <!-- <div class="panel blue">
+                <span style="float: left; font-size: 16px;">VFL</span>
+                <span style="float: right; font-size: 16px;">OFF</span>
+                <br><br>
+            
+                <div class="blue-symbol">
+                    <div class="blue-icon"></div>
+                    <div class="blue-line"></div>
+                    <span class="blue-text">650 nm</span>
+                </div>
+            </div>
+             -->
+             <div class="panel blue">
+                <span style="float: left; font-size: 16px;">VFL</span>
+                <span style="float: right; font-size: 16px;">OFF</span>
+                <br><br>
+            
+                <div class="blue-banner">
+                    <div class="blue-symbol">
+                        <div class="blue-icon"></div>
+                        <div class="blue-line"></div>
+                        <span class="blue-text">650 nm</span>
+                    </div>
+                </div>
+            </div>
+            
+        <div class="danger-panel">
+            <div class="danger-banner">
+                <span>DANGER</span>
+                <div class="danger-symbol">
+                    <div class="danger-icon"></div>
+                    <div class="danger-line"></div>
+                </div>
+            </div>
+            <p class="danger-description">Looking directly at laser output may cause damage to human eyes!</p>
+        </div>
+        
+        <div class="right-sidebar">
+            <button class="sidebar-button" id="openButton">Open</button>
+            <button class="sidebar-button" id="waveButton">Wave</button>
+            <button class="sidebar-button" id="modeButton">Mode</button>
+            <button class="sidebar-button" id="powerPlusButton">Power +</button>
+            <button class="sidebar-button" id="powerMinusButton">Power -</button>
+            <button class="sidebar-button" id="exitButton">Exit</button>
+        </div>
+        
+        <script>
+            // Function to display current timestamp
+            function updateTimestamp() {
+                const timestamp = document.getElementById('timestamp');
+                const now = new Date();
+                const formattedDate = now.toLocaleString();
+                timestamp.textContent = formattedDate;
+            }
+        
+            // Call the function every second
+            setInterval(updateTimestamp, 1000);
+            updateTimestamp(); // Call it immediately on load
+        
+            // Button actions
+            document.getElementById('openButton').addEventListener('click', function() {
+                alert('Laser is turned on.');
+            });
+        
+            document.getElementById('waveButton').addEventListener('click', function() {
+                alert('Wave function activated.');
+            });
+        
+            document.getElementById('modeButton').addEventListener('click', function() {
+                alert('Mode changed.');
+            });
+        
+            document.getElementById('powerPlusButton').addEventListener('click', function() {
+                alert('Power increased.');
+            });
+        
+            document.getElementById('powerMinusButton').addEventListener('click', function() {
+                alert('Power decreased.');
+            });
+        
+            document.getElementById('exitButton').addEventListener('click', function() {
+                window.location.href = 'exitPage.html';
+            });
+        </script>
+        

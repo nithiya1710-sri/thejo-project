@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings</title>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    background-color: #002147;
+    color: white;
+    margin: 0;
+    transition: background-color 0.3s, filter 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    background-color: #003366;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Adjust to keep the footer separate */
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.date-time {
+    font-size: 14px;
+}
+
+.settings-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="date"], input[type="time"], select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensure consistent box sizing */
+}
+
+input[type="date"], input[type="time"] {
+    width: 48%; /* Adjust width to create space */
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-right: 4%; /* Add space between the two input fields */
+}
+
+input[type="time"] {
+    margin-right: 0; /* Remove margin for the second input */
+}
+
+footer {
+    width: 180px;
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    padding: 10px;
+    z-index: 100; /* Ensure the footer stays on top */
+}
+
+footer button {
+    flex: 1;
+    padding: 20px;
+    background: #444;
+    color: white;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    font-size: 18px;
+    border-bottom: 1px solid #555;
+}
+
+footer button:hover {
+    background: #555;
+}
+
+main {
+    flex: 1;
+    margin-right: 200px; /* Add space for the fixed footer */
+    overflow-y: auto; /* Make the main content scrollable */
+}
+
+/* Responsiveness for mobile devices */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="title">System</h1>
+            <div class="date-time" id="current-datetime">Loading...</div>
+        </header>
+        <main>
+            <div class="settings-group">
+                <label for="auto-off" id="auto-off-label">Auto OFF</label>
+                <select id="auto-off">
+                    <option>OFF</option>
+                    <option>5min</option>
+                    <option>15min</option>
+                    <option selected>30min</option>
+                    <option>45min</option>
+                    <option>60min</option>
+                </select>
+            </div>
+            <div class="settings-group">
+                <label for="brightness" id="brightness-label">Backlight brightness</label>
+                <select id="brightness">
+                    <option>0%</option>
+                    <option>20%</option>
+                    <option>40%</option>
+                    <option>60%</option>
+                    <option>80%</option>
+                    <option selected>100%</option>
+                </select>
+            </div>
+            <div class="settings-group">
+                <label for="beep" id="beep-label">Beep</label>
+                <select id="beep">
+                    <option>OFF</option>
+                    <option selected>ON</option>
+                </select>
+            </div>
+            <div class="settings-group">
+                <label for="language" id="language-label">Language</label>
+                <select id="language" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="nl">Nederlands</option> <!-- Dutch option -->
+                    <option value="de">Deutsch</option> <!-- German -->
+                    <option value="it">Italiano</option> <!-- Italian -->
+                    <option value="pt">Português</option> <!-- Portuguese -->
+                </select>
+            </div>
+            <div class="settings-group">
+                <label for="usb" id="usb-label">USB Connection</label>
+                <select id="usb">
+                    <option>OFF</option>
+                    <option selected>ON</option>
+                </select>
+            </div>
+            <div class="settings-group">
+                <label for="date-time" id="datetime-label">Date & Time</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="date-time">
+                    <input type="time" id="time">
+                </div>
+            </div>
+        </main>
+        <footer>
+            <button onclick="saveSettings()" id="settings-btn">Settings</button>
+            <button onclick="showInformation()" id="info-btn">Information</button>
+            <button onclick="updateSystem()" id="update-btn">Update</button>
+            <button onclick="exitSystem()" id="exit-btn">Exit</button>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript to update the current date and time every second
+        function updateDateTime() {
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString();
+            const formattedTime = currentDate.toLocaleTimeString();
+            document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
+        }
+
+        // Set an interval to update the time every second
+        setInterval(updateDateTime, 1000);
+
+        // Initialize the date & time on page load
+        updateDateTime();
+
+        // Function to handle brightness settings
+        document.getElementById('brightness').addEventListener('change', function () {
+            const brightness = this.value;
+            changeBrightness(brightness);
+            alert(`Backlight brightness set to: ${brightness}`);
+        });
+
+        // Function to adjust brightness on the page (not the desktop)
+        function changeBrightness(brightness) {
+            let brightnessValue;
+            switch (brightness) {
+                case '0%':
+                    brightnessValue = 0;
+                    break;
+                case '20%':
+                    brightnessValue = 0.2;
+                    break;
+                case '40%':
+                    brightnessValue = 0.4;
+                    break;
+                case '60%':
+                    brightnessValue = 0.6;
+                    break;
+                case '80%':
+                    brightnessValue = 0.8;
+                    break;
+                case '100%':
+                    brightnessValue = 1;
+                    break;
+                default:
+                    brightnessValue = 1;
+            }
+            document.body.style.filter = `brightness(${brightnessValue})`;
+        }
+
+        // Language content for different languages
+        const languageContent = {
+            en: {
+                title: "System",
+                autoOffLabel: "Auto OFF",
+                brightnessLabel: "Backlight brightness",
+                beepLabel: "Beep",
+                languageLabel: "Language",
+                usbLabel: "USB Connection",
+                datetimeLabel: "Date & Time",
+                settingsBtn: "Settings",
+                infoBtn: "Information",
+                updateBtn: "Update",
+                exitBtn: "Exit"
+            },
+            es: {
+                title: "Sistema",
+                autoOffLabel: "Apagar automático",
+                brightnessLabel: "Brillo de retroiluminación",
+                beepLabel: "Bip",
+                languageLabel: "Idioma",
+                usbLabel: "Conexión USB",
+                datetimeLabel: "Fecha y hora",
+                settingsBtn: "Configuraciones",
+                infoBtn: "Información",
+                updateBtn: "Actualizar",
+                exitBtn: "Salir"
+            },
+            fr: {
+                title: "Système",
+                autoOffLabel: "Arrêt automatique",
+                brightnessLabel: "Luminosité du rétroéclairage",
+                beepLabel: "Bip",
+                languageLabel: "Langue",
+                usbLabel: "Connexion USB",
+                datetimeLabel: "Date et heure",
+                settingsBtn: "Paramètres",
+                infoBtn: "Informations",
+                updateBtn: "Mettre à jour",
+                exitBtn: "Quitter"
+            },
+            nl: {
+                title: "Systeem",
+                autoOffLabel: "Auto UIT",
+                brightnessLabel: "Achtergrondverlichting helderheid",
+                beepLabel: "Biep",
+                languageLabel: "Taal",
+                usbLabel: "USB-verbinding",
+                datetimeLabel: "Datum & Tijd",
+                settingsBtn: "Instellingen",
+                infoBtn: "Informatie",
+                updateBtn: "Bijwerken",
+                exitBtn: "Afsluiten"
+            },
+            de: {
+                title: "System",
+                autoOffLabel: "Automatisches Ausschalten",
+                brightnessLabel: "Hintergrundbeleuchtung Helligkeit",
+                beepLabel: "Piepton",
+                languageLabel: "Sprache",
+                usbLabel: "USB-Verbindung",
+                datetimeLabel: "Datum & Uhrzeit",
+                settingsBtn: "Einstellungen",
+                infoBtn: "Informationen",
+                updateBtn: "Aktualisieren",
+                exitBtn: "Beenden"
+            },
+            it: {
+                title: "Sistema",
+                autoOffLabel: "Spegnimento automatico",
+                brightnessLabel: "Luminosità retroilluminazione",
+                beepLabel: "Bip",
+                languageLabel: "Lingua",
+                usbLabel: "Connessione USB",
+                datetimeLabel: "Data e ora",
+                settingsBtn: "Impostazioni",
+                infoBtn: "Informazioni",
+                updateBtn: "Aggiornare",
+                exitBtn: "Uscire"
+            },
+            pt: {
+                title: "Sistema",
+                autoOffLabel: "Desligamento automático",
+                brightnessLabel: "Brilho de retroiluminação",
+                beepLabel: "Bip",
+                languageLabel: "Idioma",
+                usbLabel: "Conexão USB",
+                datetimeLabel: "Data e Hora",
+                settingsBtn: "Configurações",
+                infoBtn: "Informações",
+                updateBtn: "Atualizar",
+                exitBtn: "Sair"
+            }
+        };
+
+        // Function to change the language
+        function changeLanguage() {
+            const language = document.getElementById('language').value;
+            const content = languageContent[language];
+
+            // Change all text content based on selected language
+            document.getElementById('title').textContent = content.title;
+            document.getElementById('auto-off-label').textContent = content.autoOffLabel;
+            document.getElementById('brightness-label').textContent = content.brightnessLabel;
+            document.getElementById('beep-label').textContent = content.beepLabel;
+            document.getElementById('language-label').textContent = content.languageLabel;
+            document.getElementById('usb-label').textContent = content.usbLabel;
+            document.getElementById('datetime-label').textContent = content.datetimeLabel;
+            document.getElementById('settings-btn').textContent = content.settingsBtn;
+            document.getElementById('info-btn').textContent = content.infoBtn;
+            document.getElementById('update-btn').textContent = content.updateBtn;
+            document.getElementById('exit-btn').textContent = content.exitBtn;
+        }
+
+        // Call the language change function when the page loads
+        changeLanguage();
+
+        function saveSettings() {
+            alert("Settings saved!");
+        }
+
+        function showInformation() {
+            alert("Information about system settings.");
+        }
+
+        function updateSystem() {
+            alert("System is updating...");
+        }
+
+        function exitSystem() {
+            alert("Exiting system...");
+        }
+    </script>
+</body>
+</html>
+
