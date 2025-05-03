@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTDR UI</title>
+    <link rel="stylesheet" href="/expert/expert.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+   
+</head>
+<body>
+    <div class="container">
+        <div class="graph-area">
+            
+            <p id="autoTestText">Auto Test <span id="wavelength">1550</span>nm <span id="distance">500</span>m <span id="pulse">30</span>ns</p>
+
+            <div class="graph-container">
+                <canvas id="otdrGraph"></canvas>
+            </div>
+        </div>
+        <div class="side-menu">
+            <button class="menu-btn">Settings</button>
+            <button class="menu-btn">Cursor A</button>
+            <button class="menu-btn">Zoom</button>
+            <button class="menu-btn">Files</button>
+            <button class="menu-btn">Save</button>
+            <button class="menu-btn">Exit</button>
+        </div>
+        <div class="controls">
+            <div class="buttons">
+                <i class='bx bxs-left-arrow arrow-btn' data-target="wavelength" data-direction="-1"></i>
+<button><span id="wavelength">1550</span>nm</button>
+<i class='bx bxs-right-arrow arrow-btn' data-target="wavelength" data-direction="1"></i>
+
+<i class='bx bxs-left-arrow arrow-btn' data-target="distance" data-direction="-1"></i>
+<button><span id="distance">500</span>m</button>
+<i class='bx bxs-right-arrow arrow-btn' data-target="distance" data-direction="1"></i>
+
+<i class='bx bxs-left-arrow arrow-btn' data-target="pulse" data-direction="-1"></i>
+<button><span id="pulse">30</span>ns</button>
+<i class='bx bxs-right-arrow arrow-btn' data-target="pulse" data-direction="1"></i>
+
+<i class='bx bxs-left-arrow arrow-btn' data-target="time" data-direction="-1"></i>
+<button><span id="time">15</span>s</button>
+<i class='bx bxs-right-arrow arrow-btn' data-target="time" data-direction="1"></i>
+
+            </div>
+            
+            <div class="test-buttons">
+                <button class="real-test">Real Test</button>
+                <button class="avg-test">Avg. Test</button>
+                <button class="auto-test">Auto Test</button>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <button><i class='bx bx-line-chart'></i></i>Curve</button>
+            <button><i class='bx bx-list-ul'></i>List</button>
+            <button><i class='bx bx-calendar-event'></i>EventMap</button>
+            <button><i class='bx bx-save'></i>FastSave</button>
+            <button><i class='bx bx-cog'></i>Settings</button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        // 🔥 1️⃣ Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLric_hMRLUDD7TxdIcPtmavCLnmQmfsE",
+            authDomain: "thejo-otdr.firebaseapp.com",
+            databaseURL: "https://thejo-otdr-default-rtdb.firebaseio.com",  // ✅ Added Database URL
+            projectId: "thejo-otdr",
+            storageBucket: "thejo-otdr.firebasestorage.app",
+            messagingSenderId: "255389594468",
+            appId: "1:255389594468:web:e1929f090a828af0504071"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+
+        const values = {
+    wavelength: [1310, 1550],
+    distance: [500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 100000], // in meters
+    pulse: [3, 5, 10, 20, 30, 50, 80, 160],
+    time: [5, 15, 30, 60, 120, 180]
+};
+
+function updateValue(id, direction) {
+    let element = document.getElementById(id);
+    let currentValue = parseFloat(element.innerText);  // ✅ Use parseFloat for safety
+    let options = values[id];
+
+    let currentIndex = options.indexOf(currentValue);
+    if (currentIndex === -1) return;
+
+    let newIndex = currentIndex + (direction > 0 ? 1 : -1);
+
+    if (newIndex >= 0 && newIndex < options.length) {
+        element.innerText = options[newIndex];  // ✅ Correctly updates the UI
+        updateAutoTestText();
+    }
+}
+
+function updateAutoTestText() {
+    let wavelength = document.getElementById("wavelength").innerText;
+    let distance = document.getElementById("distance").innerText;
+    let pulse = document.getElementById("pulse").innerText;
+    let time = document.getElementById("time").innerText;
+
+    document.getElementById("autoTestText").innerText =
+        `Auto Test ${wavelength}nm ${distance}m ${pulse}ns ${time}s`;
+}
+
+// ✅ Use dataset attributes instead of onclick parsing
+document.querySelectorAll(".arrow-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        let targetId = this.dataset.target; // Use data-target instead of parsing onclick
+        let direction = this.dataset.direction === "1" ? 1 : -1;
+        updateValue(targetId, direction);
+    });
+});
+
+
+        // 🎯 2️⃣ Fetch Data from Firebase
+        async function fetchGraphData() {
+            try {
+                const snapshot = await get(ref(database, 'otdr_data'));
+                const data = snapshot.val();
+
+                if (!data) {
+                    console.error("No data found!");
+                    return;
+                }
+
+                let graphData = [];
+
+                for (let key in data) {
+                    graphData.push({
+                        x: data[key].distance_km,
+                        y: data[key].signal_loss_db
+                    });
+                }
+
+                console.log("Fetched Data:", graphData); // 🔍 Debugging Log
+
+                plotGraph(graphData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        // 📊 3️⃣ Plot Graph using Chart.js
+        function plotGraph(graphData) {
+            const ctx = document.getElementById('otdrGraph').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'line', // ✅ Changed from scatter to line for better visibility
+                data: {
+                    labels: graphData.map(point => point.x), // X-axis values (Distance)
+                    datasets: [{
+                        label: 'Signal Loss (dB)',
+                        data: graphData.map(point => point.y), // Y-axis values (Signal Loss)
+                        borderColor: 'white',
+                        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { enabled: true }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Distance (km)' } },
+                        y: { title: { display: true, text: 'Signal Loss (dB)' } }
+                    }
+                }
+            });
+        }
+
+        // 🚀 4️⃣ Fetch Data and Plot Graph on Load
+        window.onload = fetchGraphData;
+        
+    </script>
+</body>
+</html>
