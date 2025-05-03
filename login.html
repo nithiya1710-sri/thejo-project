@@ -1,68 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
-    <style>
-        body {
-            background-color: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .login-container h2 {
-            margin-bottom: 1rem;
-        }
-        .input-group {
-            margin-bottom: 1rem;
-        }
-        input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 0.5rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css" />
 </head>
 <body>
+  <div class="login-container">
+    <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0"  style="margin-left: 110px; width: 120px; height: 60px;" >
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Email" required /><br />
+      <input type="password" id="password" placeholder="Password" required /><br />
+      <button type="submit">Login</button>
+    </form>
+    <p id="error-message"></p>
+    <p>
+      Don't have an account?
+      <a href="sign-up.html">Sign Up</a>
+    </p>
+  </div>
 
-    <div class="login-container">
-        <img src="logo.png" alt="Thejo Logo" style="width: 100px;"> <!-- Placeholder for logo -->
-        <h2>Login</h2>
-        <div class="input-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Email Address" required>
-        </div>
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Password" required>
-        </div>
-        <button type="submit">Login</button>
-    </div>
+  <!-- Firebase and Login Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+  authDomain: "login-1d280.firebaseapp.com",
+  projectId: "login-1d280",
+  storageBucket: "login-1d280.firebasestorage.app",
+  messagingSenderId: "854337385141",
+  appId: "1:854337385141:web:df07c76b9c5811bae004fc",
+  measurementId: "G-546BETWWQW"
+};
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login form submission
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Successful login, redirect to dashboard or another page
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          document.getElementById("error-message").textContent = error.message;
+        });
+    });
+  </script>
 </body>
 </html>
