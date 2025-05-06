@@ -56,7 +56,7 @@
             background-color: #4e4e4e;
             border: none;
             color: white;
-            padding: 15px;
+            padding: 2px;
             font-size: 18px;
             cursor: pointer;
             border-radius: 10px;
@@ -100,6 +100,7 @@
                 grid-template-columns: 1fr;
             }
         }
+
     </style>
 </head>
 <body>
@@ -112,40 +113,57 @@
 
         <div class="grid">
             <button class="button auto-otdr">
+                <a href="auto-otdr.html" class="button auto-otdr">
                 <img src="autootdr.png" alt="img">
                 <span>Auto OTDR</span>
+                </a>
             </button>
-            <button class="button expert-otdr">
+            <button class="button expert-otdr"> 
+                <a href="expert.html" class="button expert-otdr">
                 <img src="expertotdr.png" alt="img">
                 <span>Expert OTDR</span>
+                </a>
             </button>
             <button class="button event-map">
+                <a href="Event-map-3.html" class="button event-map">
                 <img src="eventmap.png" alt="img">
                 <span>Event Map</span>
+                </a>
             </button>
             <button class="button vfl">
+                <a href="vfl.html" class="button vfl">
                 <img src="vfl.png" alt="img">
                 <span>VFL</span>
+                </a>
             </button>
             <button class="button laser-source">
+            <a href="laser.html" class="button laser-source">
                 <img src="laser.png" alt="img">
                 <span>Laser Source</span>
+            </a>
             </button>
             <button class="button optical-loss">
+                <a href="Optical-loss-test.html" class="button optical-loss">
                 <img src="optical.png" alt="img">
                 <span>Optical Loss</span>
+                </a>
             </button>
             <button class="button file-management">
+                <a href="filemanage.html" class="button file-management">
                 <img src="file.png" alt="img">
                 <span>File Management</span>
+                </a>
             </button>
             <button class="button system">
+                <a href="system.html" class="button system">
                 <img src="system.png" alt="img">
                 <span>System</span>
+                </a>
             </button>
         </div>
     </div>
-
+   
+    
     <script>
         document.querySelectorAll('.button').forEach(button => {
             button.addEventListener('click', () => {
