@@ -1,177 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            font-family: Arial, sans-serif;
-            color: white;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      font-family: Arial, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-        }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+      max-width: fit-content;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 15px 20px;
-            background-color: #2a2a2a;
-        }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 96%;
+      padding: 15px 20px;
+      background-color: #2a2a2a;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
 
-        .header span {
-            font-size: 18px;
-        }
+    .datetime-profile {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 50px;
-            width: 90%;
-            max-width: 500px;
-        }
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
 
-        .button {
-            background-color: #4e4e4e;
-            border: none;
-            color: white;
-            padding: 2px;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            height: 100px;
-            width: 100%;
-            transition: background-color 0.3s, transform 0.2s;
-            text-align: center;
-        }
-        .button img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    filter: brightness(0) invert(1); /* Turns dark icons white */
-    opacity: 0.95;
+    .profile-icon img {
+      width: 28px;
+      height: 28px;
+      filter: brightness(0) invert(1);
+    }
+
+    .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 40px;
+  margin-top: 25px; /* reduced from 47px */
+  width: 100%;
+  padding: 0 30px; /* add horizontal padding */
+  max-width: fit-content;
 }
 
 
+    .button {
+      background-color: #4e4e4e;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.2s;
+      aspect-ratio: 1 / 1;
+      width: 90%;
+    }
 
-        .button:hover {
-            background-color: #686868;
-            transform: scale(1.05);
-        }
+    .button img {
+      width: 65%;
+      height: auto;
+      object-fit: contain;
+     
+      opacity: 0.95;
+    }
 
-        /* Custom button colors */
-        .button.auto-otdr { background-color: #8c4be5; }
-        .button.expert-otdr { background-color: #ff7f29; }
-        .button.event-map { background-color: #42c142; }
-        .button.vfl { background-color: #d63031; }
-        .button.laser-source { background-color: #fdcb6e; }
-        .button.optical-loss { background-color: #00b894; }
-        .button.file-management { background-color: #ac9f6f; }
-        .button.system { background-color: #ff7675; }
+    .button span {
+      font-size: 20px;
+      margin-top: 12px;
+    }
 
-        @media (max-width: 480px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    .button:hover {
+      background-color: #686868;
+      transform: scale(1.05);
+    }
 
-    </style>
+    /* Custom colors */
+    .button.auto-otdr { background-color: #c92b5e; }
+    .button.expert-otdr { background-color: #f04c36; }
+    .button.event-map { background-color: #7a2a7c; }
+    .button.vfl { background-color: #2db69a; }
+    .button.laser-source { background-color: #c68b3c; }
+    .button.optical-loss { background-color: #f5a623; }
+    .button.file-management { background-color: #9b2d7c; }
+    .button.system { background-color: #6b7375; }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .button span {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Home</h1>
-            <span id="datetime"></span>
-        </div>
-
-        <div class="grid">
-            <button class="button auto-otdr">
-                <a href="auto-otdr.html" class="button auto-otdr">
-                <img src="autootdr.png" alt="img">
-                <span>Auto OTDR</span>
-                </a>
-            </button>
-            <button class="button expert-otdr"> 
-                <a href="expert.html" class="button expert-otdr">
-                <img src="expertotdr.png" alt="img">
-                <span>Expert OTDR</span>
-                </a>
-            </button>
-            <button class="button event-map">
-                <a href="Event-map-3.html" class="button event-map">
-                <img src="eventmap.png" alt="img">
-                <span>Event Map</span>
-                </a>
-            </button>
-            <button class="button vfl">
-                <a href="vfl.html" class="button vfl">
-                <img src="vfl.png" alt="img">
-                <span>VFL</span>
-                </a>
-            </button>
-            <button class="button laser-source">
-            <a href="laser.html" class="button laser-source">
-                <img src="laser.png" alt="img">
-                <span>Laser Source</span>
-            </a>
-            </button>
-            <button class="button optical-loss">
-                <a href="Optical-loss-test.html" class="button optical-loss">
-                <img src="optical.png" alt="img">
-                <span>Optical Loss</span>
-                </a>
-            </button>
-            <button class="button file-management">
-                <a href="filemanage.html" class="button file-management">
-                <img src="file.png" alt="img">
-                <span>File Management</span>
-                </a>
-            </button>
-            <button class="button system">
-                <a href="system.html" class="button system">
-                <img src="system.png" alt="img">
-                <span>System</span>
-                </a>
-            </button>
-        </div>
+<div class="container">
+  <div class="header">
+    <h1>Home</h1>
+    <div class="datetime-profile">
+      <span id="datetime"></span>
+      <div class="profile-icon">
+        <img src="profile-icon.png" alt="Profile">
+      </div>
     </div>
-   
-    
-    <script>
+  </div>
 
-        function updateDateTime() {
-            document.getElementById("datetime").textContent = new Date().toLocaleString();
-        }
+  <div class="grid">
+    <button class="button auto-otdr">
+      <a href="auto-otdr.html">
+        <img src="auto-otdr-logo.png" alt="Auto OTDR">
+        <span>Auto OTDR</span>
+      </a>
+    </button>
+    <button class="button expert-otdr">
+      <a href="expert.html">
+        <img src="expert-otdr-logo.png" alt="Expert OTDR">
+        <span>Expert OTDR</span>
+      </a>
+    </button>
+    <button class="button event-map">
+      <a href="Event-map-3.html">
+        <img src="event-map-logo.png" alt="Event Map">
+        <span>Event Map</span>
+      </a>
+    </button>
+    <button class="button vfl">
+      <a href="vfl.html">
+        <img src="vfl-logo.png" alt="VFL">
+        <span>VFL</span>
+      </a>
+    </button>
+    <button class="button laser-source">
+      <a href="laser.html">
+        <img src="laser-source-logo.png" alt="Laser Source">
+        <span>Laser Source</span>
+      </a>
+    </button>
+    <button class="button optical-loss">
+      <a href="Optical-loss-test.html">
+        <img src="optical-loss-test-logo.png" alt="Optical Loss">
+        <span>Optical Loss</span>
+      </a>
+    </button>
+    <button class="button file-management">
+      <a href="filemanage.html">
+        <img src="file-management-logo.png" alt="File Management">
+        <span>File Management</span>
+      </a>
+    </button>
+    <button class="button system">
+      <a href="system.html">
+        <img src="system-logo.png" alt="System">
+        <span>System</span>
+      </a>
+    </button>
+  </div>
+</div>
 
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-    </script>
+<script>
+  function updateDateTime() {
+    document.getElementById("datetime").textContent = new Date().toLocaleString();
+  }
+
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+</script>
+
 </body>
 </html>
