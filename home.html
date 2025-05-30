@@ -165,11 +165,6 @@
    
     
     <script>
-        document.querySelectorAll('.button').forEach(button => {
-            button.addEventListener('click', () => {
-                alert(`You clicked: ${button.textContent}`);
-            });
-        });
 
         function updateDateTime() {
             document.getElementById("datetime").textContent = new Date().toLocaleString();
