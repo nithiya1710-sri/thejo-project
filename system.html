@@ -350,7 +350,17 @@ main {
             document.getElementById('update-btn').textContent = content.updateBtn;
             document.getElementById('exit-btn').textContent = content.exitBtn;
         }
+        function saveSettings() {
+  const selectedBrightness = document.getElementById("brightnessSlider").value;
+  const selectedLanguage = document.getElementById("languageSelect").value;
 
+  // 🔥 Save to localStorage
+  localStorage.setItem('brightness', selectedBrightness);
+  localStorage.setItem('language', selectedLanguage);
+
+  // Optional: Apply immediately
+  applySettings();
+        }
         // Call the language change function when the page loads
         changeLanguage();
 
@@ -366,7 +376,8 @@ main {
             alert("System is updating...");
         }
 
-        function exitSystem() 
+        function exitSystem() {
+            alert("Exiting system...");
              window.location.href = 'home.html'
         }
     </script>
