@@ -125,7 +125,7 @@
   auth.onAuthStateChanged(user => {
     if (user) {
       document.getElementById('userEmail').innerText = user.email;
-      document.getElementById('userName').innerText = user.displayName || 'No Name';
+   //   document.getElementById('userName').innerText = user.displayName || 'No Name';
       if (user.photoURL) document.getElementById('profilePic').src = user.photoURL;
     } else {
       alert("Not logged in");
