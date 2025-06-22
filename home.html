@@ -34,6 +34,60 @@
       background-color: #2a2a2a;
     }
     .header h1 { margin: 0; font-size: 24px; }
+    .profile-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #2e2e2e;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  font-size: 16px;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dropdown-item img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(1.2);
+}
+
+.dropdown-item:hover {
+  background-color: #444;
+}
+.dropdown-menu {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
     .datetime-profile {
       display: flex;
       align-items: center;
@@ -129,9 +183,22 @@
     <h1>Home</h1>
     <div class="datetime-profile">
       <span id="datetime"></span>
-      <div class="profile-icon" onclick="window.location.href='profile.html'">
-        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
-      </div>
+      <div class="profile-dropdown">
+  <div class="profile-icon" onclick="toggleDropdown()">
+    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
+  </div>
+  <div class="dropdown-menu" id="dropdownMenu">
+    <div class="dropdown-item" onclick="goToProfile()">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Update" />
+      Update Password
+    </div>
+    <div class="dropdown-item" onclick="logout()">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828427.png" alt="Logout" />
+      Logout
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
 
@@ -187,9 +254,42 @@
   function updateDateTime() {
     document.getElementById("datetime").textContent = new Date().toLocaleString();
   }
+  function toggleDropdown() {
+  const menu = document.getElementById("dropdownMenu");
+  const isVisible = menu.style.display === "flex";
+  document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
+  if (!isVisible) {
+    menu.style.display = "flex";
+  }
+}
+
+function goToProfile() {
+  window.location.href = "profile.html";
+}
+
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "index.html"; // redirect after logout
+  }).catch((error) => {
+    console.error("Logout error:", error);
+    alert("Failed to logout.");
+  });
+}
+
+window.addEventListener("click", function (event) {
+  if (!event.target.closest(".profile-dropdown")) {
+    document.getElementById("dropdownMenu").style.display = "none";
+  }
+});
+function toggleDropdown() {
+  const menu = document.getElementById("dropdownMenu");
+  menu.classList.toggle("show");
+}
+
 
   setInterval(updateDateTime, 1000);
   updateDateTime();
+
 </script>
 
 </body>
