@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto OTDR</title>
+    <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
@@ -47,12 +49,12 @@
         </div>
 
         <div class="right-sidebar">
-            <button onclick="test()" class="sidebar-button">Test</button>
+            <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
             <button onclick="testSettings()" class="sidebar-button">Settings</button>
-            <button class="sidebar-button">Event Map</button>
+            <button onclick="event()" class="sidebar-button" >Event Map</button>
             <button class="sidebar-button">Files</button>
             <button class="sidebar-button">Save</button>
-            <button  onclick="exitSystem()" class="sidebar-button">Exit</button>
+            <button class="sidebar-button" onclick="window.location.href='home.html'">Exit</button>
         </div>
     </div>
 
@@ -60,19 +62,20 @@
     <div class="bottom-buttons">
         <button class="bottom-btn"><i class="fas fa-chart-line"></i> Curve</button>
         <button class="bottom-btn"><i class="fas fa-list"></i> List</button>
-        <button class="bottom-btn"><i class="fas fa-map"></i> Event Map</button>
+        <button onclick="event()" class="bottom-btn" ><i class="fas fa-map"></i> Event Map</button>
         <button class="bottom-btn"><i class="fas fa-save"></i> Fast Save</button>
-        <button class="bottom-btn settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        <button onclick="testSettings()" class="bottom-btn settings-btn" ><i class="fas fa-cog"></i> Settings</button>
     </div>
 
     <script src="script.js"></script>
     <script>
-    function test() {
-        window.location.href = "auto-otdr.html";  // Replace with your actual page
-      }
+        
     
       function testSettings() {
         window.location.href = "setindex.html";
+      }
+      function event() {
+        window.location.href = "Event-map-3.html";
       }
     
       function passCriterion() {
@@ -83,9 +86,7 @@
         window.location.href = "thresh.html";
       }
     
-      function defaultSettings() {
-
-      }
+     
     
       function exitSystem() {
         window.location.href = 'home.html';
