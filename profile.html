@@ -1,148 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Profile Page</title>
   <style>
-    .profile-img {
-      width: 45px;
-      height: 45px;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .profile {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 350px;
+      transition: 0.3s;
+    }
+    .profile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+    .profile-pic-container {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .profile-pic-container img {
       border-radius: 50%;
+      width: 110px;
+      height: 110px;
       object-fit: cover;
+      border: 3px solid #ccc;
+      background: #f1f1f1;
+    }
+    .edit-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #0d6efd;
+      color: white;
+      padding: 6px 7px;
+      border-radius: 50%;
+      font-size: 14px;
       cursor: pointer;
-      border: 2px solid #ccc;
+      border: 2px solid #fff;
+      transition: background 0.3s;
     }
-    .card img {
-      max-height: 80px;
-      object-fit: contain;
+    .edit-icon:hover {
+      background: #0a58ca;
     }
-    .card {
-      transition: transform 0.2s, box-shadow 0.2s;
+    .profile div {
+      margin-bottom: 8px;
+      color: #333;
+      font-size: 15px;
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    input, button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 2px rgba(13,110,253,0.2);
+    }
+    button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    button:hover {
+      background: #0b5ed7;
+    }
+    #fileUpload {
+      display: none;
     }
   </style>
 </head>
-<body class="bg-light">
+<body>
 
-  <nav class="navbar navbar-expand-lg bg-white shadow-sm px-3">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold fs-4" href="#">Dashboard</a>
-      <div class="d-flex align-items-center gap-3">
-        <span class="text-muted d-none d-sm-inline" id="datetime"></span>
-        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="profile-img" onclick="window.location.href='profile.html'" alt="Profile">
-      </div>
-    </div>
-  </nav>
-
-  <div class="container my-4">
-    <div class="row g-4">
-      <div class="col-6 col-md-3">
-        <a href="auto-otdr.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-gear-fill fs-1 text-danger"></i>
-            <div class="fw-semibold mt-2">Auto OTDR</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="expert.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-person-gear fs-1 text-primary"></i>
-            <div class="fw-semibold mt-2">Expert OTDR</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="Event-map-3.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-map fs-1 text-success"></i>
-            <div class="fw-semibold mt-2">Event Map</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="vfl.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-lightning-fill fs-1 text-warning"></i>
-            <div class="fw-semibold mt-2">VFL</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="laser.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-bezier fs-1 text-secondary"></i>
-            <div class="fw-semibold mt-2">Laser Source</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="Optical-loss-test.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-eye-fill fs-1 text-info"></i>
-            <div class="fw-semibold mt-2">Optical Loss</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="filemanage.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-folder-fill fs-1 text-dark"></i>
-            <div class="fw-semibold mt-2">File Management</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <a href="system.html" class="text-decoration-none text-dark">
-          <div class="card text-center p-3 border-0 shadow-sm">
-            <i class="bi bi-sliders2-vertical fs-1 text-secondary"></i>
-            <div class="fw-semibold mt-2">System</div>
-          </div>
-        </a>
-      </div>
-    </div>
+<div class="profile">
+  <div class="profile-pic-container" onclick="document.getElementById('fileUpload').click()">
+    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile Picture">
+    <div class="edit-icon">✎</div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
-      authDomain: "login-1d280.firebaseapp.com",
-      projectId: "login-1d280",
-      storageBucket: "login-1d280.appspot.com",
-      messagingSenderId: "854337385141",
-      appId: "1:854337385141:web:df07c76b9c5811bae004fc",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <div><strong>Name:</strong> <span id="userName">Loading...</span></div>
+  <div><strong>Email:</strong> <span id="userEmail">Loading...</span></div>
 
-    auth.onAuthStateChanged(user => {
-      if (user && user.photoURL) {
-        document.getElementById('profilePic').src = user.photoURL;
-      }
-    });
+  <input type="file" id="fileUpload" accept="image/*" onchange="uploadToCloudinary()" />
 
-    function updateDateTime() {
-      document.getElementById("datetime").textContent = new Date().toLocaleString();
+  <input type="password" id="newPassword" placeholder="New Password">
+  <button onclick="updatePassword()">Update Password</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+    authDomain: "login-1d280.firebaseapp.com",
+    projectId: "login-1d280",
+    storageBucket: "login-1d280.appspot.com",
+    messagingSenderId: "854337385141",
+    appId: "1:854337385141:web:df07c76b9c5811bae004fc",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('userEmail').innerText = user.email;
+      document.getElementById('userName').innerText = user.displayName || 'No Name';
+      if (user.photoURL) document.getElementById('profilePic').src = user.photoURL;
+    } else {
+      alert("Not logged in");
     }
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-  </script>
+  });
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  function updatePassword() {
+    const newPassword = document.getElementById('newPassword').value;
+    const user = auth.currentUser;
+    if (newPassword.length < 6) return alert("Password too short");
+    user.updatePassword(newPassword)
+      .then(() => alert("Password Updated"))
+      .catch(err => alert(err.message));
+  }
+
+  function uploadToCloudinary() {
+    const file = document.getElementById('fileUpload').files[0];
+    if (!file) return alert("Please select an image");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "YOUR_UNSIGNED_UPLOAD_PRESET"); // Change this
+
+    fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      const imageUrl = data.secure_url;
+      document.getElementById('profilePic').src = imageUrl;
+      return auth.currentUser.updateProfile({ photoURL: imageUrl });
+    })
+    .then(() => alert("Profile picture updated"))
+    .catch(err => alert(err.message));
+  }
+</script>
+
 </body>
 </html>
