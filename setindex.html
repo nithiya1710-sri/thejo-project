@@ -286,7 +286,7 @@ main {
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString();
         const formattedTime = currentDate.toLocaleTimeString();
-        document.getElementById('current-datetime').textContent = ${formattedDate} ${formattedTime};
+        document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
     }
 
     setInterval(updateDateTime, 1000);
