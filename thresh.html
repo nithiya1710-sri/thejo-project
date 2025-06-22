@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Analysis Threshold</title>
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -96,7 +98,59 @@
     footer button:hover {
       background: #555;
     }
+    .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
 
+.popup-box {
+    background-color: #003366;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 320px;
+    border: 2px solid #ffffff33;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.popup-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.popup-message {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-buttons button {
+    background-color: #444;
+    color: white;
+    font-size: 18px;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup-buttons button:hover {
+    background-color: #666;
+}
     main {
       flex: 1;
       margin-right: 200px;
@@ -150,14 +204,27 @@
       </div>
     </main>
 
-    <footer>
-      <button onclick="test()">Test</button>
-      <button onclick="testSettings()">Test Settings</button>
-      <button onclick="passCriterion()">Pass Criterion</button>
-      <button onclick="analysisThreshold()">Analysis Threshold</button>
-      <button onclick="defaultSettings()">Default</button>
-      <button onclick="exitSystem()">Exit</button>
-    </footer>
+         <footer>
+            <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
+            <button onclick="testSettings()" id="test-settings-btn">Test Settings</button>
+            <button onclick="passCriterion()" id="pass-Criterion-btn">Pass Criterion</button>
+            <button onclick="analysisThreshold()" id="analysis-threshold-btn">Analysis Threshold</button>
+            <button onclick="defaultSettings()" id="default-btn">Default</button>
+            <button onclick="exitSystem()" id="exit-btn">Exit</button>
+        </footer>
+        <!-- Custom Confirmation Popup -->
+    <div id="confirm-popup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Tips</h2>
+        <p>Restore factory default?</p>
+        <div class="popup-buttons">
+        <button onclick="confirmDefault(true)">OK</button>
+        <button onclick="confirmDefault(false)">Exit</button>
+        </div>
+    </div>
+    </div>
+
+  </div>
   </div>
 
   <script>
@@ -165,7 +232,7 @@
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
-      document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
+      document.getElementById('current-datetime').textContent = ${formattedDate} ${formattedTime};
     }
     setInterval(updateDateTime, 1000);
     updateDateTime();
@@ -181,30 +248,50 @@
       }
     }
 
-    function test() {
-    window.location.href = "index.html";  // Replace with your actual page
-  }
 
-  function testSettings() {
-    window.location.href = "setindex.html";
-  }
+    function testSettings() {
+        window.location.href = "setindex.html";
+    }
 
-  function passCriterion() {
-    window.location.href = "passindex.html";
-  }
+    function passCriterion() {
+        window.location.href = "passindex.html";
+    }
 
-  function analysisThreshold() {
-    window.location.href = "thresh.html";
-  }
+    function analysisThreshold() {
+        window.location.href = "thresh.html";
+    }
 
-  function defaultSettings() {
-    window.location.href = "default.html";
-  }
+    function defaultSettings() {
+        document.getElementById("confirm-popup").style.display = "flex";
+    }
 
-  function exitSystem() {
-    window.open('', '_self'); // Needed in some browsers
-    window.close();
+    function confirmDefault(isConfirmed) {
+  document.getElementById("confirm-popup").style.display = "none";
+
+  if (isConfirmed) {
+    // Reset all threshold dropdowns to "auto"
+    const dropdowns = [
+      "loss-threshold",
+      "reflectance-threshold",
+      "end-loss-threshold"
+    ];
+
+    dropdowns.forEach(id => {
+      const select = document.getElementById(id);
+      const input = document.getElementById(id + "-input");
+      select.value = "auto";
+      input.style.display = "none";
+      input.value = "";
+    });
+
+    // Optionally show confirmation
+    alert("Analysis Threshold settings have been reset to default.");
   }
+}
+
+    function exitSystem() {
+        window.location.href = "auto-otdr.html";
+    }
   </script>
 </body>
 </html>
