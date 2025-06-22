@@ -2,69 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login</title>
-  <link rel="stylesheet" href="index.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 100px;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-  <div class="login-container">
-    <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0"  style="margin-left: 110px; width: 120px; height: 100px;" >
-    <h2>Login</h2>
-    <form id="login-form">
-      <input type="email" id="email" placeholder="Email" required /><br />
-<!--       <input type="password" id="password" placeholder="Password" required /><br /> -->
-      <div style="position: relative;">
-      <input type="password" id="password" placeholder="Password" required style="padding-right: 30px; width: 100%;" />
-      <i class="fa-solid fa-eye" id="togglePassword" style="position: absolute; right: 10px; top: 10px; cursor: pointer;"></i>
-    </div><br />
 
-      <div style="text-align: right; margin-top: 5px;">
-      <a href="forgot-password.html" style="font-size: 14px;">Forgot Password?</a>
-    </div><br />
-      <button type="submit">Login</button>
-    </form>
-    <p id="error-message"></p>
-    <p>
-      Don't have an account?
-      <a href="signup.html">Sign Up</a>
-    </p>
-  </div>
+<div class="login-container">
+  <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" class="logo" alt="Logo">
+  <h2 class="text-center mb-4">Login</h2>
 
-  <!-- Firebase and Login Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+  <form id="login-form" novalidate>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email address</label>
+      <input type="email" id="email" class="form-control" placeholder="Enter email" required>
+    </div>
 
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
-  authDomain: "login-1d280.firebaseapp.com",
-  projectId: "login-1d280",
-  storageBucket: "login-1d280.firebasestorage.app",
-  messagingSenderId: "854337385141",
-  appId: "1:854337385141:web:df07c76b9c5811bae004fc",
-  measurementId: "G-546BETWWQW"
-};
+    <div class="mb-3 position-relative">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+      <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
+    </div>
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    <div class="mb-2 text-end">
+      <a href="forgot-password.html" class="small">Forgot Password?</a>
+    </div>
 
-    // Login form submission
-    document.getElementById("login-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+  </form>
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Successful login, redirect to dashboard or another page
-          window.location.href = "home.html";
-        })
-        .catch((error) => {
-          document.getElementById("error-message").textContent = error.message;
-        });
-    });
-  </script>
+  <p id="error-message" class="text-danger text-center mt-2"></p>
+
+  <p class="text-center mt-3">Don't have an account? <a href="signup.html">Sign Up</a></p>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+    authDomain: "login-1d280.firebaseapp.com",
+    projectId: "login-1d280",
+    storageBucket: "login-1d280.appspot.com",
+    messagingSenderId: "854337385141",
+    appId: "1:854337385141:web:df07c76b9c5811bae004fc"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("login-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => window.location.href = "home.html")
+      .catch(err => document.getElementById("error-message").textContent = err.message);
+  });
+
+  // Password toggle
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  togglePassword.addEventListener('click', () => {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+    togglePassword.classList.toggle('bi-eye');
+    togglePassword.classList.toggle('bi-eye-slash');
+  });
+</script>
+
 </body>
 </html>
