@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OTDR Pass Criterion</title>
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -107,6 +109,60 @@
       background: #555;
     }
 
+    .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-box {
+    background-color: #003366;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 320px;
+    border: 2px solid #ffffff33;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.popup-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.popup-message {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-buttons button {
+    background-color: #444;
+    color: white;
+    font-size: 18px;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup-buttons button:hover {
+    background-color: #666;
+}
+
     main {
       flex: 1;
       margin-right: 200px;
@@ -154,14 +210,26 @@
       <div id="selectedCriteria" class="output"></div>
     </main>
 
-    <footer>
-      <button onclick="test()">Test</button>
-      <button onclick="testSettings()">Test Settings</button>
-      <button onclick="passCriterion()">Pass Criterion</button>
-      <button onclick="analysisThreshold()">Analysis Threshold</button>
-      <button onclick="defaultSettings()">Default</button>
-      <button onclick="exitSystem()">Exit</button>
-    </footer>
+     <footer>
+            <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
+            <button onclick="testSettings()" id="test-settings-btn">Test Settings</button>
+            <button onclick="passCriterion()" id="pass-Criterion-btn">Pass Criterion</button>
+            <button onclick="analysisThreshold()" id="analysis-threshold-btn">Analysis Threshold</button>
+            <button onclick="defaultSettings()" id="default-btn">Default</button>
+            <button onclick="exitSystem()" id="exit-btn">Exit</button>
+        </footer>
+        <!-- Custom Confirmation Popup -->
+    <div id="confirm-popup" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Tips</h2>
+        <p>Restore factory default?</p>
+        <div class="popup-buttons">
+        <button onclick="confirmDefault(true)">OK</button>
+        <button onclick="confirmDefault(false)">Exit</button>
+        </div>
+    </div>
+    </div>
+
   </div>
 
   <script>
@@ -169,7 +237,7 @@
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
-      document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
+      document.getElementById('current-datetime').textContent = ${formattedDate} ${formattedTime};
     }
 
     setInterval(updateDateTime, 1000);
@@ -189,30 +257,44 @@
       }
     }
 
-    function test() {
-    window.location.href = "index.html";  // Replace with your actual page
-  }
 
-  function testSettings() {
-    window.location.href = "setindex.html";
-  }
 
-  function passCriterion() {
-    window.location.href = "passindex.html";
-  }
 
-  function analysisThreshold() {
-    window.location.href = "thresh.html";
-  }
+    function testSettings() {
+        window.location.href = "setindex.html";
+    }
 
-  function defaultSettings() {
-    window.location.href = "default.html";
-  }
+    function passCriterion() {
+        window.location.href = "passindex.html";
+    }
 
-  function exitSystem() {
-    window.open('', '_self'); // Needed in some browsers
-    window.close();
-  }
+    function analysisThreshold() {
+        window.location.href = "thresh.html";
+    }
+
+    function defaultSettings() {
+        document.getElementById("confirm-popup").style.display = "flex";
+    }
+
+    function confirmDefault(isConfirmed) {
+    document.getElementById("confirm-popup").style.display = "none";
+    if (isConfirmed) {
+        // Uncheck all pass criteria checkboxes
+        const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Clear the displayed selection
+        document.getElementById('selectedCriteria').textContent = 'No criteria selected.';
+
+        alert("Pass Criteria have been reset to default (none selected).");
+    }
+}
+
+    function exitSystem() {
+        window.location.href = "auto-otdr.html";
+    }
   </script>
 </body>
 </html>
