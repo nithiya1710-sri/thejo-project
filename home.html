@@ -16,7 +16,6 @@
       align-items: center;
       min-height: 100vh;
     }
-
     .container {
       display: flex;
       flex-direction: column;
@@ -25,7 +24,6 @@
       padding: 20px;
       max-width: fit-content;
     }
-
     .header {
       display: flex;
       justify-content: space-between;
@@ -34,47 +32,38 @@
       padding: 15px 20px;
       background-color: #2a2a2a;
     }
-
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
+    .header h1 { margin: 0; font-size: 24px; }
     .datetime-profile {
       display: flex;
       align-items: center;
       gap: 20px;
     }
-
     .profile-icon {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background-color: #555;
+      overflow: hidden;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      background: #555;
     }
-
     .profile-icon img {
-      width: 28px;
-      height: 28px;
-      filter: brightness(0) invert(1);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
-
     .grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 40px;
-  margin-top: 25px; /* reduced from 47px */
-  width: 100%;
-  padding: 0 30px; /* add horizontal padding */
-  max-width: fit-content;
-}
-
-
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 1fr;
+      gap: 40px;
+      margin-top: 25px;
+      width: 100%;
+      padding: 0 30px;
+      max-width: fit-content;
+    }
     .button {
       background-color: #4e4e4e;
       border: none;
@@ -91,26 +80,20 @@
       aspect-ratio: 1 / 1;
       width: 90%;
     }
-
     .button img {
       width: 65%;
       height: auto;
-      object-fit: contain;
-     
       opacity: 0.95;
     }
-
     .button span {
       font-size: 20px;
       margin-top: 12px;
     }
-
     .button:hover {
       background-color: #686868;
       transform: scale(1.05);
     }
-
-    /* Custom colors */
+    /* Custom button colors */
     .button.auto-otdr { background-color: #c92b5e; }
     .button.expert-otdr { background-color: #f04c36; }
     .button.event-map { background-color: #7a2a7c; }
@@ -130,17 +113,11 @@
       align-items: center;
       justify-content: center;
     }
-
     @media (max-width: 1024px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
-
     @media (max-width: 600px) {
-      .button span {
-        font-size: 16px;
-      }
+      .button span { font-size: 16px; }
     }
   </style>
 </head>
@@ -151,65 +128,61 @@
     <h1>Home</h1>
     <div class="datetime-profile">
       <span id="datetime"></span>
-      <div class="profile-icon">
-        <img src="profile-icon.png" alt="Profile">
+      <div class="profile-icon" onclick="window.location.href='profile.html'">
+        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
       </div>
     </div>
   </div>
 
   <div class="grid">
     <button class="button auto-otdr">
-      <a href="auto-otdr.html">
-        <img src="auto-otdr-logo.png" alt="Auto OTDR">
-        <span>Auto OTDR</span>
-      </a>
+      <a href="auto-otdr.html"><img src="auto-otdr-logo.png"><span>Auto OTDR</span></a>
     </button>
     <button class="button expert-otdr">
-      <a href="expert.html">
-        <img src="expert-otdr-logo.png" alt="Expert OTDR">
-        <span>Expert OTDR</span>
-      </a>
+      <a href="expert.html"><img src="expert-otdr-logo.png"><span>Expert OTDR</span></a>
     </button>
     <button class="button event-map">
-      <a href="Event-map-3.html">
-        <img src="event-map-logo.png" alt="Event Map">
-        <span>Event Map</span>
-      </a>
+      <a href="Event-map-3.html"><img src="event-map-logo.png"><span>Event Map</span></a>
     </button>
     <button class="button vfl">
-      <a href="vfl.html">
-        <img src="vfl-logo.png" alt="VFL">
-        <span>VFL</span>
-      </a>
+      <a href="vfl.html"><img src="vfl-logo.png"><span>VFL</span></a>
     </button>
     <button class="button laser-source">
-      <a href="laser.html">
-        <img src="laser-source-logo.png" alt="Laser Source">
-        <span>Laser Source</span>
-      </a>
+      <a href="laser.html"><img src="laser-source-logo.png"><span>Laser Source</span></a>
     </button>
     <button class="button optical-loss">
-      <a href="Optical-loss-test.html">
-        <img src="optical-loss-test-logo.png" alt="Optical Loss">
-        <span>Optical Loss</span>
-      </a>
+      <a href="Optical-loss-test.html"><img src="optical-loss-test-logo.png"><span>Optical Loss</span></a>
     </button>
     <button class="button file-management">
-      <a href="filemanage.html">
-        <img src="file-management-logo.png" alt="File Management">
-        <span>File Management</span>
-      </a>
+      <a href="filemanage.html"><img src="file-management-logo.png"><span>File Management</span></a>
     </button>
     <button class="button system">
-      <a href="system.html">
-        <img src="system-logo.png" alt="System">
-        <span>System</span>
-      </a>
+      <a href="system.html"><img src="system-logo.png"><span>System</span></a>
     </button>
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+    authDomain: "login-1d280.firebaseapp.com",
+    projectId: "login-1d280",
+    storageBucket: "login-1d280.appspot.com",
+    messagingSenderId: "854337385141",
+    appId: "1:854337385141:web:df07c76b9c5811bae004fc",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Show Firebase user profile picture if available
+  auth.onAuthStateChanged(user => {
+    if (user && user.photoURL) {
+      document.getElementById('profilePic').src = user.photoURL;
+    }
+  });
+
   function updateDateTime() {
     document.getElementById("datetime").textContent = new Date().toLocaleString();
   }
