@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile Page</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .profile {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 320px;
+    }
+    .profile-pic-container {
+      position: relative;
+      display: inline-block;
+    }
+    .profile-pic-container img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 2px solid #ccc;
+    }
+    .edit-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #000000a0;
+      color: white;
+      padding: 4px 6px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .edit-icon:hover {
+      background: #0077cc;
+    }
+    input, button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    #fileUpload {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="profile">
+  <div class="profile-pic-container" onclick="document.getElementById('fileUpload').click()">
+    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile Picture">
+    <div class="edit-icon">✎</div>
+  </div>
+  
+  <br><br>
+  <div><strong>Name:</strong> <span id="userName">Loading...</span></div>
+  <div><strong>Email:</strong> <span id="userEmail">Loading...</span></div>
+
+  <input type="file" id="fileUpload" accept="image/*" onchange="uploadToCloudinary()" />
+
+  <input type="password" id="newPassword" placeholder="New Password">
+  <button onclick="updatePassword()">Update Password</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+    authDomain: "login-1d280.firebaseapp.com",
+    projectId: "login-1d280",
+    storageBucket: "login-1d280.appspot.com",
+    messagingSenderId: "854337385141",
+    appId: "1:854337385141:web:df07c76b9c5811bae004fc",
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('userEmail').innerText = user.email;
+      document.getElementById('userName').innerText = user.displayName || 'No Name';
+      if (user.photoURL) document.getElementById('profilePic').src = user.photoURL;
+    } else {
+      alert("Not logged in");
+    }
+  });
+
+  function updatePassword() {
+    const newPassword = document.getElementById('newPassword').value;
+    const user = auth.currentUser;
+    if (newPassword.length < 6) return alert("Password too short");
+    user.updatePassword(newPassword)
+      .then(() => alert("Password Updated"))
+      .catch(err => alert(err.message));
+  }
+
+  function uploadToCloudinary() {
+    const file = document.getElementById('fileUpload').files[0];
+    if (!file) return alert("Please select an image");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "YOUR_UNSIGNED_UPLOAD_PRESET"); // <-- ADD your preset
+    fetch("https://api.cloudinary.com/v1_1/dgl2vykau/image/upload", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      const imageUrl = data.secure_url;
+      document.getElementById('profilePic').src = imageUrl;
+      const user = auth.currentUser;
+      return user.updateProfile({ photoURL: imageUrl });
+    })
+    .then(() => alert("Profile picture updated"))
+    .catch(err => alert(err.message));
+  }
+</script>
+
+</body>
+</html>
