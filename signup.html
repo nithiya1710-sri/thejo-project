@@ -4,24 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
   <link rel="stylesheet" href="signup.css" />
 </head>
 <body>
   <div class="signup-container">
-    <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0"  style="margin-left: 110px; width: 120px; height: 100px;" >
+    <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" style="margin-left: 110px; width: 120px; height: 100px;">
     <h2>Sign Up</h2>
     <form id="signup-form">
       <input type="text" id="signup-name" placeholder="Full Name" required /><br />
       <input type="email" id="signup-email" placeholder="Email" required /><br />
-      <input type="password" id="signup-password" placeholder="Password" required /><br />
+      <div style="position: relative;">
+        <input type="password" id="signup-password" placeholder="Password" required style="width: 100%; padding-right: 40px;" />
+        <span onclick="togglePassword()" style="position: absolute; right: 10px; top: 8px; cursor: pointer; user-select: none;">👁️</span>
+      </div><br />
       <button type="submit">Sign Up</button>
     </form>
     <p id="signup-error-message"></p>
-    <p>
-      Already have an account?
-      <a href="index.html">Login</a>
-    </p>
+    <p>Already have an account? <a href="index.html">Login</a></p>
   </div>
 
   <!-- Firebase and Signup Script -->
@@ -30,24 +30,20 @@
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
     import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-    // Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
-  authDomain: "login-1d280.firebaseapp.com",
-  projectId: "login-1d280",
-  storageBucket: "login-1d280.firebasestorage.app",
-  messagingSenderId: "854337385141",
-  appId: "1:854337385141:web:df07c76b9c5811bae004fc",
-  measurementId: "G-546BETWWQW"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
+      authDomain: "login-1d280.firebaseapp.com",
+      projectId: "login-1d280",
+      storageBucket: "login-1d280.firebasestorage.app",
+      messagingSenderId: "854337385141",
+      appId: "1:854337385141:web:df07c76b9c5811bae004fc",
+      measurementId: "G-546BETWWQW"
+    };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Signup form submission
     document.getElementById("signup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fullName = document.getElementById("signup-name").value;
@@ -57,20 +53,24 @@ const firebaseConfig = {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
-        // Save user data in Firestore
         await setDoc(doc(db, "users", user.uid), {
           name: fullName,
           email: email,
           createdAt: new Date().toISOString()
         });
-
         alert("Signup successful! Please log in.");
         window.location.href = "index.html";
       } catch (error) {
         document.getElementById("signup-error-message").textContent = error.message;
       }
     });
+  </script>
+
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById("signup-password");
+      passwordField.type = passwordField.type === "password" ? "text" : "password";
+    }
   </script>
 </body>
 </html>
