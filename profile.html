@@ -141,27 +141,29 @@
       .catch(err => alert(err.message));
   }
 
-  function uploadToCloudinary() {
-    const file = document.getElementById('fileUpload').files[0];
-    if (!file) return alert("Please select an image");
+function uploadToCloudinary() {
+  const file = document.getElementById('fileUpload').files[0];
+  if (!file) return alert("Please select an image");
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "YOUR_UNSIGNED_UPLOAD_PRESET"); // Change this
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "profile_pics"); // <-- your unsigned preset
+  fetch("https://api.cloudinary.com/v1_1/dgl2vykau/image/upload", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    const imageUrl = data.secure_url;
+    document.getElementById('profilePic').src = imageUrl;
 
-    fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      const imageUrl = data.secure_url;
-      document.getElementById('profilePic').src = imageUrl;
-      return auth.currentUser.updateProfile({ photoURL: imageUrl });
-    })
-    .then(() => alert("Profile picture updated"))
-    .catch(err => alert(err.message));
-  }
+    // Update Firebase profile photoURL
+    return firebase.auth().currentUser.updateProfile({ photoURL: imageUrl });
+  })
+  .then(() => alert("Profile picture updated"))
+  .catch(err => alert(err.message));
+}
+
 </script>
 
 </body>
