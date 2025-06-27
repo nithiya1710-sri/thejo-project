@@ -136,5 +136,89 @@
         setInterval(updateTime, 1000);
         updateTime();
     </script>
+    <script src="system.js"></script>
+    <script>
+  // 🔆 Brightness Setting
+  const brightnessLevels = {
+    '0%': 0, '20%': 0.2, '40%': 0.4, '60%': 0.6, '80%': 0.8, '100%': 1
+  };
+  const savedBrightness = localStorage.getItem('brightness') || '100%';
+  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
+
+  // 🌐 Language Translations
+  const lang = localStorage.getItem("language") || "en";
+  const translations = {
+    en: {
+      title: "Optical Loss Test",
+      laserSource: "Laser Source",
+      wavelength: "1550 nm",
+      opm: "OPM",
+      open: "Open",
+      wave: "Wave",
+      reference: "Reference",
+      refZero: "Ref-Zero",
+      exit: "Exit",
+      linPow: "Lin. Pow",
+      ref: "Ref",
+      relPow: "Rel. Pow"
+    },
+    fr: {
+      title: "Test de Perte Optique",
+      laserSource: "Source Laser",
+      wavelength: "1550 nm",
+      opm: "POO",
+      open: "Ouvrir",
+      wave: "Longueur d'onde",
+      reference: "Référence",
+      refZero: "Réf-Zéro",
+      exit: "Quitter",
+      linPow: "Puis. Lin.",
+      ref: "Réf.",
+      relPow: "Puis. Rel."
+    },
+    es: {
+      title: "Prueba de Pérdida Óptica",
+      laserSource: "Fuente Láser",
+      wavelength: "1550 nm",
+      opm: "OPM",
+      open: "Abrir",
+      wave: "Longitud de onda",
+      reference: "Referencia",
+      refZero: "Ref-Cero",
+      exit: "Salir",
+      linPow: "Pot. Lin.",
+      ref: "Ref.",
+      relPow: "Pot. Rel."
+    }
+  };
+
+  const t = translations[lang] || translations.en;
+
+  // 🧠 Apply Translations
+  document.addEventListener("DOMContentLoaded", () => {
+    document.title = t.title;
+    document.querySelector(".header-title").textContent = t.title;
+    document.querySelector(".laser-box h2").textContent = t.laserSource;
+    document.querySelector(".laser-box h1").textContent = t.wavelength;
+    document.querySelector(".opm-box").innerHTML = `${t.opm} <br> --.-- dBm`;
+
+    const gridHeaders = document.querySelectorAll(".grid-header");
+    if (gridHeaders.length >= 3) {
+      gridHeaders[0].textContent = t.linPow;
+      gridHeaders[1].textContent = t.ref;
+      gridHeaders[2].textContent = t.relPow;
+    }
+
+    const sidebarButtons = document.querySelectorAll(".right-sidebar .sidebar-button");
+    if (sidebarButtons.length >= 5) {
+      sidebarButtons[0].textContent = t.open;
+      sidebarButtons[1].textContent = t.wave;
+      sidebarButtons[2].textContent = t.reference;
+      sidebarButtons[3].textContent = t.refZero;
+      sidebarButtons[4].textContent = t.exit;
+    }
+  });
+</script>
+
 </body>
 </html>
