@@ -329,6 +329,177 @@ main {
         window.location.href = "auto-otdr.html";
     }
 </script>
+    <script>
+  // Brightness from localStorage
+  const brightnessMap = {
+    '0%': 0, '20%': 0.2, '40%': 0.4,
+    '60%': 0.6, '80%': 0.8, '100%': 1
+  };
+  const savedBrightness = localStorage.getItem('brightness') || '100%';
+  document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+
+  // Translation
+  const translations = {
+    en: {
+      title: "Test Settings",
+      wave: "Wave",
+      range: "Range",
+      pulse: "Pulse Width",
+      avgTime: "Avg. Time",
+      index: "Refractive Index",
+      unit: "Unit",
+      test: "Test",
+      testSettings: "Test Settings",
+      pass: "Pass Criterion",
+      analysis: "Analysis Threshold",
+      default: "Default",
+      exit: "Exit",
+      tips: "Tips",
+      restore: "Restore factory default?",
+      ok: "OK",
+      cancel: "Exit"
+    },
+    fr: {
+      title: "Paramètres de Test",
+      wave: "Longueur d'Onde",
+      range: "Plage",
+      pulse: "Largeur d'Impulsion",
+      avgTime: "Temps Moyen",
+      index: "Indice de Réfraction",
+      unit: "Unité",
+      test: "Test",
+      testSettings: "Paramètres de Test",
+      pass: "Critère de Réussite",
+      analysis: "Seuil d'Analyse",
+      default: "Par Défaut",
+      exit: "Quitter",
+      tips: "Conseils",
+      restore: "Restaurer les paramètres d'usine ?",
+      ok: "OK",
+      cancel: "Annuler"
+    },
+    es: {
+      title: "Configuración de Prueba",
+      wave: "Longitud de Onda",
+      range: "Alcance",
+      pulse: "Ancho de Pulso",
+      avgTime: "Tiempo Promedio",
+      index: "Índice de Refracción",
+      unit: "Unidad",
+      test: "Prueba",
+      testSettings: "Configuración de Prueba",
+      pass: "Criterio de Aprobación",
+      analysis: "Umbral de Análisis",
+      default: "Predeterminado",
+      exit: "Salir",
+      tips: "Consejos",
+      restore: "¿Restaurar configuración de fábrica?",
+      ok: "OK",
+      cancel: "Cancelar"
+    },
+    de: {
+      title: "Testeinstellungen",
+      wave: "Wellenlänge",
+      range: "Reichweite",
+      pulse: "Impulsbreite",
+      avgTime: "Durchschn. Zeit",
+      index: "Brechungsindex",
+      unit: "Einheit",
+      test: "Test",
+      testSettings: "Testeinstellungen",
+      pass: "Bestehens-Kriterium",
+      analysis: "Analyse-Schwelle",
+      default: "Standard",
+      exit: "Beenden",
+      tips: "Tipps",
+      restore: "Werkseinstellungen wiederherstellen?",
+      ok: "OK",
+      cancel: "Abbrechen"
+    },
+    it: {
+      title: "Impostazioni di Test",
+      wave: "Lunghezza d'Onda",
+      range: "Intervallo",
+      pulse: "Larghezza Impulso",
+      avgTime: "Tempo Medio",
+      index: "Indice di Rifrazione",
+      unit: "Unità",
+      test: "Test",
+      testSettings: "Impostazioni Test",
+      pass: "Criterio di Superamento",
+      analysis: "Soglia di Analisi",
+      default: "Predefinito",
+      exit: "Esci",
+      tips: "Suggerimenti",
+      restore: "Ripristinare impostazioni di fabbrica?",
+      ok: "OK",
+      cancel: "Annulla"
+    },
+    pt: {
+      title: "Configurações de Teste",
+      wave: "Onda",
+      range: "Alcance",
+      pulse: "Largura do Pulso",
+      avgTime: "Tempo Médio",
+      index: "Índice de Refração",
+      unit: "Unidade",
+      test: "Teste",
+      testSettings: "Configurações de Teste",
+      pass: "Critério de Aprovação",
+      analysis: "Limite de Análise",
+      default: "Padrão",
+      exit: "Sair",
+      tips: "Dicas",
+      restore: "Restaurar configurações de fábrica?",
+      ok: "OK",
+      cancel: "Cancelar"
+    },
+    nl: {
+      title: "Testinstellingen",
+      wave: "Golf",
+      range: "Bereik",
+      pulse: "Pulsbreedte",
+      avgTime: "Gemiddelde Tijd",
+      index: "Brekingsindex",
+      unit: "Eenheid",
+      test: "Test",
+      testSettings: "Testinstellingen",
+      pass: "Geslaagdcriterium",
+      analysis: "Analyse Drempel",
+      default: "Standaard",
+      exit: "Afsluiten",
+      tips: "Tips",
+      restore: "Fabrieksinstellingen herstellen?",
+      ok: "OK",
+      cancel: "Annuleren"
+    }
+  };
+
+  // Apply translation
+  const lang = localStorage.getItem("language") || "en";
+  const t = translations[lang] || translations.en;
+
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("wave-label").textContent = t.wave;
+  document.getElementById("range-label").textContent = t.range;
+  document.getElementById("pulse-width-label").textContent = t.pulse;
+  document.getElementById("avg-time-label").textContent = t.avgTime;
+  document.getElementById("refractive-index-label").textContent = t.index;
+  document.getElementById("unit-label").textContent = t.unit;
+
+  document.getElementById("test-settings-btn").textContent = t.testSettings;
+  document.getElementById("pass-Criterion-btn").textContent = t.pass;
+  document.getElementById("analysis-threshold-btn").textContent = t.analysis;
+  document.getElementById("default-btn").textContent = t.default;
+  document.getElementById("exit-btn").textContent = t.exit;
+
+  // Popup
+  document.querySelector(".popup-box h2").textContent = t.tips;
+  document.querySelector(".popup-box p").textContent = t.restore;
+  document.querySelectorAll(".popup-buttons button")[0].textContent = t.ok;
+  document.querySelectorAll(".popup-buttons button")[1].textContent = t.cancel;
+</script>
+
 
 </body>
 </html>
