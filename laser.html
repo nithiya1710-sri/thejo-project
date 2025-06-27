@@ -271,5 +271,91 @@
       }
     });
   </script>
+  <script src="system.js"></script>
+  <script>
+  // Brightness Control
+const brightnessMap = {
+  '0%': 0,
+  '20%': 0.2,
+  '40%': 0.4,
+  '60%': 0.6,
+  '80%': 0.8,
+  '100%': 1
+};
+const savedBrightness = localStorage.getItem('brightness') || '100%';
+document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+
+// Language Translation
+const translations = {
+  en: {
+    title: "Laser Source",
+    open: "Open",
+    close: "Close",
+    wave: "Wave",
+    mode: "Mode",
+    powerPlus: "Power +",
+    powerMinus: "Power -",
+    exit: "Exit",
+    danger: "DANGER",
+    warning: "Looking directly at laser output\nmay cause damage to human eyes!",
+    cw: "CW",
+    off: "OFF"
+  },
+  fr: {
+    title: "Source Laser",
+    open: "Ouvrir",
+    close: "Fermer",
+    wave: "Longueur d’onde",
+    mode: "Mode",
+    powerPlus: "Puissance +",
+    powerMinus: "Puissance -",
+    exit: "Quitter",
+    danger: "DANGER",
+    warning: "Regarder directement le laser\npeut endommager les yeux humains !",
+    cw: "CW",
+    off: "ARRÊT"
+  },
+  es: {
+    title: "Fuente Láser",
+    open: "Abrir",
+    close: "Cerrar",
+    wave: "Longitud de onda",
+    mode: "Modo",
+    powerPlus: "Potencia +",
+    powerMinus: "Potencia -",
+    exit: "Salir",
+    danger: "PELIGRO",
+    warning: "Mirar directamente al láser\npuede dañar los ojos humanos.",
+    cw: "CW",
+    off: "APAGADO"
+  }
+  // Add more as needed (de, it, pt, nl)
+};
+
+// Apply Language
+const lang = localStorage.getItem("language") || "en";
+const t = translations[lang] || translations.en;
+
+document.querySelector(".title").textContent = t.title;
+document.getElementById("open-btn").textContent = isLaserOn ? t.close : t.open;
+document.getElementById("wave-btn").textContent = t.wave;
+document.getElementById("mode-btn").textContent = t.mode;
+document.getElementById("power-plus").textContent = t.powerPlus;
+document.getElementById("power-minus").textContent = t.powerMinus;
+document.querySelector(".right-panel button:last-child").textContent = t.exit;
+document.querySelector(".danger-title span:last-child").textContent = t.danger;
+document.querySelector(".warning-text").textContent = t.warning;
+
+// Update Open/Close and CW/OFF text dynamically
+openBtn.addEventListener("click", () => {
+  if (isLaserOn) {
+    statusText.textContent = t.off;
+    openBtn.textContent = t.open;
+  } else {
+    statusText.textContent = t.cw;
+    openBtn.textContent = t.close;
+  }
+});
+</script>
 </body>
 </html>
