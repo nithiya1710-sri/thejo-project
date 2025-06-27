@@ -433,6 +433,73 @@ window.addEventListener("click", function (e) {
     }).catch(err => alert("Logout failed: " + err.message));
   }
 </script>
+<script src="system.js"></script>
+<script>
+  window.onload = function () {
+    const brightness = localStorage.getItem('brightness') || '100%';
+    const language = localStorage.getItem('language') || 'en';
+
+    // 🌟 Apply Brightness
+    const brightnessMap = {
+      '0%': 0, '20%': 0.2, '40%': 0.4,
+      '60%': 0.6, '80%': 0.8, '100%': 1
+    };
+    document.body.style.filter = `brightness(${brightnessMap[brightness] || 1})`;
+
+    // 🌍 Apply Language
+    const translations = {
+  en: {
+    autoOTDR: "Auto OTDR", expertOTDR: "Expert OTDR", eventMap: "Event Map",
+    vfl: "VFL", laserSource: "Laser Source", opticalLoss: "Optical Loss",
+    fileManagement: "File Management", system: "System"
+  },
+  fr: {
+    autoOTDR: "OTDR Auto", expertOTDR: "OTDR Expert", eventMap: "Carte des Événements",
+    vfl: "VFL ", laserSource: "Source Laser", opticalLoss: "Perte Optique",
+    fileManagement: "Gestion des Fichiers", system: "Système"
+  },
+  es: {
+    autoOTDR: "OTDR Automático", expertOTDR: "OTDR Experto", eventMap: "Mapa de Eventos",
+    vfl: "VFL", laserSource: "Fuente Láser", opticalLoss: "Pérdida Óptica",
+    fileManagement: "Gestión de Archivos", system: "Sistema"
+  },
+  de: {
+    autoOTDR: "Auto OTDR", expertOTDR: "Experten OTDR", eventMap: "Ereigniskarte",
+    vfl: "VFL", laserSource: "Laserquelle", opticalLoss: "Optischer Verlust",
+    fileManagement: "Dateiverwaltung", system: "System"
+  },
+  it: {
+    autoOTDR: "OTDR Automatico", expertOTDR: "OTDR Esperto", eventMap: "Mappa Eventi",
+    vfl: "VFL", laserSource: "Sorgente Laser", opticalLoss: "Perdita Ottica",
+    fileManagement: "Gestione File", system: "Sistema"
+  },
+  pt: {
+    autoOTDR: "OTDR Automático", expertOTDR: "OTDR Especialista", eventMap: "Mapa de Eventos",
+    vfl: "VFL ", laserSource: "Fonte de Laser", opticalLoss: "Perda Óptica",
+    fileManagement: "Gerenciamento de Arquivos", system: "Sistema"
+  },
+  nl: {
+    autoOTDR: "Auto OTDR", expertOTDR: "Expert OTDR", eventMap: "Gebeurteniskaart",
+    vfl: "VFL ", laserSource: "Laserbron", opticalLoss: "Optisch Verlies",
+    fileManagement: "Bestandsbeheer", system: "Systeem"
+  }
+};
+
+
+    const t = translations[language] || translations.en;
+
+    // Update button text
+    document.querySelector(".auto-otdr span").textContent = t.autoOTDR;
+    document.querySelector(".expert-otdr span").textContent = t.expertOTDR;
+    document.querySelector(".event-map span").textContent = t.eventMap;
+    document.querySelector(".vfl span").textContent = t.vfl;
+    document.querySelector(".laser-source span").textContent = t.laserSource;
+    document.querySelector(".optical-loss span").textContent = t.opticalLoss;
+    document.querySelector(".file-management span").textContent = t.fileManagement;
+    document.querySelector(".system span").textContent = t.system;
+  };
+</script>
+
 
 </body>
 </html>
