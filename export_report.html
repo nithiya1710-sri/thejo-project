@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Export Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f2f5;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    select, input[type="date"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- SheetJS for Excel export -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Export Reports</h2>
+
+  <label for="deviceId">Device No</label>
+  <select id="deviceId">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+  </select>
+
+  <label for="reportDate">Date</label>
+  <input type="date" id="reportDate" />
+
+  <div class="btn-group">
+    <button onclick="exportToExcel()">Export as Excel</button>
+    <button onclick="exportToPDF()">Export as PDF</button>
+  </div>
+</div>
+
+<script>
+  function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const files = JSON.parse(localStorage.getItem("otdrFiles") || "[]");
+
+    if (files.length === 0) {
+      alert("No files to export.");
+      return;
+    }
+
+    doc.setFontSize(16);
+    doc.text("OTDR File Report", 14, 20);
+
+    let startY = 30;
+    doc.setFontSize(12);
+    doc.text("No.", 14, startY);
+    doc.text("File Name", 30, startY);
+    doc.text("Date", 130, startY);
+
+    files.forEach((file, index) => {
+      let y = startY + (index + 1) * 10;
+      doc.text((index + 1).toString(), 14, y);
+      doc.text(file.name, 30, y);
+      doc.text(file.date, 130, y);
+    });
+
+    doc.save("OTDR_Report.pdf");
+  }
+
+  function exportToExcel() {
+    const files = JSON.parse(localStorage.getItem("otdrFiles") || "[]");
+
+    if (files.length === 0) {
+      alert("No files to export.");
+      return;
+    }
+
+    const worksheet = XLSX.utils.json_to_sheet(
+      files.map((f, i) => ({
+        "No.": i + 1,
+        "File Name": f.name,
+        "Date": f.date
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "OTDR Files");
+
+    XLSX.writeFile(workbook, "OTDR_Report.xlsx");
+  }
+</script>
+
+</body>
+</html>
