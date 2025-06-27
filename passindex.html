@@ -295,6 +295,127 @@
     function exitSystem() {
         window.location.href = "auto-otdr.html";
     }
+    
   </script>
+    <script src="system.js"></script>
+<script>
+  // Brightness
+const brightnessMap = {
+  '0%': 0, '20%': 0.2, '40%': 0.4,
+  '60%': 0.6, '80%': 0.8, '100%': 1
+};
+const savedBrightness = localStorage.getItem('brightness') || '100%';
+document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+
+// Translation data
+const translations = {
+  en: {
+    title: "OTDR Pass Criterion",
+    selectLabel: "Select one or more Pass Criteria",
+    checkbox: [
+      "Connection Loss 0.20dB",
+      "Splicing Loss 0.20dB",
+      "Bend Loss 3.00dB",
+      "Link Loss 32.00dB",
+      "Average Loss (1550nm - 0.25, 1310nm - 0.40dB)"
+    ],
+    saveBtn: "Save Selection",
+    noCriteria: "No criteria selected.",
+    selected: "Selected: ",
+    test: "Test",
+    testSettings: "Test Settings",
+    pass: "Pass Criterion",
+    analysis: "Analysis Threshold",
+    default: "Default",
+    exit: "Exit",
+    tips: "Tips",
+    restore: "Restore factory default?",
+    ok: "OK",
+    cancel: "Exit"
+  },
+  fr: {
+    title: "Critère de Réussite OTDR",
+    selectLabel: "Sélectionnez un ou plusieurs critères de réussite",
+    checkbox: [
+      "Perte de Connexion 0.20dB",
+      "Perte d'Épissure 0.20dB",
+      "Perte de Courbure 3.00dB",
+      "Perte de Liaison 32.00dB",
+      "Perte Moyenne (1550nm - 0.25, 1310nm - 0.40dB)"
+    ],
+    saveBtn: "Enregistrer la sélection",
+    noCriteria: "Aucun critère sélectionné.",
+    selected: "Sélectionné : ",
+    test: "Test",
+    testSettings: "Paramètres de Test",
+    pass: "Critère de Réussite",
+    analysis: "Seuil d'Analyse",
+    default: "Par Défaut",
+    exit: "Quitter",
+    tips: "Conseils",
+    restore: "Restaurer les paramètres d'usine ?",
+    ok: "OK",
+    cancel: "Annuler"
+  },
+  es: {
+    title: "Criterio de Aprobación OTDR",
+    selectLabel: "Seleccione uno o más criterios de aprobación",
+    checkbox: [
+      "Pérdida de Conexión 0.20dB",
+      "Pérdida de Empalme 0.20dB",
+      "Pérdida por Curvatura 3.00dB",
+      "Pérdida de Enlace 32.00dB",
+      "Pérdida Promedio (1550nm - 0.25, 1310nm - 0.40dB)"
+    ],
+    saveBtn: "Guardar Selección",
+    noCriteria: "Ningún criterio seleccionado.",
+    selected: "Seleccionado: ",
+    test: "Test",
+    testSettings: "Configuración de Prueba",
+    pass: "Criterio de Aprobación",
+    analysis: "Umbral de Análisis",
+    default: "Predeterminado",
+    exit: "Salir",
+    tips: "Consejos",
+    restore: "¿Restaurar configuración de fábrica?",
+    ok: "OK",
+    cancel: "Cancelar"
+  }
+  // Add de, it, pt, nl similarly if needed
+};
+
+// Apply translation
+const lang = localStorage.getItem("language") || "en";
+const t = translations[lang] || translations.en;
+
+document.querySelector("h1").textContent = t.title;
+document.querySelector("label").textContent = t.selectLabel;
+document.querySelectorAll(".checkbox-group label").forEach((el, i) => {
+  el.innerHTML = `<input type="checkbox" value="${t.checkbox[i]}"> ${t.checkbox[i]}`;
+});
+document.querySelector("button[onclick='savePassCriteria()']").textContent = t.saveBtn;
+document.getElementById("test-settings-btn").textContent = t.testSettings;
+document.getElementById("pass-Criterion-btn").textContent = t.pass;
+document.getElementById("analysis-threshold-btn").textContent = t.analysis;
+document.getElementById("default-btn").textContent = t.default;
+document.getElementById("exit-btn").textContent = t.exit;
+
+// Popup
+document.querySelector(".popup-box h2").textContent = t.tips;
+document.querySelector(".popup-box p").textContent = t.restore;
+document.querySelectorAll(".popup-buttons button")[0].textContent = t.ok;
+document.querySelectorAll(".popup-buttons button")[1].textContent = t.cancel;
+
+// Patch savePassCriteria with localized message
+function savePassCriteria() {
+  const selected = [];
+  document.querySelectorAll('.checkbox-group input:checked').forEach((checkbox) => {
+    selected.push(checkbox.value);
+  });
+
+  const output = document.getElementById('selectedCriteria');
+  output.textContent = selected.length > 0 ? t.selected + selected.join(', ') : t.noCriteria;
+}
+</script>
 </body>
 </html>
