@@ -258,5 +258,99 @@
         <button class="sidebar-button">Save</button>
         <button class="sidebar-button">Fast Save</button>
     </div>
+    <script>
+  // Brightness
+  const brightnessMap = {
+    '0%': 0, '20%': 0.2, '40%': 0.4, '60%': 0.6, '80%': 0.8, '100%': 1
+  };
+  const savedBrightness = localStorage.getItem('brightness') || '100%';
+  document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+
+  // Language
+  const lang = localStorage.getItem('language') || 'en';
+  const translations = {
+    en: {
+      totalLength: "Total Length",
+      totalL: "Total-L",
+      avgL: "Avg.L",
+      totalEvents: "Total Events",
+      start: "Start",
+      lastEvent: "Last Event",
+      nextEvent: "Next Event",
+      loss: "Loss",
+      avgLoss: "Avg-Loss",
+      reflection: "Reflection",
+      totalLoss: "Total Loss",
+      testCondition: "Test Condition:",
+      sidebar: ["Test", "Settings", "Event Map", "Files", "Save", "Fast Save"]
+    },
+    fr: {
+      totalLength: "Longueur Totale",
+      totalL: "Total-L",
+      avgL: "Moy. L",
+      totalEvents: "Événements Totaux",
+      start: "Démarrer",
+      lastEvent: "Événement Précédent",
+      nextEvent: "Événement Suivant",
+      loss: "Perte",
+      avgLoss: "Perte Moy.",
+      reflection: "Réflexion",
+      totalLoss: "Perte Totale",
+      testCondition: "Condition de Test:",
+      sidebar: ["Test", "Paramètres", "Carte d'Événement", "Fichiers", "Sauvegarder", "Sauvegarde Rapide"]
+    },
+    es: {
+      totalLength: "Longitud Total",
+      totalL: "Total-L",
+      avgL: "Prom. L",
+      totalEvents: "Eventos Totales",
+      start: "Iniciar",
+      lastEvent: "Evento Anterior",
+      nextEvent: "Siguiente Evento",
+      loss: "Pérdida",
+      avgLoss: "Pérdida Prom.",
+      reflection: "Reflexión",
+      totalLoss: "Pérdida Total",
+      testCondition: "Condición de Prueba:",
+      sidebar: ["Prueba", "Ajustes", "Mapa de Eventos", "Archivos", "Guardar", "Guardar Rápido"]
+    }
+  };
+
+  const t = translations[lang] || translations.en;
+
+  // Apply Translations
+  document.addEventListener("DOMContentLoaded", () => {
+    const labels = document.querySelectorAll(".top-bar > div");
+    if (labels.length >= 4) {
+      labels[0].textContent = t.totalLength;
+      labels[1].textContent = t.totalL;
+      labels[2].textContent = t.avgL;
+      labels[3].textContent = t.totalEvents;
+    }
+
+    document.querySelector(".start-button").textContent = t.start;
+    document.querySelector(".event-section .event-button:first-child").textContent = t.lastEvent;
+    document.querySelector(".event-section .event-button:last-child").textContent = t.nextEvent;
+
+    const eventBox = document.querySelector(".event-box");
+    if (eventBox) {
+      eventBox.innerHTML = `
+        <p>${t.loss}: <span id="loss">----</span></p>
+        <p>${t.avgLoss}: <span id="avgLoss">----</span></p>
+        <p>${t.reflection}: <span id="reflection">----</span></p>
+        <p>${t.totalLoss}: <span id="totalLoss">----</span></p>
+      `;
+    }
+
+    const condition = document.querySelector(".test-condition");
+    if (condition) condition.textContent = t.testCondition;
+
+    const sidebarButtons = document.querySelectorAll(".sidebar-button");
+    sidebarButtons.forEach((btn, i) => {
+      btn.textContent = t.sidebar[i] || btn.textContent;
+    });
+  });
+</script>
+<script src="system.js"></script>
 </body>
 </html>
