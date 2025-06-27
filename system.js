@@ -86,8 +86,14 @@
     }
 
     function showInformation() {
-        alert("System Info:\nModel: VFL-X300\nVersion: 1.0.2\nLast Update: June 2025");
-    }
+    const date = document.getElementById('date-time').value || 'N/A';
+    const time = document.getElementById('time').value || 'N/A';
+
+    const lastUpdate = (date !== 'N/A' && time !== 'N/A') ? `${date} at ${time}` : 'Not set';
+
+    alert(`System Info:\nModel: VFL-X300\nVersion: 1.0.2\nLast Update: ${lastUpdate}`);
+}
+
 
     function exitSystem() {
         window.location.href = 'home.html';
