@@ -382,7 +382,7 @@ window.addEventListener("click", function (e) {
   // Notification Count (Example)
   function setNotificationCount(count) {
     const badge = document.getElementById('notification-count');
-    if (count > 0) {
+    if (count >= 0) {
       badge.textContent = count > 99 ? "99+" : count;
       badge.style.display = "inline";
     } else {
