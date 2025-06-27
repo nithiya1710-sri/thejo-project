@@ -92,5 +92,91 @@
         window.location.href = 'home.html';
 
       }</script>
+ <script src="system.js"></script>
+    <script>
+  // 🔆 Brightness Control
+  const brightnessLevels = {
+    '0%': 0, '20%': 0.2, '40%': 0.4, '60%': 0.6, '80%': 0.8, '100%': 1
+  };
+  const savedBrightness = localStorage.getItem('brightness') || '100%';
+  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
+
+  // 🌐 Language Translations
+  const lang = localStorage.getItem("language") || "en";
+  const translations = {
+    en: {
+      title: "Auto OTDR",
+      test: "Test",
+      settings: "Settings",
+      eventMap: "Event Map",
+      files: "Files",
+      save: "Save",
+      exit: "Exit",
+      curve: "Curve",
+      list: "List",
+      fastSave: "Fast Save"
+    },
+    fr: {
+      title: "OTDR Auto",
+      test: "Tester",
+      settings: "Paramètres",
+      eventMap: "Carte d'événement",
+      files: "Fichiers",
+      save: "Enregistrer",
+      exit: "Quitter",
+      curve: "Courbe",
+      list: "Liste",
+      fastSave: "Sauvegarde rapide"
+    },
+    es: {
+      title: "OTDR Automático",
+      test: "Prueba",
+      settings: "Configuración",
+      eventMap: "Mapa de eventos",
+      files: "Archivos",
+      save: "Guardar",
+      exit: "Salir",
+      curve: "Curva",
+      list: "Lista",
+      fastSave: "Guardado rápido"
+    },
+    de: {
+      title: "Auto OTDR",
+      test: "Test",
+      settings: "Einstellungen",
+      eventMap: "Ereigniskarte",
+      files: "Dateien",
+      save: "Speichern",
+      exit: "Beenden",
+      curve: "Kurve",
+      list: "Liste",
+      fastSave: "Schnellspeichern"
+    }
+  };
+  const t = translations[lang] || translations.en;
+
+  // 🌍 Apply Translations
+  document.addEventListener("DOMContentLoaded", () => {
+    // Page title
+    document.title = t.title;
+    document.querySelector(".page-title").innerText = t.title;
+
+    // Sidebar buttons
+    const sidebarLabels = [t.test, t.settings, t.eventMap, t.files, t.save, t.exit];
+    document.querySelectorAll(".right-sidebar .sidebar-button").forEach((btn, i) => {
+      if (sidebarLabels[i]) btn.textContent = sidebarLabels[i];
+    });
+
+    // Bottom buttons
+    const bottomLabels = [t.curve, t.list, t.eventMap, t.fastSave, t.settings];
+    document.querySelectorAll(".bottom-buttons .bottom-btn").forEach((btn, i) => {
+      if (bottomLabels[i]) {
+        const icon = btn.querySelector("i").outerHTML;
+        btn.innerHTML = `${icon} ${bottomLabels[i]}`;
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
