@@ -238,5 +238,169 @@
   updateDateTime();
   loadFiles();
 </script>
+<script src="system.js"></script>
+<script>
+  // Brightness Control
+const brightnessLevels = {
+  '0%': 0,
+  '20%': 0.2,
+  '40%': 0.4,
+  '60%': 0.6,
+  '80%': 0.8,
+  '100%': 1
+};
+const savedBrightness = localStorage.getItem("brightness") || "100%";
+document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
+
+// Language Translations
+const translations = {
+  en: {
+    management: "OTDR File Management",
+    upload: "Upload",
+    save: "Save Settings",
+    last: "Last Page",
+    next: "Next Page",
+    exit: "Exit",
+    total: "Total Files:",
+    open: "Open",
+    del: "Delete",
+    confirmDelete: name => `Are you sure you want to delete "${name}"?`
+  },
+  es: {
+    management: "Gestión de archivos OTDR",
+    upload: "Subir",
+    save: "Guardar configuración",
+    last: "Página anterior",
+    next: "Página siguiente",
+    exit: "Salir",
+    total: "Archivos totales:",
+    open: "Abrir",
+    del: "Eliminar",
+    confirmDelete: name => `¿Estás seguro de que deseas eliminar "${name}"?`
+  },
+  fr: {
+    management: "Gestion de fichiers OTDR",
+    upload: "Téléverser",
+    save: "Enregistrer les paramètres",
+    last: "Page précédente",
+    next: "Page suivante",
+    exit: "Quitter",
+    total: "Fichiers au total :",
+    open: "Ouvrir",
+    del: "Supprimer",
+    confirmDelete: name => `Êtes-vous sûr de vouloir supprimer "${name}" ?`
+  },
+  nl: {
+    management: "OTDR-bestandsbeheer",
+    upload: "Uploaden",
+    save: "Instellingen opslaan",
+    last: "Vorige pagina",
+    next: "Volgende pagina",
+    exit: "Afsluiten",
+    total: "Totaal bestanden:",
+    open: "Openen",
+    del: "Verwijderen",
+    confirmDelete: name => `Weet je zeker dat je "${name}" wilt verwijderen?`
+  },
+  it: {
+    management: "Gestione file OTDR",
+    upload: "Carica",
+    save: "Salva impostazioni",
+    last: "Pagina precedente",
+    next: "Pagina successiva",
+    exit: "Esci",
+    total: "File totali:",
+    open: "Apri",
+    del: "Elimina",
+    confirmDelete: name => `Sei sicuro di voler eliminare "${name}"?`
+  },
+  pt: {
+    management: "Gerenciamento de arquivos OTDR",
+    upload: "Enviar",
+    save: "Salvar configurações",
+    last: "Página anterior",
+    next: "Próxima página",
+    exit: "Sair",
+    total: "Total de arquivos:",
+    open: "Abrir",
+    del: "Excluir",
+    confirmDelete: name => `Tem certeza de que deseja excluir "${name}"?`
+  }
+};
+
+
+const lang = localStorage.getItem("language") || "en";
+const t = translations[lang] || translations.en;
+
+// Apply Translations
+document.querySelector(".header span").textContent = t.management;
+document.querySelectorAll(".file-operations button")[0].textContent = t.upload;
+document.querySelectorAll(".file-operations button")[1].textContent = t.save;
+document.querySelectorAll(".file-operations button")[2].textContent = t.last;
+document.querySelectorAll(".file-operations button")[3].textContent = t.next;
+document.querySelectorAll(".file-operations button")[4].textContent = t.exit;
+document.querySelector(".footer").firstChild.textContent = t.total + " ";
+
+// Modify Open/Delete labels dynamically
+function loadFilesTranslated() {
+  const fileTableBody = document.getElementById("fileTableBody");
+  fileTableBody.innerHTML = "";
+
+  fileList.forEach((file, index) => {
+    let row = document.createElement("tr");
+
+    let cell1 = document.createElement("td");
+    cell1.textContent = index + 1;
+
+    let cell2 = document.createElement("td");
+    cell2.contentEditable = true;
+    cell2.textContent = file.name;
+    cell2.addEventListener("blur", function () {
+      fileList[index].name = this.textContent;
+      saveFiles();
+    });
+
+    let cell3 = document.createElement("td");
+    cell3.textContent = file.date;
+
+    let cell4 = document.createElement("td");
+    let openLink = document.createElement("span");
+    openLink.textContent = t.open;
+    openLink.className = "open-link";
+    openLink.onclick = () => {
+      const win = window.open();
+      win.document.write(`<iframe src="${file.content}" width="100%" height="100%"></iframe>`);
+    };
+    cell4.appendChild(openLink);
+
+    let cell5 = document.createElement("td");
+    let deleteBtn = document.createElement("button");
+    deleteBtn.textContent = t.del;
+    deleteBtn.className = "delete-btn";
+    deleteBtn.onclick = () => {
+      if (confirm(t.confirmDelete(file.name))) {
+        fileList.splice(index, 1);
+        saveFiles();
+        loadFilesTranslated();
+      }
+    };
+    cell5.appendChild(deleteBtn);
+
+    row.appendChild(cell1);
+    row.appendChild(cell2);
+    row.appendChild(cell3);
+    row.appendChild(cell4);
+    row.appendChild(cell5);
+    fileTableBody.appendChild(row);
+  });
+
+  document.getElementById("totalFiles").textContent = fileList.length;
+}
+
+// Override default loader with translation-aware loader
+loadFiles = loadFilesTranslated;
+loadFiles();
+
+</script>
 </body>
 </html>
