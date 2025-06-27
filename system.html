@@ -187,7 +187,6 @@ main {
             <button onclick="exitSystem()" id="exit-btn">Exit</button>
         </footer>
     </div>
-
     <script>
         // JavaScript to update the current date and time every second
         function updateDateTime() {
@@ -364,23 +363,39 @@ main {
         }
         // Call the language change function when the page loads
         changeLanguage();
+    function saveSettings() {
+        localStorage.setItem('brightness', document.getElementById('brightness').value);
+        localStorage.setItem('language', document.getElementById('language').value);
+        localStorage.setItem('auto-off', document.getElementById('auto-off').value);
+        localStorage.setItem('beep', document.getElementById('beep').value);
+        localStorage.setItem('usb', document.getElementById('usb').value);
+        localStorage.setItem('date', document.getElementById('date-time').value);
+        localStorage.setItem('time', document.getElementById('time').value);
+    }
 
-        function saveSettings() {
-            
-        }
+    // Settings button ➝ save settings and go to setindex.html
+    document.getElementById("settings-btn").addEventListener("click", () => {
+        saveSettings();
+        alert("Settings saved.");
+    });
 
-        function showInformation() {
-            
-        }
+    // Update button ➝ save and apply immediately
+    function updateSystem() {
+        saveSettings();
+        updateDateTime();
+        changeBrightness(document.getElementById('brightness').value);
+        changeLanguage();
+        alert("System updated with new settings.");
+    }
 
-        function updateSystem() {
-            
-        }
+    function showInformation() {
+        alert("System Info:\nModel: VFL-X300\nVersion: 1.0.2\nLast Update: June 2025");
+    }
 
-        function exitSystem() {
-            window.location.href = 'home.html'
-        }
-    </script>
+    function exitSystem() {
+        window.location.href = 'home.html';
+    }
+    </script> 
+</script>
 </body>
 </html>
-
