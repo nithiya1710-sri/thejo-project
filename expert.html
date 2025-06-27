@@ -161,35 +161,87 @@ document.querySelectorAll(".arrow-btn").forEach(button => {
 
         // 📊 3️⃣ Plot Graph using Chart.js
         function plotGraph(graphData) {
-            const ctx = document.getElementById('otdrGraph').getContext('2d');
+  const ctx = document.getElementById('otdrGraph').getContext('2d');
 
-            new Chart(ctx, {
-                type: 'line', // ✅ Changed from scatter to line for better visibility
-                data: {
-                    labels: graphData.map(point => point.x), // X-axis values (Distance)
-                    datasets: [{
-                        label: 'Signal Loss (dB)',
-                        data: graphData.map(point => point.y), // Y-axis values (Signal Loss)
-                        borderColor: 'white',
-                        backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true },
-                        tooltip: { enabled: true }
-                    },
-                    scales: {
-                        x: { title: { display: true, text: 'Distance (km)' } },
-                        y: { title: { display: true, text: 'Signal Loss (dB)' } }
-                    }
-                }
-            });
+  const aIndex = 1;
+  const bIndex = 2;
+
+  const aPoint = graphData[aIndex];
+  const bPoint = graphData[bIndex];
+
+  new Chart(ctx, {
+    type: 'scatter', // Use scatter for individual points
+    data: {
+      datasets: [{
+        label: 'Signal Points',
+        data: graphData,
+        showLine: false, // ❌ No connecting line
+        backgroundColor: '#fff',
+        borderColor: '#000',
+        borderWidth: 1,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.x}m / ${ctx.parsed.y.toFixed(2)}dB`
+          }
+        },
+        annotation: {
+          annotations: {
+            markerA: {
+              type: 'line',
+              xMin: aPoint.x,
+              xMax: aPoint.x,
+              borderColor: '#00ffff',
+              borderWidth: 2,
+              label: {
+                content: [`A`, `${aPoint.x.toFixed(3)}m`, `${aPoint.y.toFixed(2)}dB`],
+                enabled: true,
+                backgroundColor: '#333',
+                position: 'start',
+                yAdjust: -40
+              }
+            },
+            markerB: {
+              type: 'line',
+              xMin: bPoint.x,
+              xMax: bPoint.x,
+              borderColor: '#00ffff',
+              borderWidth: 2,
+              label: {
+                content: [`B`, `${bPoint.x.toFixed(3)}m`, `${bPoint.y.toFixed(2)}dB`],
+                enabled: true,
+                backgroundColor: '#333',
+                position: 'start',
+                yAdjust: -40
+              }
+            }
+          }
         }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          title: { display: true, text: 'Distance (km)', color: '#fff' },
+          ticks: { color: '#fff' },
+          grid: { color: '#444' }
+        },
+        y: {
+          title: { display: true, text: 'Signal Loss (dB)', color: '#fff' },
+          ticks: { color: '#fff' },
+          grid: { color: '#444' }
+        }
+      }
+    },
+    plugins: [Chart.registry.getPlugin('annotation')]
+  });
+}
 
         // 🚀 4️⃣ Fetch Data and Plot Graph on Load
         window.onload = fetchGraphData;
