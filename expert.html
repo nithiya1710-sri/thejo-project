@@ -193,5 +193,164 @@ document.querySelectorAll(".arrow-btn").forEach(button => {
         window.onload = fetchGraphData;
         
     </script>
+    <script src="system.js"></script>
+    <script>
+    // 🔆 Brightness Control
+const brightnessMap = {
+  "0%": 0,
+  "20%": 0.2,
+  "40%": 0.4,
+  "60%": 0.6,
+  "80%": 0.8,
+  "100%": 1
+};
+const savedBrightness = localStorage.getItem("brightness") || "100%";
+document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+
+// 🌍 Language Translations
+const lang = localStorage.getItem("language") || "en";
+const uiText = {
+  en: {
+    autoTest: "Auto Test",
+    realTest: "Real Test",
+    avgTest: "Avg. Test",
+    settings: "Settings",
+    cursor: "Cursor A",
+    zoom: "Zoom",
+    files: "Files",
+    save: "Save",
+    exit: "Exit",
+    curve: "Curve",
+    list: "List",
+    eventMap: "EventMap",
+    fastSave: "FastSave"
+  },
+  fr: {
+    autoTest: "Test auto",
+    realTest: "Test réel",
+    avgTest: "Test moy.",
+    settings: "Paramètres",
+    cursor: "Curseur A",
+    zoom: "Zoom",
+    files: "Fichiers",
+    save: "Enregistrer",
+    exit: "Quitter",
+    curve: "Courbe",
+    list: "Liste",
+    eventMap: "Carte d’événement",
+    fastSave: "Sauvegarde rapide"
+  },
+  es: {
+    autoTest: "Prueba automática",
+    realTest: "Prueba real",
+    avgTest: "Prueba prom.",
+    settings: "Configuraciones",
+    cursor: "Cursor A",
+    zoom: "Zoom",
+    files: "Archivos",
+    save: "Guardar",
+    exit: "Salir",
+    curve: "Curva",
+    list: "Lista",
+    eventMap: "Mapa de eventos",
+    fastSave: "Guardar rápido"
+  },
+  nl: {
+    autoTest: "Automatische test",
+    realTest: "Reële test",
+    avgTest: "Gem. test",
+    settings: "Instellingen",
+    cursor: "Cursor A",
+    zoom: "Zoom",
+    files: "Bestanden",
+    save: "Opslaan",
+    exit: "Afsluiten",
+    curve: "Curve",
+    list: "Lijst",
+    eventMap: "Gebeurteniskaart",
+    fastSave: "Snel opslaan"
+  },
+  de: {
+    autoTest: "Automatischer Test",
+    realTest: "Realer Test",
+    avgTest: "Durchschn. Test",
+    settings: "Einstellungen",
+    cursor: "Cursor A",
+    zoom: "Zoom",
+    files: "Dateien",
+    save: "Speichern",
+    exit: "Beenden",
+    curve: "Kurve",
+    list: "Liste",
+    eventMap: "Ereigniskarte",
+    fastSave: "Schnellspeichern"
+  },
+  it: {
+    autoTest: "Test automatico",
+    realTest: "Test reale",
+    avgTest: "Test medio",
+    settings: "Impostazioni",
+    cursor: "Cursore A",
+    zoom: "Zoom",
+    files: "File",
+    save: "Salva",
+    exit: "Esci",
+    curve: "Curva",
+    list: "Elenco",
+    eventMap: "Mappa eventi",
+    fastSave: "Salvataggio veloce"
+  },
+  pt: {
+    autoTest: "Teste automático",
+    realTest: "Teste real",
+    avgTest: "Teste méd.",
+    settings: "Configurações",
+    cursor: "Cursor A",
+    zoom: "Zoom",
+    files: "Arquivos",
+    save: "Salvar",
+    exit: "Sair",
+    curve: "Curva",
+    list: "Lista",
+    eventMap: "Mapa de eventos",
+    fastSave: "Salvar rápido"
+  }
+};
+
+const t = uiText[lang] || uiText.en;
+
+// 🖼 Apply UI Labels
+function applyOTDRLabels() {
+  // Test buttons
+  document.querySelector(".auto-test").innerText = t.autoTest;
+  document.querySelector(".real-test").innerText = t.realTest;
+  document.querySelector(".avg-test").innerText = t.avgTest;
+
+  // Side menu buttons
+  const menuBtns = document.querySelectorAll(".side-menu .menu-btn");
+  if (menuBtns.length >= 6) {
+    menuBtns[0].innerText = t.settings;
+    menuBtns[1].innerText = t.cursor;
+    menuBtns[2].innerText = t.zoom;
+    menuBtns[3].innerText = t.files;
+    menuBtns[4].innerText = t.save;
+    menuBtns[5].innerText = t.exit;
+  }
+
+  // Bottom nav
+  const navBtns = document.querySelectorAll(".bottom-nav button");
+  if (navBtns.length >= 5) {
+    navBtns[0].innerHTML = `<i class='bx bx-line-chart'></i>${t.curve}`;
+    navBtns[1].innerHTML = `<i class='bx bx-list-ul'></i>${t.list}`;
+    navBtns[2].innerHTML = `<i class='bx bx-calendar-event'></i>${t.eventMap}`;
+    navBtns[3].innerHTML = `<i class='bx bx-save'></i>${t.fastSave}`;
+    navBtns[4].innerHTML = `<i class='bx bx-cog'></i>${t.settings}`;
+  }
+}
+
+// ⏱ Apply on load
+document.addEventListener("DOMContentLoaded", applyOTDRLabels);
+</script>
+
 </body>
 </html>
