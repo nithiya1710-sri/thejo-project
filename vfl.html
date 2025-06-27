@@ -246,5 +246,95 @@
     // Empty button is just visual filler
     document.getElementById("empty-btn").disabled = true;
   </script>
+   <script>
+  window.onload = function () {
+    // Load saved settings
+    const brightness = localStorage.getItem('brightness') || '100%';
+    const language = localStorage.getItem('language') || 'en';
+
+    // 🔆 Apply brightness
+    const brightnessMap = {
+      '0%': 0, '20%': 0.2, '40%': 0.4,
+      '60%': 0.6, '80%': 0.8, '100%': 1
+    };
+    document.body.style.filter = `brightness(${brightnessMap[brightness] || 1})`;
+
+    // 🌍 Apply language translations
+    const translations = {
+      en: { title: "VFL", normal: "Normal", freq1: "1 Hz", freq2: "2 Hz", close: "Close", exit: "Exit" },
+      fr: { title: "VFL", normal: "Normal", freq1: "1 Hz", freq2: "2 Hz", close: "Fermer", exit: "Quitter" },
+      es: { title: "VFL", normal: "Normal", freq1: "1 Hz", freq2: "2 Hz", close: "Cerrar", exit: "Salir" },
+      de: { title: "VFL", normal: "Normal", freq1: "1 Hz", freq2: "2 Hz", close: "Schließen", exit: "Beenden" },
+      it: { title: "VFL", normal: "Normale", freq1: "1 Hz", freq2: "2 Hz", close: "Chiudi", exit: "Esci" },
+      pt: { title: "VFL", normal: "Normal", freq1: "1 Hz", freq2: "2 Hz", close: "Fechar", exit: "Sair" },
+      nl: { title: "VFL", normal: "Normaal", freq1: "1 Hz", freq2: "2 Hz", close: "Sluiten", exit: "Afsluiten" }
+    };
+
+    const content = translations[language] || translations.en;
+    document.querySelector(".title").textContent = content.title;
+    document.getElementById("normal-btn").textContent = content.normal;
+    document.getElementById("freq1-btn").textContent = content.freq1;
+    document.getElementById("freq2-btn").textContent = content.freq2;
+    document.getElementById("close-btn").textContent = content.close;
+
+    const exitBtn = Array.from(document.getElementsByTagName("button"))
+      .find(btn => btn.textContent.trim().toLowerCase() === "exit" || btn.onclick?.toString().includes("home.html"));
+    if (exitBtn) exitBtn.textContent = content.exit;
+
+    // 🕒 Start timestamp clock from saved system time
+    function startClockFromSystemTime() {
+      const startTime = localStorage.getItem('systemStartTime');
+      const timestampEl = document.getElementById('timestamp');
+
+      if (!startTime || !timestampEl) return;
+
+      const startDate = new Date(startTime);
+
+      function update() {
+        const now = new Date();
+        const elapsedMs = now.getTime() - startDate.getTime();
+        const liveTime = new Date(startDate.getTime() + elapsedMs);
+
+        const yyyy = liveTime.getFullYear();
+        const mm = String(liveTime.getMonth() + 1).padStart(2, '0');
+        const dd = String(liveTime.getDate()).padStart(2, '0');
+        const hhmmss = liveTime.toLocaleTimeString();
+
+        timestampEl.textContent = `${yyyy}-${mm}-${dd} ${hhmmss}`;
+      }
+
+      setInterval(update, 1000);
+      update(); // Initial call
+    }
+
+    startClockFromSystemTime();
+    function showRunningSystemTime() {
+  const systemStartTime = localStorage.getItem('systemStartTime');
+  const timestampEl = document.getElementById('timestamp');
+
+  if (!systemStartTime || !timestampEl) return;
+
+  const baseTime = new Date(systemStartTime);
+
+  function updateClock() {
+    const elapsed = Date.now() - baseTime.getTime();
+    const current = new Date(baseTime.getTime() + elapsed);
+
+    const yyyy = current.getFullYear();
+    const mm = String(current.getMonth() + 1).padStart(2, '0');
+    const dd = String(current.getDate()).padStart(2, '0');
+    const time = current.toLocaleTimeString();
+
+    timestampEl.textContent = `${yyyy}-${mm}-${dd} ${time}`;
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
+showRunningSystemTime();
+
+  };
+</script>
 </body>
 </html>
