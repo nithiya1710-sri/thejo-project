@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
   <style>
     body {
       background-color: #1a1a1a;
@@ -25,94 +25,181 @@
       padding: 20px;
       max-width: fit-content;
     }
-    .header {
+    
+       .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 96%;
       padding: 15px 20px;
-      background-color: #2a2a2a;
+      background-color: #000000;
     }
-    .header h1 { margin: 0; font-size: 24px; }
-    .profile-dropdown {
-  position: relative;
-}
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
 
-.dropdown-menu {
-  position: absolute;
-  top: 60px;
-  right: 0;
-  background-color: #2e2e2e;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  display: none;
-  flex-direction: column;
-  min-width: 180px;
-  z-index: 1000;
-  overflow: hidden;
-  transition: all 0.2s ease-in-out;
-}
-
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  font-size: 16px;
-  color: #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.dropdown-item img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0) invert(1); /* Turns any dark icon white */
-}
-
-.dropdown-item:hover {
-  background-color: #444;
-}
-.dropdown-menu {
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-  transition: all 0.3s ease;
-}
-
-.dropdown-menu.show {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
+    .header-left img {
+      height: 40px;
+      margin-right: 10px;
+    }
 
     .datetime-profile {
       display: flex;
       align-items: center;
       gap: 20px;
     }
+
+    #datetime {
+      font-size: 14px;
+      color: #444;
+    }
+
+     .notification-dropdown {
+  position: relative;
+}
+
+.notification-icon {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification-icon img {
+  height: 24px;
+}
+
+#notification-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.notification-menu {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 250px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 1000;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-header a {
+  font-size: 13px;
+  color: #00bfff;
+  text-decoration: none;
+}
+
+.notification-item {
+  padding: 10px 16px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.notification-footer {
+  padding: 10px 16px;
+  text-align: center;
+}
+
+.notification-footer .clear {
+  color: red;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+
+    .profile-dropdown {
+      position: relative;
+    }
+
     .profile-icon {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       overflow: hidden;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #555;
     }
+
     .profile-icon img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 260px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .dropdown-menu .top {
+      background: #00bfff;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .dropdown-menu .top img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid white;
+    }
+
+    .dropdown-menu .top div {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .dropdown-menu .top .edit {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      font-size: 14px;
+    }
+
+    .dropdown-menu .bottom {
+      padding: 15px;
+    }
+
+    .dropdown-menu button {
+      width: 100%;
+      background: #0d6efd;
+      border: none;
+      padding: 10px;
+      font-size: 15px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 1fr;
       gap: 40px;
       margin-top: 25px;
       width: 80%;
@@ -148,7 +235,6 @@
       background-color: #686868;
       transform: scale(1.05);
     }
-    /* Custom button colors */
     .button.auto-otdr { background-color: #c92b5e; }
     .button.expert-otdr { background-color: #f04c36; }
     .button.event-map { background-color: #7a2a7c; }
@@ -157,7 +243,6 @@
     .button.optical-loss { background-color: #f5a623; }
     .button.file-management { background-color: #9b2d7c; }
     .button.system { background-color: #6b7375; }
-
     a {
       text-decoration: none;
       color: inherit;
@@ -179,97 +264,76 @@
 <body>
 
 <div class="container">
- <div class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f5f9fc;">
-  <!-- Thejo Logo + Name -->
-  <div style="display: flex; align-items: center;">
-    <img src="https://thejo-engg.com/wp-content/uploads/2021/05/Thejo-Logo.png" alt="Thejo Logo" style="height: 40px; margin-right: 10px;">
-    <span style="font-size: 20px; font-weight: bold;">THEJO</span>
+  <!-- Header -->
+  <div class="header">
+  <div class="header-left">
+        <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" alt="Thejo Logo" style="height: 40px; margin-right: 10px;color:#2f3e5d;">
   </div>
 
-  <!-- Right Side: Datetime + Notification + Profile -->
-  <div class="datetime-profile" style="display: flex; align-items: center; gap: 20px; position: relative;">
-    <!-- Timestamp -->
-    <span id="datetime" style="font-size: 14px; color: #555;"></span>
+  <div class="datetime-profile">
+    <span id="datetime"></span>
 
-    <!-- Notification Icon with Count -->
-    <div style="position: relative; cursor: pointer;">
-      <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="Notification" style="height: 24px;">
-      <span id="notification-count" style="
-        display: none;
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        background: red;
-        color: white;
-        font-size: 12px;
-        padding: 2px 5px;
-        border-radius: 50%;
-        min-width: 18px;
-        text-align: center;
-      ">0</span>
+    <!-- Notification -->
+    <div class="notification-dropdown">
+  <div class="notification-icon" onclick="toggleNotificationDropdown()">
+    <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="Notification">
+    <span id="notification-count">3</span>
+  </div>
+  <div class="notification-menu" id="notificationMenu">
+    <div class="notification-header">
+      <span>Notifications</span>
+      <a href="#">Mark all read</a>
     </div>
+    <div class="notification-item">Today</div>
+    <div class="notification-item">Yesterday</div>
+    <div class="notification-footer">
+      <a href="#" class="clear">Clear all Notifications</a>
+    </div>
+  </div>
+</div>
 
-    <!-- Profile Icon with Dropdown -->
-    <div class="profile-dropdown" style="position: relative;">
-      <div class="profile-icon" onclick="toggleDropdown()" style="cursor: pointer;">
-        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" style="height: 30px;">
+    <!-- Profile -->
+    <div class="profile-dropdown">
+      <div class="profile-icon" onclick="toggleDropdown()">
+        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
       </div>
-      <div class="dropdown-menu" id="dropdownMenu" style="
-        display: none;
-        position: absolute;
-        top: 35px;
-        right: 0;
-        background: white;
-        border: 1px solid #ccc;
-        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
-        border-radius: 5px;
-        overflow: hidden;
-        z-index: 10;
-      ">
-        <div class="dropdown-item" onclick="goToProfile()" style="padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Update" style="height: 20px;">
-          Update Password
+
+      <div class="dropdown-menu" id="dropdownMenu">
+        <div class="top" onclick="document.getElementById('fileUpload').click()">
+          <img id="dropdownProfilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
+          <div id="dropdownUserEmail">Loading...</div>
+          <div class="edit">✎</div>
         </div>
-        <div class="dropdown-item" onclick="logout()" style="padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
-          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828427.png" alt="Logout" style="height: 20px;">
-          Logout
+        <div class="bottom">
+          <button onclick="logout()">↩️ Logout</button>
         </div>
+        <input type="file" id="fileUpload" accept="image/*" style="display:none;" onchange="uploadToCloudinary()" />
       </div>
     </div>
   </div>
 </div>
 
+
+  <!-- Dashboard Buttons -->
   <div class="grid">
-    <button class="button auto-otdr">
-      <a href="auto-otdr.html"><img src="auto-otdr-logo.png"><span>Auto OTDR</span></a>
-    </button>
-    <button class="button expert-otdr">
-      <a href="expert.html"><img src="expert-otdr-logo.png"><span>Expert OTDR</span></a>
-    </button>
-    <button class="button event-map">
-      <a href="Event-map-3.html"><img src="event-map-logo.png"><span>Event Map</span></a>
-    </button>
-    <button class="button vfl">
-      <a href="vfl.html"><img src="vfl-logo.png"><span>VFL</span></a>
-    </button>
-    <button class="button laser-source">
-      <a href="laser.html"><img src="laser-source-logo.png"><span>Laser Source</span></a>
-    </button>
-    <button class="button optical-loss">
-      <a href="Optical-loss-test.html"><img src="optical-loss-test-logo.png"><span>Optical Loss</span></a>
-    </button>
-    <button class="button file-management">
-      <a href="filemanage.html"><img src="file-management-logo.png"><span>File Management</span></a>
-    </button>
-    <button class="button system">
-      <a href="system.html"><img src="system-logo.png"><span>System</span></a>
-    </button>
+    <button class="button auto-otdr"><a href="auto-otdr.html"><img src="auto-otdr-logo.png"><span>Auto OTDR</span></a></button>
+    <button class="button expert-otdr"><a href="expert.html"><img src="expert-otdr-logo.png"><span>Expert OTDR</span></a></button>
+    <button class="button event-map"><a href="Event-map-3.html"><img src="event-map-logo.png"><span>Event Map</span></a></button>
+    <button class="button vfl"><a href="vfl.html"><img src="vfl-logo.png"><span>VFL</span></a></button>
+    <button class="button laser-source"><a href="laser.html"><img src="laser-source-logo.png"><span>Laser Source</span></a></button>
+    <button class="button optical-loss"><a href="Optical-loss-test.html"><img src="optical-loss-test-logo.png"><span>Optical Loss</span></a></button>
+    <button class="button file-management"><a href="filemanage.html"><img src="file-management-logo.png"><span>File Management</span></a></button>
+    <button class="button system"><a href="system.html"><img src="system-logo.png"><span>System</span></a></button>
   </div>
 </div>
+
+<!-- Firebase -->
 
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+
 <script>
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyB996e2sFLWaygDFW4JYR91Q18DzUzHBXE",
     authDomain: "login-1d280.firebaseapp.com",
@@ -278,56 +342,44 @@
     messagingSenderId: "854337385141",
     appId: "1:854337385141:web:df07c76b9c5811bae004fc",
   };
+
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  // Show Firebase user profile picture if available
-  auth.onAuthStateChanged(user => {
-    if (user && user.photoURL) {
-      document.getElementById('profilePic').src = user.photoURL;
-    }
-  });
-
+  // Set DateTime
   function updateDateTime() {
     document.getElementById("datetime").textContent = new Date().toLocaleString();
   }
-  function toggleDropdown() {
-  const menu = document.getElementById("dropdownMenu");
-  const isVisible = menu.style.display === "flex";
-  document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
-  if (!isVisible) {
-    menu.style.display = "flex";
-  }
-}
-
-function goToProfile() {
-  window.location.href = "profile.html";
-}
-
-function logout() {
-  auth.signOut().then(() => {
-    window.location.href = "index.html"; // redirect after logout
-  }).catch((error) => {
-    console.error("Logout error:", error);
-    alert("Failed to logout.");
-  });
-}
-
-window.addEventListener("click", function (event) {
-  if (!event.target.closest(".profile-dropdown")) {
-    document.getElementById("dropdownMenu").style.display = "none";
-  }
-});
-function toggleDropdown() {
-  const menu = document.getElementById("dropdownMenu");
-  menu.classList.toggle("show");
-}
-
-
   setInterval(updateDateTime, 1000);
   updateDateTime();
-  
-  // Example: Update notification count
+
+  // Toggle Profile Dropdown
+  function toggleDropdown() {
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  }
+
+  window.addEventListener("click", function (e) {
+    if (!e.target.closest(".profile-dropdown")) {
+      document.getElementById("dropdownMenu").style.display = "none";
+    }
+  });
+
+  //Notification
+  function toggleNotificationDropdown() {
+  const menu = document.getElementById("notificationMenu");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+window.addEventListener("click", function (e) {
+  if (!e.target.closest(".notification-dropdown")) {
+    document.getElementById("notificationMenu").style.display = "none";
+  }
+});
+
+
+
+  // Notification Count (Example)
   function setNotificationCount(count) {
     const badge = document.getElementById('notification-count');
     if (count > 0) {
@@ -337,10 +389,49 @@ function toggleDropdown() {
       badge.style.display = "none";
     }
   }
+  setNotificationCount(2); // change as needed
 
-  // Test Example: simulate 10 notifications
-  setNotificationCount(2);
+  // Firebase Auth
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      const email = user.email;
+      const pic = user.photoURL || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+      document.getElementById('dropdownUserEmail').innerText = email;
+      document.getElementById('dropdownProfilePic').src = pic;
+      document.getElementById('profilePic').src = pic;
+    }
+  });
 
+  // Cloudinary Upload
+  function uploadToCloudinary() {
+    const file = document.getElementById('fileUpload').files[0];
+    if (!file) return alert("No image selected");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "profile_pics"); // your preset
+
+    fetch("https://api.cloudinary.com/v1_1/dgl2vykau/image/upload", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      const imageUrl = data.secure_url;
+      document.getElementById('profilePic').src = imageUrl;
+      document.getElementById('dropdownProfilePic').src = imageUrl;
+      return auth.currentUser.updateProfile({ photoURL: imageUrl });
+    })
+    .then(() => alert("Profile picture updated"))
+    .catch(err => alert("Upload error: " + err.message));
+  }
+
+  // Logout
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "index.html";
+    }).catch(err => alert("Logout failed: " + err.message));
+  }
 </script>
 
 </body>
