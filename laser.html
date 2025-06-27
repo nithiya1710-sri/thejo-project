@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Laser Source</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -27,23 +30,24 @@
       gap: 10px;
     }
 
-    .main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  height: auto;
-  min-height: calc(100vh - 80px); /* full height minus header */
-  margin: 0 auto;
-  background-color: #00111f;
-  padding: 40px 20px;
-  border-radius: 10px;
-  gap: 20px;
-  flex-wrap: wrap; /* allow stacking on small screens */
-  box-sizing: border-box;
-}
+    .icon {
+      font-size: 24px;
+    }
 
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      min-height: calc(100vh - 80px);
+      margin: 0 auto;
+      background-color: #00111f;
+      padding: 40px 20px;
+      border-radius: 10px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
 
     .left-panel {
       width: 65%;
@@ -64,7 +68,8 @@
       background-color: #2fa7df;
       padding: 30px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       font-size: 48px;
       color: white;
       margin-bottom: 10px;
@@ -78,6 +83,11 @@
 
     .unit {
       font-size: 20px;
+    }
+
+    .power {
+      font-size: 20px;
+      margin-top: 20px;
     }
 
     .danger-panel {
@@ -148,7 +158,7 @@
   </style>
 </head>
 <body>
- <div class="header">
+  <div class="header">
     <span class="title">Laser Source</span>
     <span class="datetime" id="timestamp"></span>
     <div class="icons">
@@ -160,12 +170,16 @@
   <div class="main">
     <div class="left-panel">
       <div class="panel-title" id="status-toggle">
-        <span>Laser Source</span><span class="status" id="status-text">OFF</span>
+        <span>Laser Source</span>
+        <span class="status" id="status-text">OFF</span>
       </div>
       <div class="panel blue">
         <div class="wavelength">
           <span class="laser-icon" id="laser-icon">☀</span>
-          <span class="value">650</span><span class="unit">nm</span>
+          <span class="value">1550</span><span class="unit">nm</span>
+        </div>
+        <div class="power">
+          Power: <span id="power-value">10</span> dBm
         </div>
       </div>
       <div class="danger-panel">
@@ -178,45 +192,82 @@
     </div>
 
     <div class="right-panel">
-      <button>Open</button>
-      <button>Wave</button>
-      <button>Mode</button>
-      <button>Power +</button>
-      <button>Power -</button>
+      <button id="open-btn">Open</button>
+      <button id="wave-btn">Wave</button>
+      <button id="mode-btn">Mode</button>
+      <button id="power-plus">Power +</button>
+      <button id="power-minus">Power -</button>
       <button onclick="window.location.href='home.html'">Exit</button>
     </div>
   </div>
 
   <script>
-    // Real-time clock
+    const timestampEl = document.getElementById("timestamp");
+    const statusText = document.getElementById("status-text");
+    const laserIcon = document.getElementById("laser-icon");
+    const wavelengthValue = document.querySelector(".value");
+    const powerValue = document.getElementById("power-value");
+
+    const openBtn = document.getElementById("open-btn");
+    const waveBtn = document.getElementById("wave-btn");
+    const modeBtn = document.getElementById("mode-btn");
+
+    let isLaserOn = false;
+    let waveAt1310 = false;
+    let modeIndex = 0;
+    let powerLevel = 10; // dBm
+    const modes = ["CW", "270 Hz", "330 Hz", "1000 Hz", "2000 Hz"];
+
+    // Clock
     function updateTimestamp() {
       const now = new Date();
-      const formatted =
-        now.getFullYear() +
-        "-" +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(now.getDate()).padStart(2, "0") +
-        " " +
-        now.toLocaleTimeString();
-      document.getElementById("timestamp").textContent = formatted;
+      const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${now.toLocaleTimeString()}`;
+      timestampEl.textContent = formatted;
     }
-
     setInterval(updateTimestamp, 1000);
     updateTimestamp();
 
-    // Toggle ON/OFF and blinking icon
-    const statusToggle = document.getElementById("status-toggle");
-    const statusText = document.getElementById("status-text");
-    const laserIcon = document.getElementById("laser-icon");
-
-    statusToggle.addEventListener("click", () => {
-      if (statusText.textContent === "OFF") {
-        statusText.textContent = "ON";
+    // Open / Close Laser
+    openBtn.addEventListener("click", () => {
+      isLaserOn = !isLaserOn;
+      if (isLaserOn) {
+        statusText.textContent = "CW";
         laserIcon.classList.add("blink-red");
+        openBtn.textContent = "Close";
       } else {
         statusText.textContent = "OFF";
         laserIcon.classList.remove("blink-red");
+        openBtn.textContent = "Open";
+        modeIndex = 0;
+      }
+    });
+
+    // Toggle Wavelength
+    waveBtn.addEventListener("click", () => {
+      waveAt1310 = !waveAt1310;
+      wavelengthValue.textContent = waveAt1310 ? "1310" : "1550";
+    });
+
+    // Cycle Modes
+    modeBtn.addEventListener("click", () => {
+      if (!isLaserOn) return;
+      modeIndex = (modeIndex + 1) % modes.length;
+      statusText.textContent = modes[modeIndex];
+    });
+
+    // Power +
+    document.getElementById("power-plus").addEventListener("click", () => {
+      if (isLaserOn && powerLevel < 30) {
+        powerLevel++;
+        powerValue.textContent = powerLevel;
+      }
+    });
+
+    // Power -
+    document.getElementById("power-minus").addEventListener("click", () => {
+      if (isLaserOn && powerLevel > 0) {
+        powerLevel--;
+        powerValue.textContent = powerLevel;
       }
     });
   </script>
