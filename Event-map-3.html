@@ -6,24 +6,7 @@
     <title>Dashboard UI</title>
     
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAzERmHT8d8hq8AqXAZ1qJm_tT4HdSQn5I",
-            authDomain: "test-afbb6.firebaseapp.com",
-            projectId: "test-afbb6",
-            storageBucket: "test-afbb6.firebasestorage.app",
-            messagingSenderId: "1019803721815",
-            appId: "1:1019803721815:web:7cdbe37f41cbebd94ac312",
-            measurementId: "G-5GSJ7QQ3GW"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+        
         // Function to fetch real-time data
         function fetchData() {
             const docRef = doc(db, "dashboard", "metrics");
