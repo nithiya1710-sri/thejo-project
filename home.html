@@ -179,28 +179,65 @@
 <body>
 
 <div class="container">
-  <div class="header">
-    <h1>Home</h1>
-    <div class="datetime-profile">
-      <span id="datetime"></span>
-      <div class="profile-dropdown">
-  <div class="profile-icon" onclick="toggleDropdown()">
-    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
+ <div class="header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f5f9fc;">
+  <!-- Thejo Logo + Name -->
+  <div style="display: flex; align-items: center;">
+    <img src="https://thejo-engg.com/wp-content/uploads/2021/05/Thejo-Logo.png" alt="Thejo Logo" style="height: 40px; margin-right: 10px;">
+    <span style="font-size: 20px; font-weight: bold;">THEJO</span>
   </div>
-  <div class="dropdown-menu" id="dropdownMenu">
-    <div class="dropdown-item" onclick="goToProfile()">
-      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Update" />
-      Update Password
+
+  <!-- Right Side: Datetime + Notification + Profile -->
+  <div class="datetime-profile" style="display: flex; align-items: center; gap: 20px; position: relative;">
+    <!-- Timestamp -->
+    <span id="datetime" style="font-size: 14px; color: #555;"></span>
+
+    <!-- Notification Icon with Count -->
+    <div style="position: relative; cursor: pointer;">
+      <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="Notification" style="height: 24px;">
+      <span id="notification-count" style="
+        display: none;
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: red;
+        color: white;
+        font-size: 12px;
+        padding: 2px 5px;
+        border-radius: 50%;
+        min-width: 18px;
+        text-align: center;
+      ">0</span>
     </div>
-    <div class="dropdown-item" onclick="logout()">
-      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828427.png" alt="Logout" />
-      Logout
+
+    <!-- Profile Icon with Dropdown -->
+    <div class="profile-dropdown" style="position: relative;">
+      <div class="profile-icon" onclick="toggleDropdown()" style="cursor: pointer;">
+        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile" style="height: 30px;">
+      </div>
+      <div class="dropdown-menu" id="dropdownMenu" style="
+        display: none;
+        position: absolute;
+        top: 35px;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        border-radius: 5px;
+        overflow: hidden;
+        z-index: 10;
+      ">
+        <div class="dropdown-item" onclick="goToProfile()" style="padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Update" style="height: 20px;">
+          Update Password
+        </div>
+        <div class="dropdown-item" onclick="logout()" style="padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <img src="https://cdn-icons-png.flaticon.com/512/1828/1828427.png" alt="Logout" style="height: 20px;">
+          Logout
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
-    </div>
-  </div>
 
   <div class="grid">
     <button class="button auto-otdr">
@@ -289,6 +326,20 @@ function toggleDropdown() {
 
   setInterval(updateDateTime, 1000);
   updateDateTime();
+  
+  // Example: Update notification count
+  function setNotificationCount(count) {
+    const badge = document.getElementById('notification-count');
+    if (count > 0) {
+      badge.textContent = count > 99 ? "99+" : count;
+      badge.style.display = "inline";
+    } else {
+      badge.style.display = "none";
+    }
+  }
+
+  // Test Example: simulate 10 notifications
+  setNotificationCount(2);
 
 </script>
 
