@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Laser Source</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <title>VFL</title>
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
   <style>
     body {
       margin: 0;
@@ -27,23 +27,24 @@
       gap: 10px;
     }
 
-    .main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  height: auto;
-  min-height: calc(100vh - 80px); /* full height minus header */
-  margin: 0 auto;
-  background-color: #00111f;
-  padding: 40px 20px;
-  border-radius: 10px;
-  gap: 20px;
-  flex-wrap: wrap; /* allow stacking on small screens */
-  box-sizing: border-box;
-}
+    .icon {
+      font-size: 24px;
+    }
 
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      min-height: calc(100vh - 80px);
+      margin: 0 auto;
+      background-color: #00111f;
+      padding: 40px 20px;
+      border-radius: 10px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
 
     .left-panel {
       width: 65%;
@@ -57,7 +58,6 @@
       padding: 10px;
       font-weight: bold;
       font-size: 18px;
-      cursor: pointer;
     }
 
     .panel.blue {
@@ -116,7 +116,6 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      position: relative;
     }
 
     .right-panel button {
@@ -129,18 +128,22 @@
       cursor: pointer;
       font-size: 18px;
       border-bottom: 1px solid #555;
+      min-height: 60px;
     }
 
-    .right-panel button:hover {
+    .right-panel button:hover:enabled {
       background: #555;
     }
 
-    .blink-red {
-      color: red;
-      animation: blink-red 1s infinite;
+    .blink {
+      animation: blink 1s infinite;
     }
 
-    @keyframes blink-red {
+    .blink-fast {
+      animation: blink 0.5s infinite;
+    }
+
+    @keyframes blink {
       0% { color: red; }
       50% { color: #2fa7df; }
       100% { color: red; }
@@ -159,12 +162,13 @@
 
   <div class="main">
     <div class="left-panel">
-      <div class="panel-title" id="status-toggle">
-        <span>VFL</span><span class="status" id="status-text">OFF</span>
+      <div class="panel-title">
+        <span>VFL</span>
+        <span class="status" id="status-text">OFF</span>
       </div>
       <div class="panel blue">
         <div class="wavelength">
-          <span class="laser-icon" id="laser-icon">☀</span>
+          <span class="laser-icon red" id="laser-icon">☀</span>
           <span class="value">650</span><span class="unit">nm</span>
         </div>
       </div>
@@ -178,46 +182,69 @@
     </div>
 
     <div class="right-panel">
-      <button>Normal</button>
-      <button>1 Hz</button>
-      <button>2 Hz</button>
-      <button>Close</button>
+      <button id="normal-btn">Normal</button>
+      <button id="freq1-btn">1 Hz</button>
+      <button id="freq2-btn">2 Hz</button>
+      <button id="close-btn">Close</button>
+      <button id="empty-btn"> </button>
       <button onclick="window.location.href='home.html'">Exit</button>
     </div>
   </div>
 
   <script>
-    // Real-time clock
+    // Timestamp updater
     function updateTimestamp() {
       const now = new Date();
-      const formatted =
-        now.getFullYear() +
-        "-" +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(now.getDate()).padStart(2, "0") +
-        " " +
-        now.toLocaleTimeString();
+      const formatted = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${now.toLocaleTimeString()}`;
       document.getElementById("timestamp").textContent = formatted;
     }
-
     setInterval(updateTimestamp, 1000);
     updateTimestamp();
 
-    // Toggle ON/OFF and blinking icon
-    const statusToggle = document.getElementById("status-toggle");
     const statusText = document.getElementById("status-text");
     const laserIcon = document.getElementById("laser-icon");
 
-    statusToggle.addEventListener("click", () => {
-      if (statusText.textContent === "OFF") {
-        statusText.textContent = "ON";
-        laserIcon.classList.add("blink-red");
-      } else {
-        statusText.textContent = "OFF";
-        laserIcon.classList.remove("blink-red");
+    const btnNormal = document.getElementById("normal-btn");
+    const btn1Hz = document.getElementById("freq1-btn");
+    const btn2Hz = document.getElementById("freq2-btn");
+    const btnClose = document.getElementById("close-btn");
+
+    let isVFLOn = false; // Flag to control Hz modes
+
+    function setBlink(mode) {
+      laserIcon.classList.remove("blink", "blink-fast");
+      if (mode === "1hz") laserIcon.classList.add("blink");
+      else if (mode === "2hz") laserIcon.classList.add("blink-fast");
+    }
+
+    btnNormal.addEventListener("click", () => {
+      isVFLOn = true;
+      statusText.textContent = "ON";
+      setBlink("1hz");
+    });
+
+    btn1Hz.addEventListener("click", () => {
+      if (isVFLOn) {
+        statusText.textContent = "1 Hz";
+        setBlink("1hz");
       }
     });
+
+    btn2Hz.addEventListener("click", () => {
+      if (isVFLOn) {
+        statusText.textContent = "2 Hz";
+        setBlink("2hz");
+      }
+    });
+
+    btnClose.addEventListener("click", () => {
+      isVFLOn = false;
+      statusText.textContent = "OFF";
+      laserIcon.classList.remove("blink", "blink-fast");
+    });
+
+    // Empty button is just visual filler
+    document.getElementById("empty-btn").disabled = true;
   </script>
 </body>
 </html>
