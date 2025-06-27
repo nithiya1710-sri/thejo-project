@@ -6,7 +6,7 @@
   <title>OTDR File Management</title>
   <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <style>
-    body {
+     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
@@ -57,6 +57,12 @@
       padding: 10px;
       background: #f8f9fa;
     }
+    .operation-panel {
+      display: none;
+      margin-top: 10px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
     button {
       width: 100%;
       padding: 10px;
@@ -68,6 +74,12 @@
     }
     button:hover {
       background: #0056b3;
+    }
+    .operation-panel button {
+      background: #6c757d;
+    }
+    .operation-panel button:hover {
+      background: #5a6268;
     }
     input[type="file"] {
       margin-bottom: 10px;
@@ -82,12 +94,11 @@
       cursor: pointer;
       text-decoration: underline;
     }
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
+    .checkbox-col {
+      display: none;
+    }
+    .checkbox-visible .checkbox-col {
+      display: table-cell;
     }
   </style>
 </head>
@@ -101,38 +112,46 @@
     <div class="file-list">
       <table>
         <thead>
-        <tr>
+        <tr id="fileTableHeaderRow">
+          <th class="checkbox-col">✔</th>
           <th>No.</th>
           <th>File Name</th>
           <th>Date</th>
           <th>Open</th>
-          <th>Delete</th>
         </tr>
         </thead>
-        <tbody id="fileTableBody">
-        <!-- Files will be loaded dynamically here -->
-        </tbody>
+        <tbody id="fileTableBody"></tbody>
       </table>
     </div>
     <div class="file-operations">
-      <input type="file" id="fileInput" />
+      <input type="file" id="fileInput" accept=".pdf,.txt,.jpg,.jpeg,.png,.svg,.img" />
       <button onclick="uploadFile()">Upload</button>
+      <button onclick="showOperationPanel()">File Operation</button>
       <button onclick="saveSettings()">Save Settings</button>
       <button onclick="lastPage()">Last Page</button>
       <button onclick="nextPage()">Next Page</button>
-      <button onclick="window.location.href='home.html'">Exit</button>
+      <button onclick="exitApp()">Exit</button>
+      <button onclick="window.location.href='export_report.html'">Export Report</button>
+
+      <div id="operationPanel" class="operation-panel">
+        <button onclick="selectAllFiles()">Select All</button>
+        <button onclick="deleteSelectedFiles()">Delete</button>
+        <button onclick="renameSelectedFile()">Rename</button>
+        <button onclick="hideOperationPanel()">Back</button>
+      </div>
     </div>
   </div>
   <div class="footer">Total Files: <span id="totalFiles">0</span></div>
 </div>
 
+
 <script>
   let fileList = JSON.parse(localStorage.getItem("otdrFiles") || "[]");
+  let checkboxesVisible = false;
 
   function updateDateTime() {
     const now = new Date();
     document.getElementById("date-time").textContent = now.toLocaleString();
-
   }
 
   function saveFiles() {
@@ -145,49 +164,54 @@
 
     fileList.forEach((file, index) => {
       let row = document.createElement("tr");
+      if (checkboxesVisible) row.classList.add("checkbox-visible");
 
+      // checkbox cell
+      let cell0 = document.createElement("td");
+      cell0.className = "checkbox-col";
+      let checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "file-checkbox";
+      checkbox.dataset.index = index;
+      cell0.appendChild(checkbox);
+
+      // index
       let cell1 = document.createElement("td");
       cell1.textContent = index + 1;
 
+      // file name
       let cell2 = document.createElement("td");
-      cell2.contentEditable = true;
       cell2.textContent = file.name;
-      cell2.addEventListener("blur", function () {
-        fileList[index].name = this.textContent;
-        saveFiles();
-      });
 
+      // date
       let cell3 = document.createElement("td");
       cell3.textContent = file.date;
 
+      // open
       let cell4 = document.createElement("td");
       let openLink = document.createElement("span");
       openLink.textContent = "Open";
       openLink.className = "open-link";
       openLink.onclick = () => {
-        const win = window.open();
-        win.document.write(`<iframe src="${file.content}" width="100%" height="100%"></iframe>`);
+        try {
+          const byteArray = Uint8Array.from(file.binaryData);
+          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+        } catch (err) {
+          console.error("Error opening file:", err);
+          alert("Failed to open file.");
+        }
       };
       cell4.appendChild(openLink);
 
-      let cell5 = document.createElement("td");
-      let deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Delete";
-      deleteBtn.className = "delete-btn";
-      deleteBtn.onclick = () => {
-        if (confirm(`Are you sure you want to delete "${file.name}"?`)) {
-          fileList.splice(index, 1);
-          saveFiles();
-          loadFiles();
-        }
-      };
-      cell5.appendChild(deleteBtn);
-
+      // append all cells
+      row.appendChild(cell0);
       row.appendChild(cell1);
       row.appendChild(cell2);
       row.appendChild(cell3);
       row.appendChild(cell4);
-      row.appendChild(cell5);
+
       fileTableBody.appendChild(row);
     });
 
@@ -204,18 +228,67 @@
 
     const reader = new FileReader();
     reader.onload = function (e) {
-      const base64 = e.target.result;
+      const arrayBuffer = e.target.result;
+      const byteArray = Array.from(new Uint8Array(arrayBuffer));
       const date = new Date().toISOString().split("T")[0];
       fileList.push({
         name: file.name,
         date,
-        content: base64
+        type: file.type || "application/octet-stream",
+        binaryData: byteArray
       });
       saveFiles();
       loadFiles();
       input.value = "";
     };
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
+  }
+
+  function showOperationPanel() {
+    document.getElementById("operationPanel").style.display = "block";
+  }
+
+  function hideOperationPanel() {
+    document.getElementById("operationPanel").style.display = "none";
+    checkboxesVisible = false;
+    loadFiles(); // reload without checkboxes
+  }
+
+  function selectAllFiles() {
+    checkboxesVisible = true;
+    loadFiles();
+    document.querySelectorAll(".file-checkbox").forEach(cb => cb.checked = true);
+  }
+
+  function deleteSelectedFiles() {
+    if (!checkboxesVisible) return alert("Use Select All first.");
+    const selected = Array.from(document.querySelectorAll(".file-checkbox"))
+      .filter(cb => cb.checked)
+      .map(cb => parseInt(cb.dataset.index));
+
+    if (selected.length === 0) return alert("No files selected.");
+
+    if (confirm("Are you sure to delete selected files?")) {
+      fileList = fileList.filter((_, idx) => !selected.includes(idx));
+      saveFiles();
+      loadFiles();
+    }
+  }
+
+  function renameSelectedFile() {
+    if (!checkboxesVisible) return alert("Use Select All first.");
+    const selected = Array.from(document.querySelectorAll(".file-checkbox"))
+      .filter(cb => cb.checked)
+      .map(cb => parseInt(cb.dataset.index));
+
+    if (selected.length !== 1) return alert("Select only one file to rename.");
+
+    const newName = prompt("Enter new name:");
+    if (newName) {
+      fileList[selected[0]].name = newName;
+      saveFiles();
+      loadFiles();
+    }
   }
 
   function saveSettings() {
