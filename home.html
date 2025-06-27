@@ -26,23 +26,9 @@
       max-width: fit-content;
     }
     
-       .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 96%;
-      padding: 15px 20px;
-      background-color: #ffffff;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
+    
 
-    .header-left img {
-      height: 40px;
-      margin-right: 10px;
-    }
+  
 
     .datetime-profile {
       display: flex;
@@ -259,7 +245,8 @@
     @media (max-width: 600px) {
       .button span { font-size: 16px; }
     }
-    .responsive-nav{
+    .responsive-container {
+
 
     display: flex;
     align-items: center;
@@ -269,19 +256,26 @@
     box-sizing: border-box;
     flex-wrap: wrap;
     width: 300%;
-    }
+}
+
+
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Header -->
-  <div class="responsive-nav>
+  <!-- Header --
+  <div class="header">
+  <div class="header-left">
+        <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" alt="Thejo Logo" style="height: 40px; margin-right: 10px;">
+  </div>-->
+<!-- Navbar -->
+<div class="responsive-container">
 
     <!-- Left: Logo and Toggle -->
     <div style="display: flex; align-items: center; gap: 15px;">
       <div style="background-color: #465b70; padding: 5px 10px; display: flex; align-items: center;">
-        <img src="./thejo.png" alt="Thejo Logo" style="height: 30px;">
+        <img src="/thejo.png" alt="Thejo Logo" style="height: 30px;">
       </div>
       <div style="font-size: 20px; color: #7b7b7b;">≡</div>
     </div>
@@ -335,7 +329,6 @@
   </div>
 </div>
 </div>
-
 
 
   <!-- Dashboard Buttons -->
