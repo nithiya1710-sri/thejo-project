@@ -659,13 +659,7 @@
       if (sidebarLabels[i]) btn.innerText = sidebarLabels[i];
     });
 
-    const bottomLabels = [
-      t.curve, t.list, t.map, t.fastSave, t.settings
-    ];
-    document.querySelectorAll('.bottom-btn').forEach((btn, i) => {
-      if (bottomLabels[i]) btn.innerHTML = btn.innerHTML.replace(/>.*$/, `> ${bottomLabels[i]}`);
-    });
-
+   
     const topBarItems = document.querySelectorAll('.top-bar div');
     topBarItems[0].innerText = t.totalLength;
     topBarItems[1].innerText = t.totalL;
