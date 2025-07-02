@@ -1,505 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Settings</title>
-    <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test Settings</title>
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
 
-    <style>
-      body {
-    font-family: Arial, sans-serif;
-    background-color: #002147;
-    color: white;
-    margin: 0;
-    transition: background-color 0.3s, filter 0.3s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 10px;
-    box-sizing: border-box;
-}
-.container {
-    width: 100%;
-    height: 100%;
-    background-color: #003366;
-    border-radius: 8px;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden;
-    max-width: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Adjust to keep the footer separate */
-}
-title{
-    text-align: center;
-}
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.date-time {
-    font-size: 20px;
-}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 10px;
+    }
 
-.settings-group {
-    margin-bottom: 15px;
-}
+    .container {
+      width: 100%;
+      height: 100%;
+      background-color: #2a2a40;
+      border-radius: 8px;
+      padding: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 20px;
-}
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-input[type="date"], input[type="time"], select {
-    width: 100%;
-    padding: 10px;
-    font-size: 20px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box; /* Ensure consistent box sizing */
-}
+    .date-time {
+      font-size: 20px;
+      color: #5affde;
+    }
 
-input[type="date"], input[type="time"] {
-    width: 48%; /* Adjust width to create space */
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    margin-right: 4%; /* Add space between the two input fields */
-}
+    main {
+      flex: 1;
+      margin-right: 200px;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+   
 
-input[type="time"] {
-    margin-right: 0; /* Remove margin for the second input */
-}
 
+    main::-webkit-scrollbar {
+      display: none;
+    }
+
+    .settings-group {
+      margin-bottom: 15px;
+      margin-right: 50px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 18px;
+      color: #d0e9ff;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 6px;
+      border: none;
+      background-color: #3a3a55;
+      color: white;
+    }
+
+    .full-width-input:disabled {
+      background-color: #606472;
+      color: #cccccc;
+      border: 1px solid #555a6e;
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      width: 48%;
+      margin-right: 4%;
+    }
+
+    .refractive-index span {
+      display: inline-block;
+      background-color: #3a3a55;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #ffffff;
+      border: 1px solid #555a6e;
+      width: 100%;
+    }
 footer {
-    width: 180px;
-    background: #333;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    padding: 10px;
-    z-index: 100; /* Ensure the footer stays on top */
+  width: 180px;
+  background-color: #2a2a40;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  padding: 20px 10px;
+  z-index: 100;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+  justify-content: space-between; /* Evenly space buttons vertically */
 }
 
 footer button {
-    flex: 1;
-    padding: 20px;
-    background: #444;
-    color: white;
-    border: none;
-    text-align: center;
-    cursor: pointer;
-    font-size: 20px;
-    border-bottom: 1px solid #555;
+  background-color: #3a3a55;
+  color: white;
+  border: none;
+  padding: 20px 10px;   /* Big clickable area */
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s;
+  width: 100%;
+  flex: 1;
+  margin: 5px 0;
+
 }
 
 footer button:hover {
-    background: #555;
+  background-color: #00b894;
+  color: #001d2c;
+  transform: scale(1.02);
 }
-.popup-overlay {
+
+
+/* ===== Responsive for Mobile Devices ===== */
+@media (max-width: 768px) {
+  footer {
     position: fixed;
-    top: 0;
+    bottom: 0;
+    top: auto;
+    right: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
+    height: auto;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    gap: 10px;
+    padding: 12px;
+    border-top: 1px solid #00b894;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  footer button {
+    flex: 1 1 45%;
+    padding: 20px 10px;            /* Extra padding for mobile */
+    font-size: 18px;               /* Bigger text */
+    margin: 5px;
+  }
 }
 
-.popup-box {
-    background-color: #003366;
-    color: white;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    width: 320px;
-    border: 2px solid #ffffff33;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-}
-
-.popup-title {
-    font-size: 24px;
-    margin-bottom: 15px;
-}
-
-.popup-message {
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.popup-buttons {
-    display: flex;
-    justify-content: space-around;
-}
-
-.popup-buttons button {
-    background-color: #444;
-    color: white;
-    font-size: 18px;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.popup-buttons button:hover {
-    background-color: #666;
-}
-
-
-main {
-    flex: 1;
-    margin-right: 200px; /* Add space for the fixed footer */
-    overflow-y: auto; /* Make the main content scrollable */
-}
-.refractive-index span {
-    display: inline-block;
-    background-color: #f7f7f7; /* Light background color */
-    padding: 10px 15px; /* Increased padding for more space inside */
-    border-radius: 8px; /* Rounded corners for a softer look */
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 18px;
-    color: #333333; /* Darker text for better readability */
-    font-weight: normal; /* Normal text weight */
-    border: 1px solid #ccc; /* Light border to resemble a comment box */
-    width: 100%; /* Make it stretch the width of its container */
-    box-sizing: border-box; /* Ensure padding and border are included in the width */
-    transition: all 0.3s ease; /* Smooth transition on focus */
-}
-
-.refractive-index span:focus {
-    outline: none; /* Remove default focus outline */
-    border-color: #007BFF; /* Blue border color when focused */
-    background-color: #e6f7ff; /* Light blue background on focus */
-}
-
-
-/* Responsiveness for mobile devices */
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
     }
-}
 
+    .popup-box {
+      background-color: #cfd8dc;
+      color: #000;
+      padding: 20px 30px;
+      border-radius: 8px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      border: 1px solid #90a4ae;
+    }
 
-    </style>
+    .popup-title {
+      background-color: #00cfd4;
+      color: white;
+      font-size: 20px;
+      padding: 10px;
+      margin: -20px -30px 20px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .popup-message {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .popup-buttons button {
+      font-size: 16px;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100px;
+    }
+
+    .popup-buttons button:first-child {
+      background-color: #00acc1;
+      color: white;
+    }
+
+    .popup-buttons button:last-child {
+      background-color: #e0e0e0;
+      color: #555;
+    }
+
+    .popup-buttons button:hover {
+      filter: brightness(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      footer {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        position: relative;
+      }
+
+      footer button {
+        flex: 1;
+        margin: 5px;
+      }
+
+      main {
+        margin-right: 0;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1 id="title">Test Settings</h1>
-            <div class="date-time" id="current-datetime">Loading...</div>
-        </header>
-        <main>
-            <div class="settings-group">
-                <label for="wave" id="wave-label">Wave</label>
-                <select id="wave">
-                    <option value="1550nm" selected>1550nm</option>
-                    <option value="1310nm">1310nm</option>
-                </select>
-            </div>
-            <div class="settings-group">
-                <label for="range" id="range-label">Range</label>
-                <select id="range">
-                    <option value="500m" selected>500m</option>
-                    <option value="1km">1km</option>
-                    <option value="2km">2km</option>
-                    <option value="4km">4km</option>
-                    <option value="8km">8km</option>
-                    <option value="16km">16km</option>
-                    <option value="32km">32km</option>
-                </select>
-            </div>
-            <div class="settings-group">
-                <label for="pulse-width" id="pulse-width-label">Pulse Width</label>
-                <select id="pulse-width">
-                    <option value="30ns" selected>30ns</option>
-                    <option value="10ns">10ns</option>
-                    <option value="20ns">20ns</option>
-                    <option value="50ns">50ns</option>
-                    <option value="80ns">80ns</option>
-                </select>
-            </div>
-            <div class="settings-group">
-                <label for="avg-time" id="avg-time-label">Avg. Time</label>
-                <select id="avg-time">
-                    <option value="15s" selected>15s</option>
-                    <option value="30s">30s</option>
-                    <option value="60s">60s</option>
-                    <option value="120s">120s</option>
-                </select>
-            </div>
-            <div class="settings-group">
-                <label for="refractive-index" id="refractive-index-label">Refractive Index</label>
-                <div class="refractive-index">
-                    <span>1550nm: 1.46832</span><br>
-                    <span>1310nm: 1.46770</span>
-                </div>
-            </div>
-            <div class="settings-group">
-                <label for="unit" id="unit-label">Unit</label>
-                <select id="unit">
-                    <option value="km" selected>km</option>
-                    <option value="kft">kft</option>
-                    <option value="mi">mi</option>
-                </select>
-            </div>
-        </main>
-        <footer>
-            <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
-            <button onclick="testSettings()" id="test-settings-btn">Test Settings</button>
-            <button onclick="passCriterion()" id="pass-Criterion-btn">Pass Criterion</button>
-            <button onclick="analysisThreshold()" id="analysis-threshold-btn">Analysis Threshold</button>
-            <button onclick="defaultSettings()" id="default-btn">Default</button>
-            <button onclick="exitSystem()" id="exit-btn">Exit</button>
-        </footer>
-        <!-- Custom Confirmation Popup -->
-    <div id="confirm-popup" class="popup-overlay">
-    <div class="popup-box">
-        <h2>Tips</h2>
-        <p>Restore factory default?</p>
-        <div class="popup-buttons">
-        <button onclick="confirmDefault(true)">OK</button>
-        <button onclick="confirmDefault(false)">Exit</button>
+  <div class="container">
+    <header>
+      <h1 class="page-title">Test Settings</h1>
+      <div class="date-time" id="current-datetime">Loading...</div>
+    </header>
+    <main>
+      <div class="settings-group">
+        <label for="wave">Wave</label>
+        <select id="wave">
+          <option value="1550nm" selected>1550nm</option>
+          <option value="1310nm">1310nm</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="range">Range</label>
+        <select id="range">
+          <option value="500m" selected>500m</option>
+          <option value="1km">1km</option>
+          <option value="2km">2km</option>
+          <option value="4km">4km</option>
+          <option value="8km">8km</option>
+          <option value="16km">16km</option>
+          <option value="32km">32km</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="pulse-width">Pulse Width</label>
+        <select id="pulse-width">
+          <option value="30ns" selected>30ns</option>
+          <option value="10ns">10ns</option>
+          <option value="20ns">20ns</option>
+          <option value="50ns">50ns</option>
+          <option value="80ns">80ns</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="avg-time">Avg. Time</label>
+        <select id="avg-time">
+          <option value="15s" selected>15s</option>
+          <option value="30s">30s</option>
+          <option value="60s">60s</option>
+          <option value="120s">120s</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="refractive-index">Refractive Index</label>
+        <div class="refractive-index">
+          <span>1550nm: 1.46832</span><br />
+          <span>1310nm: 1.46770</span>
         </div>
-    </div>
-    </div>
+      </div>
+      <div class="settings-group">
+        <label for="unit">Unit</label>
+        <select id="unit">
+          <option value="km" selected>km</option>
+          <option value="kft">kft</option>
+          <option value="mi">mi</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="transmitting-cable">Transmitting cable</label>
+        <input type="text" id="transmitting-cable" value="0km" disabled class="full-width-input"/>
+      </div>
+      <div class="settings-group">
+        <label for="end-cable">End cable</label>
+        <input type="text" id="end-cable" value="0km" disabled class="full-width-input"/>
+      </div>
+    </main>
 
-    </div>
+    <footer>
+      <button onclick="window.location.href='auto-otdr.html'">Test</button>
+      <button onclick="testSettings()">Test Settings</button>
+      <button onclick="passCriterion()">Pass Criterion</button>
+      <button onclick="analysisThreshold()">Analysis Threshold</button>
+      <button onclick="defaultSettings()">Default</button>
+      <button onclick="exitSystem()">Exit</button>
+    </footer>
 
-    <script>
+    <!-- Confirmation Popup -->
+    <div id="confirm-popup" class="popup-overlay">
+      <div class="popup-box">
+        <div class="popup-title">Tips</div>
+        <div class="popup-message">Restore factory default?</div>
+        <div class="popup-buttons">
+          <button onclick="confirmDefault(true)">OK</button>
+          <button onclick="confirmDefault(false)">Exit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
     function updateDateTime() {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString();
-        const formattedTime = currentDate.toLocaleTimeString();
-        document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString();
+      document.getElementById("current-datetime").textContent = `${formattedDate} ${formattedTime}`;
     }
 
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-   
-
     function testSettings() {
-        window.location.href = "setindex.html";
+      window.location.href = "setindex.html";
     }
 
     function passCriterion() {
-        window.location.href = "passindex.html";
+      window.location.href = "passindex.html";
     }
 
     function analysisThreshold() {
-        window.location.href = "thresh.html";
+      window.location.href = "thresh.html";
     }
 
     function defaultSettings() {
-        document.getElementById("confirm-popup").style.display = "flex";
+      document.getElementById("confirm-popup").style.display = "flex";
     }
 
     function confirmDefault(isConfirmed) {
-        document.getElementById("confirm-popup").style.display = "none";
-        if (isConfirmed) {
-            // Set each select element to its default value
-            document.getElementById("wave").value = "1550nm";
-            document.getElementById("range").value = "500m";
-            document.getElementById("pulse-width").value = "30ns";
-            document.getElementById("avg-time").value = "15s";
-            document.getElementById("unit").value = "km";
-
-            // Optionally, show a confirmation toast or alert
-            alert("Factory default settings have been restored.");
-        }
+      document.getElementById("confirm-popup").style.display = "none";
+      if (isConfirmed) {
+        document.getElementById("wave").value = "1550nm";
+        document.getElementById("range").value = "500m";
+        document.getElementById("pulse-width").value = "30ns";
+        document.getElementById("avg-time").value = "15s";
+        document.getElementById("unit").value = "km";
+        alert("Factory default settings have been restored.");
+      }
     }
 
     function exitSystem() {
-        window.location.href = "auto-otdr.html";
+      window.location.href = "auto-otdr.html";
     }
-</script>
-    <script>
-  // Brightness from localStorage
-  const brightnessMap = {
-    '0%': 0, '20%': 0.2, '40%': 0.4,
-    '60%': 0.6, '80%': 0.8, '100%': 1
-  };
-  const savedBrightness = localStorage.getItem('brightness') || '100%';
-  document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
-
-  // Translation
-  const translations = {
-    en: {
-      title: "Test Settings",
-      wave: "Wave",
-      range: "Range",
-      pulse: "Pulse Width",
-      avgTime: "Avg. Time",
-      index: "Refractive Index",
-      unit: "Unit",
-      test: "Test",
-      testSettings: "Test Settings",
-      pass: "Pass Criterion",
-      analysis: "Analysis Threshold",
-      default: "Default",
-      exit: "Exit",
-      tips: "Tips",
-      restore: "Restore factory default?",
-      ok: "OK",
-      cancel: "Exit"
-    },
-    fr: {
-      title: "Paramètres de Test",
-      wave: "Longueur d'Onde",
-      range: "Plage",
-      pulse: "Largeur d'Impulsion",
-      avgTime: "Temps Moyen",
-      index: "Indice de Réfraction",
-      unit: "Unité",
-      test: "Test",
-      testSettings: "Paramètres de Test",
-      pass: "Critère de Réussite",
-      analysis: "Seuil d'Analyse",
-      default: "Par Défaut",
-      exit: "Quitter",
-      tips: "Conseils",
-      restore: "Restaurer les paramètres d'usine ?",
-      ok: "OK",
-      cancel: "Annuler"
-    },
-    es: {
-      title: "Configuración de Prueba",
-      wave: "Longitud de Onda",
-      range: "Alcance",
-      pulse: "Ancho de Pulso",
-      avgTime: "Tiempo Promedio",
-      index: "Índice de Refracción",
-      unit: "Unidad",
-      test: "Prueba",
-      testSettings: "Configuración de Prueba",
-      pass: "Criterio de Aprobación",
-      analysis: "Umbral de Análisis",
-      default: "Predeterminado",
-      exit: "Salir",
-      tips: "Consejos",
-      restore: "¿Restaurar configuración de fábrica?",
-      ok: "OK",
-      cancel: "Cancelar"
-    },
-    de: {
-      title: "Testeinstellungen",
-      wave: "Wellenlänge",
-      range: "Reichweite",
-      pulse: "Impulsbreite",
-      avgTime: "Durchschn. Zeit",
-      index: "Brechungsindex",
-      unit: "Einheit",
-      test: "Test",
-      testSettings: "Testeinstellungen",
-      pass: "Bestehens-Kriterium",
-      analysis: "Analyse-Schwelle",
-      default: "Standard",
-      exit: "Beenden",
-      tips: "Tipps",
-      restore: "Werkseinstellungen wiederherstellen?",
-      ok: "OK",
-      cancel: "Abbrechen"
-    },
-    it: {
-      title: "Impostazioni di Test",
-      wave: "Lunghezza d'Onda",
-      range: "Intervallo",
-      pulse: "Larghezza Impulso",
-      avgTime: "Tempo Medio",
-      index: "Indice di Rifrazione",
-      unit: "Unità",
-      test: "Test",
-      testSettings: "Impostazioni Test",
-      pass: "Criterio di Superamento",
-      analysis: "Soglia di Analisi",
-      default: "Predefinito",
-      exit: "Esci",
-      tips: "Suggerimenti",
-      restore: "Ripristinare impostazioni di fabbrica?",
-      ok: "OK",
-      cancel: "Annulla"
-    },
-    pt: {
-      title: "Configurações de Teste",
-      wave: "Onda",
-      range: "Alcance",
-      pulse: "Largura do Pulso",
-      avgTime: "Tempo Médio",
-      index: "Índice de Refração",
-      unit: "Unidade",
-      test: "Teste",
-      testSettings: "Configurações de Teste",
-      pass: "Critério de Aprovação",
-      analysis: "Limite de Análise",
-      default: "Padrão",
-      exit: "Sair",
-      tips: "Dicas",
-      restore: "Restaurar configurações de fábrica?",
-      ok: "OK",
-      cancel: "Cancelar"
-    },
-    nl: {
-      title: "Testinstellingen",
-      wave: "Golf",
-      range: "Bereik",
-      pulse: "Pulsbreedte",
-      avgTime: "Gemiddelde Tijd",
-      index: "Brekingsindex",
-      unit: "Eenheid",
-      test: "Test",
-      testSettings: "Testinstellingen",
-      pass: "Geslaagdcriterium",
-      analysis: "Analyse Drempel",
-      default: "Standaard",
-      exit: "Afsluiten",
-      tips: "Tips",
-      restore: "Fabrieksinstellingen herstellen?",
-      ok: "OK",
-      cancel: "Annuleren"
-    }
-  };
-
-  // Apply translation
-  const lang = localStorage.getItem("language") || "en";
-  const t = translations[lang] || translations.en;
-
-  document.getElementById("title").textContent = t.title;
-  document.getElementById("wave-label").textContent = t.wave;
-  document.getElementById("range-label").textContent = t.range;
-  document.getElementById("pulse-width-label").textContent = t.pulse;
-  document.getElementById("avg-time-label").textContent = t.avgTime;
-  document.getElementById("refractive-index-label").textContent = t.index;
-  document.getElementById("unit-label").textContent = t.unit;
-
-  document.getElementById("test-settings-btn").textContent = t.testSettings;
-  document.getElementById("pass-Criterion-btn").textContent = t.pass;
-  document.getElementById("analysis-threshold-btn").textContent = t.analysis;
-  document.getElementById("default-btn").textContent = t.default;
-  document.getElementById("exit-btn").textContent = t.exit;
-
-  // Popup
-  document.querySelector(".popup-box h2").textContent = t.tips;
-  document.querySelector(".popup-box p").textContent = t.restore;
-  document.querySelectorAll(".popup-buttons button")[0].textContent = t.ok;
-  document.querySelectorAll(".popup-buttons button")[1].textContent = t.cancel;
-</script>
-
-
+  </script>
 </body>
 </html>
