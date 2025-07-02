@@ -22,12 +22,14 @@
             </div>
             <div class="graph-header">
                 <div class="arrow-group">
+                    <div class="arrow-control">
                     <button class="arrow-btn" id="prev-wavelength" onclick="changeWavelength(-1)">&#9664;</button>
                     <span class="test-param" id="wavelength">1550nm</span>
                     <button class="arrow-btn" id="next-wavelength" onclick="changeWavelength(1)">&#9654;</button>
                     <button class="arrow-btn" id="prev-distance" onclick="changeDistance(-1)">&#9664;</button>
                     <span class="test-param" id="distance">500m</span>
                     <button class="arrow-btn" id="next-distance" onclick="changeDistance(1)">&#9654;</button>
+                    </div>
                 </div>
                 <div id="progress-container" class="hidden">
                     <img id="danger-icon" src="danger.png" alt="Danger" class="danger-icon">
@@ -51,9 +53,9 @@
         <div class="right-sidebar">
             <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
             <button onclick="testSettings()" class="sidebar-button">Settings</button>
-            <button onclick="window.location.href='Event-map-3.html'" class="sidebar-button" >Event Map</button>
-            <button class="sidebar-button">Files</button>
-            <button class="sidebar-button">Save</button>
+            <button onclick="Zoom()" class="sidebar-button" >Zoom</button>
+            <button class="sidebar-button" onclick="window.location.href='filemanage.html'">Files</button>
+            <button class="sidebar-button" onclick="saveData()">Save</button>
             <button class="sidebar-button" onclick="window.location.href='home.html'">Exit</button>
         </div>
     </div>
@@ -62,22 +64,47 @@
     <div class="bottom-buttons">
         <button class="bottom-btn"><i class="fas fa-chart-line"></i> Curve</button>
         <button class="bottom-btn"><i class="fas fa-list"></i> List</button>
-        <button onclick="event()" class="bottom-btn" ><i class="fas fa-map"></i> Event Map</button>
+        <button class="bottom-btn" onclick="window.location.href='Event-map-3.html'"><i class="fas fa-map"></i> Event Map</button>
         <button class="bottom-btn"><i class="fas fa-save"></i> Fast Save</button>
-        <button onclick="testSettings()" class="bottom-btn settings-btn" ><i class="fas fa-cog"></i> Settings</button>
+        <button class="bottom-btn settings-btn" ><i class="fas fa-cog"></i> Settings</button>
+    </div>
+    <!-- Invalid Data Popup -->
+    <div id="invalid-popup" class="popup-overlay" style="display: none;">
+    <div class="popup-box">
+        <h2 class="popup-title">Tips</h2>
+        <p class="popup-message">Invalid data, please retest!</p>
+        <div class="popup-buttons">
+        <button onclick="closeInvalidPopup()">OK</button>
+        <button onclick="closeInvalidPopup()">Exit</button>
+        </div>
+    </div>
     </div>
 
+    
     <script src="script.js"></script>
     <script>
-        
+    
+    function saveData() {
+  // Replace this with your actual condition
+  const isDataValid = false; // just an example; use real logic
+
+  if (!isDataValid) {
+    document.getElementById("invalid-popup").style.display = "flex";
+  } else {
+    // Proceed to save
+    alert("Data saved successfully!");
+  }
+}
+
+function closeInvalidPopup() {
+  document.getElementById("invalid-popup").style.display = "none";
+}
+
     
       function testSettings() {
         window.location.href = "setindex.html";
       }
-      function event() {
-        window.location.href = "Event-map-3.html";
-      }
-    
+      
       function passCriterion() {
         window.location.href = "passindex.html";
       }
@@ -85,98 +112,64 @@
       function analysisThreshold() {
         window.location.href = "thresh.html";
       }
-    
-     
-    
+      
+        
       function exitSystem() {
         window.location.href = 'home.html';
 
-      }</script>
- <script src="system.js"></script>
-    <script>
-  // 🔆 Brightness Control
-  const brightnessLevels = {
-    '0%': 0, '20%': 0.2, '40%': 0.4, '60%': 0.6, '80%': 0.8, '100%': 1
-  };
-  const savedBrightness = localStorage.getItem('brightness') || '100%';
-  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
-
-  // 🌐 Language Translations
-  const lang = localStorage.getItem("language") || "en";
-  const translations = {
-    en: {
-      title: "Auto OTDR",
-      test: "Test",
-      settings: "Settings",
-      eventMap: "Event Map",
-      files: "Files",
-      save: "Save",
-      exit: "Exit",
-      curve: "Curve",
-      list: "List",
-      fastSave: "Fast Save"
-    },
-    fr: {
-      title: "OTDR Auto",
-      test: "Tester",
-      settings: "Paramètres",
-      eventMap: "Carte d'événement",
-      files: "Fichiers",
-      save: "Enregistrer",
-      exit: "Quitter",
-      curve: "Courbe",
-      list: "Liste",
-      fastSave: "Sauvegarde rapide"
-    },
-    es: {
-      title: "OTDR Automático",
-      test: "Prueba",
-      settings: "Configuración",
-      eventMap: "Mapa de eventos",
-      files: "Archivos",
-      save: "Guardar",
-      exit: "Salir",
-      curve: "Curva",
-      list: "Lista",
-      fastSave: "Guardado rápido"
-    },
-    de: {
-      title: "Auto OTDR",
-      test: "Test",
-      settings: "Einstellungen",
-      eventMap: "Ereigniskarte",
-      files: "Dateien",
-      save: "Speichern",
-      exit: "Beenden",
-      curve: "Kurve",
-      list: "Liste",
-      fastSave: "Schnellspeichern"
-    }
-  };
-  const t = translations[lang] || translations.en;
-
-  // 🌍 Apply Translations
-  document.addEventListener("DOMContentLoaded", () => {
-    // Page title
-    document.title = t.title;
-    document.querySelector(".page-title").innerText = t.title;
-
-    // Sidebar buttons
-    const sidebarLabels = [t.test, t.settings, t.eventMap, t.files, t.save, t.exit];
-    document.querySelectorAll(".right-sidebar .sidebar-button").forEach((btn, i) => {
-      if (sidebarLabels[i]) btn.textContent = sidebarLabels[i];
-    });
-
-    // Bottom buttons
-    const bottomLabels = [t.curve, t.list, t.eventMap, t.fastSave, t.settings];
-    document.querySelectorAll(".bottom-buttons .bottom-btn").forEach((btn, i) => {
-      if (bottomLabels[i]) {
-        const icon = btn.querySelector("i").outerHTML;
-        btn.innerHTML = `${icon} ${bottomLabels[i]}`;
       }
-    });
-  });
-</script>
+            
+        let zoomLevel = 1;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let offsetX = 0;
+        let offsetY = 0;
 
+        function Zoom() {
+            zoomLevel += 0.2;
+            if (zoomLevel > 3) zoomLevel = 1;
+
+            const canvas = document.querySelector("canvas");
+            canvas.style.transform = `scale(${zoomLevel}) translate(${offsetX}px, ${offsetY}px)`;
+            canvas.style.transformOrigin = "top left";
+        }
+
+        // Add drag functionality
+        window.onload = function () {
+            const canvas = document.querySelector("canvas");
+
+            canvas.addEventListener("mousedown", function (e) {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                canvas.style.cursor = "grabbing";
+            });
+
+            canvas.addEventListener("mousemove", function (e) {
+                if (!isDragging) return;
+
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+
+                offsetX += dx / zoomLevel;
+                offsetY += dy / zoomLevel;
+
+                canvas.style.transform = `scale(${zoomLevel}) translate(${offsetX}px, ${offsetY}px)`;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+
+            canvas.addEventListener("mouseup", function () {
+                isDragging = false;
+                canvas.style.cursor = "default";
+            });
+
+            canvas.addEventListener("mouseleave", function () {
+                isDragging = false;
+                canvas.style.cursor = "default";
+            });
+        };
+</script>
 </body>
 </html>
