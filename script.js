@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function drawGraph(width, height) {
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "#2a2a40";
         ctx.fillRect(0, 0, width, height);
 
         const paddingX = 80;
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function resetAutoTestButton() {
         autoTestButton.innerText = "Auto Test";
-        autoTestButton.style.backgroundColor = "#ba6cd4";
+        autoTestButton.style.backgroundColor = "#00a383";
         autoTestButton.style.color = "white";
         autoTestButton.disabled = false;
 
@@ -191,4 +191,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("distance").innerText =
         (distances[currentDistanceIndex] >= 1000 ? distances[currentDistanceIndex] / 1000 + "km" : distances[currentDistanceIndex] + "m");
     updateAutoTestLabel();
+
+
 });
