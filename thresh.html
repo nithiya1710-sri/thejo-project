@@ -5,33 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Analysis Threshold</title>
   <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #002147;
-      color: white;
+    * {
       margin: 0;
-      transition: background-color 0.3s, filter 0.3s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 10px;
+      padding: 0;
       box-sizing: border-box;
     }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      padding: 10px;
+    }
+
     .container {
       width: 100%;
       height: 100%;
-      background-color: #003366;
+      background-color: #2a2a40;
       border-radius: 8px;
       padding: 20px;
-      box-sizing: border-box;
-      overflow: hidden;
-      max-width: none;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
     }
 
     header {
@@ -39,127 +37,224 @@
       margin-bottom: 20px;
     }
 
+    header h1 {
+      font-size: 28px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .date-time {
+      font-size: 20px;
+      color: #5affde;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      margin-right: 200px; /* space for right sidebar */
+      scrollbar-width: thin;
+      scrollbar-color: #00b894 transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    main::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    main::-webkit-scrollbar-thumb {
+      background-color: #00b894;
+      border-radius: 3px;
+    }
+
     .settings-group {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      margin-right: 50px;
     }
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       font-size: 20px;
+      color: #d0e9ff;
     }
 
-    select, input[type="number"] {
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3a3a55;
+      color: white;
+    }
+
+    input[disabled] {
+      background-color: #666;
+      color: #aaa;
+    }
+
+    .full-width-input {
       width: 100%;
       padding: 10px;
       font-size: 20px;
       border: none;
       border-radius: 5px;
-      box-sizing: border-box;
+      background-color: #3a3a55;
+      color: white;
     }
 
-    .manual-input {
-      display: none;
-      margin-top: 10px;
+    .full-width-input:disabled {
+      background-color: #555;
+      color: #ccc;
     }
 
-    input[disabled] {
-      background-color: #ccc;
-      color: #555;
-    }
-
+    /* Sidebar */
     footer {
       width: 180px;
-      background: #333;
+      background-color: #2a2a40;
       display: flex;
       flex-direction: column;
       position: fixed;
       top: 0;
       right: 0;
       height: 100vh;
-      padding: 10px;
+      padding: 20px 10px;
       z-index: 100;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+      justify-content: space-between;
     }
 
     footer button {
-      flex: 1;
-      padding: 20px;
-      background: #444;
+      background-color: #3a3a55;
       color: white;
       border: none;
-      text-align: center;
+      padding: 20px 10px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 20px;
-      border-bottom: 1px solid #555;
-    }
-    .date-time {
-    font-size: 20px;
-}
-    footer button:hover {
-      background: #555;
-    }
-    .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.popup-box {
-    background-color: #003366;
-    color: white;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    width: 320px;
-    border: 2px solid #ffffff33;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-}
-
-.popup-title {
-    font-size: 24px;
-    margin-bottom: 15px;
-}
-
-.popup-message {
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.popup-buttons {
-    display: flex;
-    justify-content: space-around;
-}
-
-.popup-buttons button {
-    background-color: #444;
-    color: white;
-    font-size: 18px;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.popup-buttons button:hover {
-    background-color: #666;
-}
-    main {
+      transition: background 0.3s ease, transform 0.2s;
+      width: 100%;
       flex: 1;
-      margin-right: 200px;
-      overflow-y: auto;
+      margin: 5px 0;
     }
 
+    footer button:hover {
+      background-color: #00b894;
+      color: #001d2c;
+      transform: scale(1.02);
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-box {
+      background-color: #cfd8dc;
+      color: #000;
+      padding: 20px 30px;
+      border-radius: 8px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      border: 1px solid #90a4ae;
+    }
+
+    .popup-title {
+      background-color: #00cfd4;
+      color: white;
+      font-size: 20px;
+      padding: 10px;
+      margin: -20px -30px 20px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .popup-message {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .popup-buttons button {
+      font-size: 16px;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100px;
+    }
+
+    .popup-buttons button:first-child {
+      background-color: #00acc1;
+      color: white;
+    }
+
+    .popup-buttons button:last-child {
+      background-color: #e0e0e0;
+      color: #555;
+    }
+
+    .popup-buttons button:hover {
+      filter: brightness(1.1);
+    }
+
+
+    /* Mobile Responsive */
     @media (max-width: 768px) {
+      html, body {
+        height: 100%;
+        overflow: auto;
+      }
+
       .container {
+        height: auto;
         padding: 15px;
+      }
+
+      main {
+        margin-right: 0;
+        padding-right: 10px;
+      }
+
+      footer {
+        position: relative;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        right: 0;
+        height: auto;
+        width: 100%;
+        background-color: #2a2a40;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+
+      footer button {
+        flex: 1 1 45%;
+        padding: 20px 10px;
+        font-size: 18px;
+        margin: 5px;
       }
     }
   </style>
@@ -170,61 +265,58 @@
       <h1>Analysis Threshold</h1>
       <div class="date-time" id="current-datetime">Loading...</div>
     </header>
+
     <main>
       <div class="settings-group">
         <label for="loss-threshold">Loss Threshold</label>
-        <select id="loss-threshold" onchange="toggleInput('loss-threshold')">
+        <select id="loss-threshold">
           <option value="auto">Auto</option>
-          <option value="manual">Manual</option>
+          <option value="custom-0.20">Customize 0.20 dB</option>
         </select>
-        <input class="manual-input" type="number" id="loss-threshold-input" placeholder="Enter value (e.g., 0.20 dB)" step="0.01">
       </div>
 
       <div class="settings-group">
         <label for="reflectance-threshold">Reflectance Threshold</label>
-        <select id="reflectance-threshold" onchange="toggleInput('reflectance-threshold')">
+        <select id="reflectance-threshold">
           <option value="auto">Auto</option>
-          <option value="manual">Manual</option>
+          <option value="custom-40.00">Customize 40.00 dB</option>
         </select>
-        <input class="manual-input" type="number" id="reflectance-threshold-input" placeholder="Enter value (e.g., -45 dB)" step="0.1">
       </div>
 
       <div class="settings-group">
         <label for="end-loss-threshold">End Loss Threshold</label>
-        <select id="end-loss-threshold" onchange="toggleInput('end-loss-threshold')">
+        <select id="end-loss-threshold">
           <option value="auto">Auto</option>
-          <option value="manual">Manual</option>
+          <option value="custom-10.00">Customize 10.00 dB</option>
         </select>
-        <input class="manual-input" type="number" id="end-loss-threshold-input" placeholder="Enter value (e.g., 1.0 dB)" step="0.1">
       </div>
 
       <div class="settings-group">
         <label for="backscatter-coefficient">Backscatter Coefficient</label>
-        <input type="text" id="backscatter-coefficient" value="Disabled" disabled>
+        <input type="text" id="backscatter-coefficient" value="Disabled" disabled class="full-width-input">
       </div>
     </main>
 
-         <footer>
-            <button class="sidebar-button" onclick="window.location.href='auto-otdr.html'">Test</button>
-            <button onclick="testSettings()" id="test-settings-btn">Test Settings</button>
-            <button onclick="passCriterion()" id="pass-Criterion-btn">Pass Criterion</button>
-            <button onclick="analysisThreshold()" id="analysis-threshold-btn">Analysis Threshold</button>
-            <button onclick="defaultSettings()" id="default-btn">Default</button>
-            <button onclick="exitSystem()" id="exit-btn">Exit</button>
-        </footer>
-        <!-- Custom Confirmation Popup -->
-    <div id="confirm-popup" class="popup-overlay">
-    <div class="popup-box">
-        <h2>Tips</h2>
-        <p>Restore factory default?</p>
-        <div class="popup-buttons">
-        <button onclick="confirmDefault(true)">OK</button>
-        <button onclick="confirmDefault(false)">Exit</button>
-        </div>
-    </div>
-    </div>
+    <footer>
+      <button onclick="window.location.href='auto-otdr.html'">Test</button>
+      <button onclick="testSettings()">Test Settings</button>
+      <button onclick="passCriterion()">Pass Criterion</button>
+      <button onclick="analysisThreshold()">Analysis Threshold</button>
+      <button onclick="defaultSettings()">Default</button>
+      <button onclick="exitSystem()">Exit</button>
+    </footer>
 
-  </div>
+    <div id="confirm-popup" class="popup-overlay">
+      <div class="popup-box">
+        <div class="popup-title">Tips</div>
+          <div class="popup-message">Restore factory default?</div>
+
+        <div class="popup-buttons">
+          <button onclick="confirmDefault(true)">OK</button>
+          <button onclick="confirmDefault(false)">Exit</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -234,220 +326,44 @@
       const formattedTime = currentDate.toLocaleTimeString();
       document.getElementById('current-datetime').textContent = `${formattedDate} ${formattedTime}`;
     }
+
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    function toggleInput(id) {
-      const dropdown = document.getElementById(id);
-      const input = document.getElementById(id + "-input");
-      if (dropdown.value === "manual") {
-        input.style.display = "block";
-      } else {
-        input.style.display = "none";
-        input.value = "";
-      }
-    }
-
-
     function testSettings() {
-        window.location.href = "setindex.html";
+      window.location.href = "setindex.html";
     }
 
     function passCriterion() {
-        window.location.href = "passindex.html";
+      window.location.href = "passindex.html";
     }
 
     function analysisThreshold() {
-        window.location.href = "thresh.html";
+      window.location.href = "thresh.html";
     }
 
     function defaultSettings() {
-        document.getElementById("confirm-popup").style.display = "flex";
+      document.getElementById("confirm-popup").style.display = "flex";
     }
 
     function confirmDefault(isConfirmed) {
-  document.getElementById("confirm-popup").style.display = "none";
-
-  if (isConfirmed) {
-    // Reset all threshold dropdowns to "auto"
-    const dropdowns = [
-      "loss-threshold",
-      "reflectance-threshold",
-      "end-loss-threshold"
-    ];
-
-    dropdowns.forEach(id => {
-      const select = document.getElementById(id);
-      const input = document.getElementById(id + "-input");
-      select.value = "auto";
-      input.style.display = "none";
-      input.value = "";
-    });
-
-    // Optionally show confirmation
-    alert("Analysis Threshold settings have been reset to default.");
-  }
-}
+      document.getElementById("confirm-popup").style.display = "none";
+      if (isConfirmed) {
+        const dropdowns = [
+          "loss-threshold",
+          "reflectance-threshold",
+          "end-loss-threshold"
+        ];
+        dropdowns.forEach(id => {
+          document.getElementById(id).value = "auto";
+        });
+        alert("Analysis Threshold settings have been reset to default.");
+      }
+    }
 
     function exitSystem() {
-        window.location.href = "auto-otdr.html";
+      window.location.href = "auto-otdr.html";
     }
   </script>
-  <script src="system.js"></script>
-  <script>
-  // Apply Brightness from localStorage
-  const brightnessMap = {
-    '0%': 0, '20%': 0.2, '40%': 0.4,
-    '60%': 0.6, '80%': 0.8, '100%': 1
-  };
-  const savedBrightness = localStorage.getItem('brightness') || '100%';
-  document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
-
-  // Translations
-  const translations = {
-    en: {
-      title: "Analysis Threshold",
-      loss: "Loss Threshold",
-      reflectance: "Reflectance Threshold",
-      endLoss: "End Loss Threshold",
-      backscatter: "Backscatter Coefficient",
-      test: "Test",
-      testSettings: "Test Settings",
-      pass: "Pass Criterion",
-      analysis: "Analysis Threshold",
-      default: "Default",
-      exit: "Exit",
-      tips: "Tips",
-      restore: "Restore factory default?",
-      ok: "OK",
-      cancel: "Exit"
-    },
-    fr: {
-      title: "Seuil d'Analyse",
-      loss: "Seuil de Perte",
-      reflectance: "Seuil de Réflectance",
-      endLoss: "Seuil de Perte Finale",
-      backscatter: "Coefficient de Rétrodiffusion",
-      test: "Test",
-      testSettings: "Paramètres de Test",
-      pass: "Critère de Réussite",
-      analysis: "Seuil d'Analyse",
-      default: "Par Défaut",
-      exit: "Quitter",
-      tips: "Conseils",
-      restore: "Restaurer les paramètres d'usine ?",
-      ok: "OK",
-      cancel: "Annuler"
-    },
-    es: {
-      title: "Umbral de Análisis",
-      loss: "Umbral de Pérdida",
-      reflectance: "Umbral de Reflectancia",
-      endLoss: "Umbral de Pérdida Final",
-      backscatter: "Coeficiente de Retrodispersión",
-      test: "Prueba",
-      testSettings: "Configuración de Prueba",
-      pass: "Criterio de Aprobación",
-      analysis: "Umbral de Análisis",
-      default: "Predeterminado",
-      exit: "Salir",
-      tips: "Consejos",
-      restore: "¿Restaurar configuración de fábrica?",
-      ok: "OK",
-      cancel: "Cancelar"
-    },
-    de: {
-      title: "Analyse-Schwelle",
-      loss: "Verlustschwelle",
-      reflectance: "Reflexionsschwelle",
-      endLoss: "Endverlust-Schwelle",
-      backscatter: "Rückstreu-Koeffizient",
-      test: "Test",
-      testSettings: "Testeinstellungen",
-      pass: "Bestehens-Kriterium",
-      analysis: "Analyse-Schwelle",
-      default: "Standard",
-      exit: "Beenden",
-      tips: "Tipps",
-      restore: "Werkseinstellungen wiederherstellen?",
-      ok: "OK",
-      cancel: "Abbrechen"
-    },
-    it: {
-      title: "Soglia di Analisi",
-      loss: "Soglia di Perdita",
-      reflectance: "Soglia di Riflettanza",
-      endLoss: "Soglia di Perdita Finale",
-      backscatter: "Coefficiente di Retrodiffusione",
-      test: "Test",
-      testSettings: "Impostazioni Test",
-      pass: "Criterio di Superamento",
-      analysis: "Soglia di Analisi",
-      default: "Predefinito",
-      exit: "Esci",
-      tips: "Suggerimenti",
-      restore: "Ripristinare impostazioni di fabbrica?",
-      ok: "OK",
-      cancel: "Annulla"
-    },
-    pt: {
-      title: "Limite de Análise",
-      loss: "Limite de Perda",
-      reflectance: "Limite de Reflectância",
-      endLoss: "Limite de Perda Final",
-      backscatter: "Coeficiente de Retroespalhamento",
-      test: "Teste",
-      testSettings: "Configurações de Teste",
-      pass: "Critério de Aprovação",
-      analysis: "Limite de Análise",
-      default: "Padrão",
-      exit: "Sair",
-      tips: "Dicas",
-      restore: "Restaurar configurações de fábrica?",
-      ok: "OK",
-      cancel: "Cancelar"
-    },
-    nl: {
-      title: "Analyse Drempel",
-      loss: "Verliesdrempel",
-      reflectance: "Reflectiedrempel",
-      endLoss: "Eindverliesdrempel",
-      backscatter: "Terugverstrooiingscoëfficiënt",
-      test: "Test",
-      testSettings: "Testinstellingen",
-      pass: "Geslaagdcriterium",
-      analysis: "Analyse Drempel",
-      default: "Standaard",
-      exit: "Afsluiten",
-      tips: "Tips",
-      restore: "Fabrieksinstellingen herstellen?",
-      ok: "OK",
-      cancel: "Annuleren"
-    }
-  };
-
-  // Apply translation
-  const lang = localStorage.getItem("language") || "en";
-  const t = translations[lang] || translations.en;
-
-  document.querySelector("h1").textContent = t.title;
-  document.querySelector("label[for='loss-threshold']").textContent = t.loss;
-  document.querySelector("label[for='reflectance-threshold']").textContent = t.reflectance;
-  document.querySelector("label[for='end-loss-threshold']").textContent = t.endLoss;
-  document.querySelector("label[for='backscatter-coefficient']").textContent = t.backscatter;
-
-  document.getElementById("test-settings-btn").textContent = t.testSettings;
-  document.getElementById("pass-Criterion-btn").textContent = t.pass;
-  document.getElementById("analysis-threshold-btn").textContent = t.analysis;
-  document.getElementById("default-btn").textContent = t.default;
-  document.getElementById("exit-btn").textContent = t.exit;
-
-  // Popup content
-  document.querySelector(".popup-box h2").textContent = t.tips;
-  document.querySelector(".popup-box p").textContent = t.restore;
-  document.querySelectorAll(".popup-buttons button")[0].textContent = t.ok;
-  document.querySelectorAll(".popup-buttons button")[1].textContent = t.cancel;
-</script>
-
 </body>
 </html>
