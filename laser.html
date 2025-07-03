@@ -178,9 +178,7 @@
           <span class="laser-icon" id="laser-icon">☀</span>
           <span class="value">1550</span><span class="unit">nm</span>
         </div>
-        <div class="power">
-          Power: <span id="power-value">10</span> dBm
-        </div>
+       
       </div>
       <div class="danger-panel">
         <div class="danger-title">
@@ -189,8 +187,11 @@
         </div>
         <p class="warning-text">Looking directly at laser output<br>may cause damage to human eyes!</p>
       </div>
+      
     </div>
 
+          
+  
     <div class="right-panel">
       <button id="open-btn">Open</button>
       <button id="wave-btn">Wave</button>
@@ -199,7 +200,14 @@
       <button id="power-minus">Power -</button>
       <button onclick="window.location.href='home.html'">Exit</button>
     </div>
+  
+            
   </div>
+  <!--Power bar-->>
+      <div class="power-bar" style="margin-top: 20px; text-align: center;">
+        <label for="powerSlider" style="font-size: 16px;">Adjust Power:</label><br>
+        <input type="range" id="powerSlider" min="0" max="30" value="10" style="width: 80%; margin-top: 10px;" disabled />
+      </div>
 
   <script>
     const timestampEl = document.getElementById("timestamp");
@@ -211,6 +219,9 @@
     const openBtn = document.getElementById("open-btn");
     const waveBtn = document.getElementById("wave-btn");
     const modeBtn = document.getElementById("mode-btn");
+    const powerSlider = document.getElementById("powerSlider");
+    const powerPlus = document.getElementById("power-plus");
+    const powerMinus = document.getElementById("power-minus");
 
     let isLaserOn = false;
     let waveAt1310 = false;
@@ -255,21 +266,28 @@
       statusText.textContent = modes[modeIndex];
     });
 
-    // Power +
-    document.getElementById("power-plus").addEventListener("click", () => {
-      if (isLaserOn && powerLevel < 30) {
-        powerLevel++;
-        powerValue.textContent = powerLevel;
-      }
-    });
+   // Slider → Power Display
+  powerSlider.addEventListener("input", () => {
+    powerLevel = parseInt(powerSlider.value);
+    powerValue.textContent = powerLevel;
+  });
+    // Power + button
+    powerPlus.addEventListener("click", () => {
+    if (isLaserOn && powerLevel < 30) {
+      powerLevel++;
+      powerSlider.value = powerLevel;
+      powerValue.textContent = powerLevel;
+    }
+  });
 
-    // Power -
-    document.getElementById("power-minus").addEventListener("click", () => {
-      if (isLaserOn && powerLevel > 0) {
-        powerLevel--;
-        powerValue.textContent = powerLevel;
-      }
-    });
+  // Power - button
+  powerMinus.addEventListener("click", () => {
+    if (isLaserOn && powerLevel > 0) {
+      powerLevel--;
+      powerSlider.value = powerLevel;
+      powerValue.textContent = powerLevel;
+    }
+  });
   </script>
   <script src="system.js"></script>
   <script>
