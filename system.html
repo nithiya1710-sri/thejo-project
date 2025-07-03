@@ -4,31 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>System Settings</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
 
+  <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e2f;
-      color: #ffffff;
+      font-family: Arial, sans-serif;
+      background-color: #002147;
+      color: white;
+      margin: 0;
+      transition: background-color 0.3s, filter 0.3s;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       padding: 10px;
+      box-sizing: border-box;
     }
 
     .container {
       width: 100%;
       height: 100%;
-      background-color: #2a2a40;
+      background-color: #003366;
       border-radius: 8px;
       padding: 20px;
+      box-sizing: border-box;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -40,20 +39,7 @@
     }
 
     .date-time {
-      font-size: 20px;
-      color: #5affde;
-    }
-
-    main {
-      flex: 1;
-      margin-right: 200px;
-      overflow-y: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-
-    main::-webkit-scrollbar {
-      display: none;
+      font-size: 14px;
     }
 
     .settings-group {
@@ -63,99 +49,63 @@
     label {
       display: block;
       margin-bottom: 5px;
-      font-size: 18px;
-      color: #d0e9ff;
     }
 
-    select,
-    input[type="date"],
-    input[type="time"] {
+    input[type="date"], input[type="time"], select {
       width: 100%;
       padding: 10px;
-      font-size: 18px;
-      border-radius: 6px;
       border: none;
-      background-color: #3a3a55;
-      color: white;
+      border-radius: 5px;
+      box-sizing: border-box;
     }
 
-    .date-time-inputs {
-      display: flex;
-      gap: 10px;
-    }
-
-    .date-time-inputs input {
+    input[type="date"], input[type="time"] {
       width: 48%;
+      margin-right: 4%;
+    }
+
+    input[type="time"] {
+      margin-right: 0;
     }
 
     footer {
       width: 180px;
-      background-color: #2a2a40;
+      background: #333;
       display: flex;
       flex-direction: column;
       position: fixed;
       top: 0;
       right: 0;
       height: 100vh;
-      padding: 20px 10px;
+      padding: 10px;
       z-index: 100;
-      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
-      justify-content: space-between;
     }
 
     footer button {
-      background-color: #3a3a55;
+      flex: 1;
+      padding: 20px;
+      background: #444;
       color: white;
       border: none;
-      padding: 20px 10px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 10px;
+      text-align: center;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s;
-      width: 100%;
-      flex: 1;
-      margin: 5px 0;
+      font-size: 18px;
+      border-bottom: 1px solid #555;
     }
 
     footer button:hover {
-      background-color: #00b894;
-      color: #001d2c;
-      transform: scale(1.02);
+      background: #555;
+    }
+
+    main {
+      flex: 1;
+      margin-right: 200px;
+      overflow-y: auto;
     }
 
     @media (max-width: 768px) {
-      footer {
-        position: fixed;
-        bottom: 0;
-        top: auto;
-        right: 0;
-        left: 0;
-        height: auto;
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        padding: 12px;
-        border-top: 1px solid #00b894;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-      }
-
-      footer button {
-        flex: 1 1 45%;
-        padding: 20px 10px;
-        font-size: 18px;
-        margin: 5px;
-      }
-
-      main {
-        margin-right: 0;
-      }
-
       .container {
-        padding: 10px;
+        padding: 15px;
       }
     }
   </style>
@@ -163,13 +113,12 @@
 <body>
   <div class="container">
     <header>
-      <h1 id="title">System Settings</h1>
+      <h1 id="title">System</h1>
       <div class="date-time" id="current-datetime">Loading...</div>
     </header>
-
     <main>
       <div class="settings-group">
-        <label for="auto-off">Auto OFF</label>
+        <label for="auto-off" id="auto-off-label">Auto OFF</label>
         <select id="auto-off">
           <option>OFF</option>
           <option>5min</option>
@@ -179,9 +128,8 @@
           <option>60min</option>
         </select>
       </div>
-
       <div class="settings-group">
-        <label for="brightness">Backlight Brightness</label>
+        <label for="brightness" id="brightness-label">Backlight brightness</label>
         <select id="brightness">
           <option>0%</option>
           <option>20%</option>
@@ -191,17 +139,15 @@
           <option selected>100%</option>
         </select>
       </div>
-
       <div class="settings-group">
-        <label for="beep">Beep</label>
+        <label for="beep" id="beep-label">Beep</label>
         <select id="beep">
           <option>OFF</option>
           <option selected>ON</option>
         </select>
       </div>
-
       <div class="settings-group">
-        <label for="language">Language</label>
+        <label for="language" id="language-label">Language</label>
         <select id="language" onchange="changeLanguage()">
           <option value="en">English</option>
           <option value="es">Español</option>
@@ -212,29 +158,26 @@
           <option value="pt">Português</option>
         </select>
       </div>
-
       <div class="settings-group">
-        <label for="usb">USB Connection</label>
+        <label for="usb" id="usb-label">USB Connection</label>
         <select id="usb">
           <option>OFF</option>
           <option selected>ON</option>
         </select>
       </div>
-
       <div class="settings-group">
-        <label for="datetime">Date & Time</label>
-        <div class="date-time-inputs">
+        <label for="datetime" id="datetime-label">Date & Time</label>
+        <div style="display: flex; gap: 10px;">
           <input type="date" id="date">
           <input type="time" id="time">
         </div>
       </div>
     </main>
-
     <footer>
-      <button onclick="saveSettings()">Settings</button>
-      <button onclick="showInformation()">Information</button>
-      <button onclick="updateSystem()">Update</button>
-      <button onclick="exitSystem()">Exit</button>
+      <button onclick="saveSettings()" id="settings-btn">Settings</button>
+      <button onclick="showInformation()" id="info-btn">Information</button>
+      <button onclick="updateSystem()" id="update-btn">Update</button>
+      <button onclick="exitSystem()" id="exit-btn">Exit</button>
     </footer>
   </div>
     <script src="system.js"></script>
