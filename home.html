@@ -245,17 +245,38 @@
     @media (max-width: 600px) {
       .button span { font-size: 16px; }
     }
-    .responsive-container {
+    
 
+    /* Responsive Navbar */
+.responsive-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f4f8fb;
+  padding: 10px 30px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
-    display: flex;
-    align-items: center;
+@media (max-width: 768px) {
+  .responsive-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .responsive-container > div {
+    width: 100%;
     justify-content: space-between;
-    background-color: #f4f8fb;
-    padding: 10px 40px;
-    box-sizing: border-box;
-    flex-wrap: wrap;
-    width: 300%;
+  }
+
+  .notification-dropdown,
+  .profile-dropdown {
+    margin-top: 10px;
+  }
+
+
 }
 
 
@@ -264,25 +285,18 @@
 <body>
 
 <div class="container">
-  <!-- Header --
-  <div class="header">
-  <div class="header-left">
-        <img src="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" alt="Thejo Logo" style="height: 40px; margin-right: 10px;">
-  </div>-->
-<!-- Navbar -->
-<div class="responsive-container">
 
-    <!-- Left: Logo and Toggle -->
+<nav class="responsive-container">
+  <!-- Left: Logo and Toggle -->
     <div style="display: flex; align-items: center; gap: 15px;">
-      <div style="background-color: #465b70; padding: 5px 10px; display: flex; align-items: center;">
+      <div style="padding: 5px 10px; display: flex; align-items: center;">
         <img src="/thejo.png" alt="Thejo Logo" style="height: 30px;">
       </div>
-      
     </div>
 
 
     <!-- Right: -->
-    <div style="display: flex; align-items: center; gap: 20px; padding: 5px 15px; border-radius: 6px;">
+    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
     <!--DateTime -->
     <div style="display: flex; align-items: center;">
       <span id="datetime" style="font-size: 14px; color: #444;"></span>
@@ -291,23 +305,23 @@
 
     <!-- Notification -->
     <div class="notification-dropdown">
-  <div class="notification-icon" onclick="toggleNotificationDropdown()">
-    <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="Notification">
-    <span id="notification-count">3</span>
-  </div>
-  <div class="notification-menu" id="notificationMenu">
-    <div class="notification-header">
-      <span>Notifications</span>
-      <a href="#">Mark all read</a>
+      <div class="notification-icon" onclick="toggleNotificationDropdown()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="Notification">
+        <span id="notification-count">0</span>
+      </div>
+      <div class="notification-menu" id="notificationMenu">
+        <div class="notification-header">
+          <span>Notifications</span>
+          <a href="#">Mark all read</a>
+        </div>
+        <div class="notification-item">Today</div>
+        <div class="notification-item">Yesterday</div>
+        <div class="notification-footer">
+          <a href="#" class="clear">Clear all Notifications</a>
+        </div>
+      </div>
     </div>
-    <div class="notification-item">Today</div>
-    <div class="notification-item">Yesterday</div>
-    <div class="notification-footer">
-      <a href="#" class="clear">Clear all Notifications</a>
-    </div>
-  </div>
-</div>
-
+    
     <!-- Profile -->
     <div class="profile-dropdown">
       <div class="profile-icon" onclick="toggleDropdown()">
@@ -318,7 +332,10 @@
         <div class="top" onclick="document.getElementById('fileUpload').click()">
           <img id="dropdownProfilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
           <div id="dropdownUserEmail">Loading...</div>
-          <div class="edit">✎</div>
+          <div style="position: absolute; bottom: 10px; right: 15px; display: flex; align-items: center; gap: 10px;">
+            <div class="edit" style="cursor: pointer; font-size: 16px;" title="Edit">✎</div>
+            <div onclick="removeProfilePicture()" style="cursor: pointer; color:#ddd ;font-size: 16px;" title="Remove">🗑️</div>
+          </div>          
         </div>
         <div class="bottom">
           <button onclick="logout()">↩️ Logout</button>
@@ -327,9 +344,7 @@
       </div>
     </div>
   </div>
-</div>
-</div>
-
+</nav>
 
   <!-- Dashboard Buttons -->
   <div class="grid">
@@ -395,7 +410,6 @@ window.addEventListener("click", function (e) {
 });
 
 
-
   // Notification Count (Example)
   function setNotificationCount(count) {
     const badge = document.getElementById('notification-count');
@@ -418,7 +432,6 @@ window.addEventListener("click", function (e) {
       document.getElementById('profilePic').src = pic;
     }
   });
-
   // Cloudinary Upload
   function uploadToCloudinary() {
     const file = document.getElementById('fileUpload').files[0];
@@ -442,6 +455,18 @@ window.addEventListener("click", function (e) {
     .then(() => alert("Profile picture updated"))
     .catch(err => alert("Upload error: " + err.message));
   }
+
+  function removeProfilePicture() {
+  const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+  document.getElementById('profilePic').src = defaultImage;
+  document.getElementById('dropdownProfilePic').src = defaultImage;
+
+  if (auth.currentUser) {
+    auth.currentUser.updateProfile({ photoURL: defaultImage })
+      .then(() => alert("Profile picture removed"))
+      .catch(err => alert("Error: " + err.message));
+  }
+}
 
   // Logout
   function logout() {
