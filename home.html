@@ -323,26 +323,34 @@
     </div>
     
     <!-- Profile -->
-    <div class="profile-dropdown">
-      <div class="profile-icon" onclick="toggleDropdown()">
-        <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
+<div class="profile-dropdown">
+  <div class="profile-icon" onclick="toggleDropdown()">
+    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" alt="Profile">
+  </div>
+
+  <div class="dropdown-menu" id="dropdownMenu">
+    <div class="top" style="position: relative;">
+      <img id="dropdownProfilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
+      <div id="dropdownUserEmail">Loading...</div>
+
+      <!-- ✎ Edit icon --
+      <div id="editIcon" class="edit" style="cursor: pointer; font-size: 16px; margin-top: 8px;" title="Edit" onclick="toggleEditOptions()">✎</div>-->
+
+      <!-- Hidden Upload & Remove buttons -->
+      <div id="editOptions" style="display: none; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+        <button onclick="document.getElementById('fileUpload').click()" style="padding: 5px 10px; border: none; background: #fff; color: #00bfff; border-radius: 5px; cursor: pointer;">📤 Upload New</button>
+        <button onclick="removeProfilePicture()" style="padding: 5px 10px; border: none; background: #fff; color: red; border-radius: 5px; cursor: pointer;">🗑️ Remove Photo</button>
       </div>
 
-      <div class="dropdown-menu" id="dropdownMenu">
-        <div class="top" onclick="document.getElementById('fileUpload').click()">
-          <img id="dropdownProfilePic" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" />
-          <div id="dropdownUserEmail">Loading...</div>
-          <div style="position: absolute; bottom: 10px; right: 15px; display: flex; align-items: center; gap: 10px;">
-            <div class="edit" style="cursor: pointer; font-size: 16px;" title="Edit">✎</div>
-            <div onclick="removeProfilePicture()" style="cursor: pointer; color:#ddd ;font-size: 16px;" title="Remove">🗑️</div>
-          </div>          
-        </div>
-        <div class="bottom">
-          <button onclick="logout()">↩️ Logout</button>
-        </div>
-        <input type="file" id="fileUpload" accept="image/*" style="display:none;" onchange="uploadToCloudinary()" />
-      </div>
+      <input type="file" id="fileUpload" accept="image/*" style="display:none;" onchange="uploadToCloudinary()" />
     </div>
+
+    <div class="bottom">
+      <button onclick="logout()">↩️ Logout</button>
+    </div>
+  </div>
+</div>
+
   </div>
 </nav>
 
@@ -390,6 +398,12 @@
     const menu = document.getElementById("dropdownMenu");
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
   }
+
+  function toggleEditOptions() {
+  document.getElementById('editOptions').style.display = 'flex';
+  
+}
+
 
   window.addEventListener("click", function (e) {
     if (!e.target.closest(".profile-dropdown")) {
