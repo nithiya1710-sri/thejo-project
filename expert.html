@@ -194,7 +194,7 @@ document.querySelectorAll(".arrow-btn").forEach(button => {
   const aPoint = graphData[aIndex];
   const bPoint = graphData[bIndex];
 
-  new Chart(ctx, {
+  chart = new Chart(ctx, {
     type: 'scatter', // Use scatter for individual points
     data: {
       datasets: [{
@@ -254,8 +254,8 @@ document.querySelectorAll(".arrow-btn").forEach(button => {
               }
             }
           }
-        }
-      },
+        },
+      
         zoom: {
               pan: {
                 enabled: false,
@@ -272,8 +272,9 @@ document.querySelectorAll(".arrow-btn").forEach(button => {
                   enabled: true
                 },
                 mode: 'xy'
-              },
-            },
+              }
+            }
+      },
         
       scales: {
         x: {
