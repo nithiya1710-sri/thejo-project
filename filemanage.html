@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <title>OTDR File Management</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -124,6 +124,8 @@
       </table>
     </div>
     <div class="file-operations">
+      
+      <!-- Default Buttons -->
       <div id="defaultButtons">
         <input type="file" id="fileInput" accept=".pdf,.txt,.jpg,.jpeg,.png,.svg,.img" />
         <button onclick="uploadFile()">Upload</button>
@@ -131,10 +133,11 @@
         <button onclick="saveSettings()">Save Settings</button>
         <button onclick="lastPage()">Last Page</button>
         <button onclick="nextPage()">Next Page</button>
-        <button onclick="window.location.href='home.html'">Exit</button>
-        <button onclick="window.location.href='export_report.html'">Export Reports</button>
+        <button onclick="exitApp()">Exit</button>
+        <button onclick="window.location.href='export_report.html'">Export Report</button>
       </div>
 
+      <!-- Operation Buttons -->
       <div id="operationPanel" class="operation-panel">
         <button onclick="selectAllFiles()">Select All</button>
         <button onclick="deleteSelectedFiles()">Delete</button>
@@ -167,6 +170,7 @@
       let row = document.createElement("tr");
       if (checkboxesVisible) row.classList.add("checkbox-visible");
 
+      // checkbox
       let cell0 = document.createElement("td");
       cell0.className = "checkbox-col";
       let checkbox = document.createElement("input");
@@ -175,15 +179,19 @@
       checkbox.dataset.index = index;
       cell0.appendChild(checkbox);
 
+      // index
       let cell1 = document.createElement("td");
       cell1.textContent = index + 1;
 
+      // name
       let cell2 = document.createElement("td");
       cell2.textContent = file.name;
 
+      // date
       let cell3 = document.createElement("td");
       cell3.textContent = file.date;
 
+      // open
       let cell4 = document.createElement("td");
       let openLink = document.createElement("span");
       openLink.textContent = "Open";
@@ -195,7 +203,6 @@
           const url = URL.createObjectURL(blob);
           window.open(url, "_blank");
         } catch (err) {
-          console.error("Error opening file:", err);
           alert("Failed to open file.");
         }
       };
@@ -206,7 +213,6 @@
       row.appendChild(cell2);
       row.appendChild(cell3);
       row.appendChild(cell4);
-
       fileTableBody.appendChild(row);
     });
 
@@ -262,9 +268,7 @@
     const selected = Array.from(document.querySelectorAll(".file-checkbox"))
       .filter(cb => cb.checked)
       .map(cb => parseInt(cb.dataset.index));
-
     if (selected.length === 0) return alert("No files selected.");
-
     if (confirm("Are you sure to delete selected files?")) {
       fileList = fileList.filter((_, idx) => !selected.includes(idx));
       saveFiles();
@@ -277,9 +281,7 @@
     const selected = Array.from(document.querySelectorAll(".file-checkbox"))
       .filter(cb => cb.checked)
       .map(cb => parseInt(cb.dataset.index));
-
     if (selected.length !== 1) return alert("Select only one file to rename.");
-
     const newName = prompt("Enter new name:");
     if (newName) {
       fileList[selected[0]].name = newName;
@@ -300,10 +302,16 @@
     alert("Go to next page.");
   }
 
+  function exitApp() {
+    alert("Exiting...");
+  }
+
   setInterval(updateDateTime, 1000);
   updateDateTime();
   loadFiles();
 </script>
+
+
 
 
 <script src="system.js"></script>
