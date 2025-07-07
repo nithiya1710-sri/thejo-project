@@ -124,6 +124,7 @@
       </table>
     </div>
     <div class="file-operations">
+      <div id="defaultButtons">
       <input type="file" id="fileInput" accept=".pdf,.txt,.jpg,.jpeg,.png,.svg,.img" />
       <button onclick="uploadFile()">Upload</button>
       <button onclick="showOperationPanel()">File Operation</button>
@@ -132,6 +133,7 @@
       <button onclick="nextPage()">Next Page</button>
       <button onclick="window.location.href='home.html'">Exit</button>
       <button onclick="window.location.href='export_report.html'">Export Reports</button>
+      </div>
 
       <div id="operationPanel" class="operation-panel">
         <button onclick="selectAllFiles()">Select All</button>
@@ -246,10 +248,12 @@
 
   function showOperationPanel() {
     document.getElementById("operationPanel").style.display = "block";
+    document.getElementById("defaultButtons").style.display = "none";
   }
 
   function hideOperationPanel() {
     document.getElementById("operationPanel").style.display = "none";
+    document.getElementById("defaultButtons").style.display = "none";
     checkboxesVisible = false;
     loadFiles(); // reload without checkboxes
   }
