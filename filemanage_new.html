@@ -100,6 +100,9 @@
     .checkbox-visible .checkbox-col {
       display: table-cell;
     }
+    #operationPanel {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -115,10 +118,9 @@
         <tr id="fileTableHeaderRow">
           <th class="checkbox-col">✔</th>
           <th>No.</th>
-          <th>File Name</th>
+          <th>File Name (Folder/File)</th>
           <th>Date</th>
           <th>Open</th>
-          <th>Delete</th>
         </tr>
         </thead>
         <tbody id="fileTableBody"></tbody>
@@ -131,10 +133,11 @@
         <button onclick="showOperationPanel()">File Operation</button>
         <button onclick="saveSettings()">Save Settings</button>
         <button onclick="lastPage()">Last Page</button>
-        <button onclick="nextPage()">Next Page</button> 
+        <button onclick="nextPage()">Next Page</button>
         <button onclick="window.location.href='home.html'">Exit</button>
-        <button onclick="window.location.href='export_report.html'">Export Reports</button> 
+        <button onclick="window.location.href='export_report.html'">Export Reports</button>
       </div>
+
       <div id="operationPanel" class="operation-panel">
         <button onclick="selectAllFiles()">Select All</button>
         <button onclick="deleteSelectedFiles()">Delete</button>
@@ -147,7 +150,8 @@
 </div>
 
 <script>
-  let fileList = JSON.parse(localStorage.getItem("otdrFiles") || "[]");
+  let rawFiles = [];
+  let groupedFolders = {};
   let checkboxesVisible = false;
 
   function updateDateTime() {
@@ -156,35 +160,138 @@
   }
 
   function saveFiles() {
-    localStorage.setItem("otdrFiles", JSON.stringify(fileList));
+    localStorage.setItem("otdrFilesGrouped", JSON.stringify(groupedFolders));
+  }
+
+  function loadFiles() {
+    const tableBody = document.getElementById("fileTableBody");
+    tableBody.innerHTML = "";
+
+    let fileIndex = 1;
+
+    Object.entries(groupedFolders).forEach(([folder, files], folderIndex) => {
+      const folderRow = document.createElement("tr");
+      folderRow.classList.add("folder-row");
+      folderRow.style.background = "#f0f0f0";
+      folderRow.style.fontWeight = "bold";
+      folderRow.onclick = () => toggleFolder(folderIndex);
+
+      if (checkboxesVisible) {
+        const folderCheckboxCell = document.createElement("td");
+        const folderCheckbox = document.createElement("input");
+        folderCheckbox.type = "checkbox";
+        folderCheckbox.className = "folder-checkbox";
+        folderCheckbox.dataset.folder = folder;
+        folderCheckboxCell.appendChild(folderCheckbox);
+        folderRow.appendChild(folderCheckboxCell);
+      } else {
+        const emptyCell = document.createElement("td");
+        folderRow.appendChild(emptyCell);
+      }
+
+      const folderCell = document.createElement("td");
+      folderCell.colSpan = 4;
+      folderCell.innerHTML = `<span>📁 ${folder}</span>`;
+      folderRow.appendChild(folderCell);
+      tableBody.appendChild(folderRow);
+
+      files.forEach((file, fileIdx) => {
+        const row = document.createElement("tr");
+        row.classList.add(`folder-files-${folderIndex}`);
+        row.style.display = "none";
+
+        const cell0 = document.createElement("td");
+        cell0.className = "checkbox-col";
+        if (checkboxesVisible) cell0.style.display = "table-cell";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "file-checkbox";
+        checkbox.dataset.index = `${folder}|${fileIdx}`;
+        cell0.appendChild(checkbox);
+
+        const cell1 = document.createElement("td");
+        cell1.textContent = fileIndex++;
+
+        const cell2 = document.createElement("td");
+        cell2.textContent = file.name;
+
+        const cell3 = document.createElement("td");
+        cell3.textContent = file.date;
+
+        const cell4 = document.createElement("td");
+        const openLink = document.createElement("span");
+        openLink.textContent = "Open";
+        openLink.className = "open-link";
+        openLink.onclick = (e) => {
+          e.stopPropagation();
+          const byteArray = Uint8Array.from(file.binaryData);
+          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+        };
+        cell4.appendChild(openLink);
+
+        row.appendChild(cell0);
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        row.appendChild(cell4);
+
+        tableBody.appendChild(row);
+      });
+    });
+
+    document.getElementById("totalFiles").textContent = rawFiles.length;
+  }
+
+  function toggleFolder(index) {
+    document.querySelectorAll(`.folder-files-${index}`).forEach(row => {
+      row.style.display = row.style.display === "none" ? "table-row" : "none";
+    });
   }
 
   function uploadFile() {
     const input = document.getElementById("fileInput");
-    const files = Array.from(input.files);
-    if (files.length === 0) {
-      alert("Please select at least one file or folder.");
+    const files = input.files;
+    if (!files || files.length === 0) {
+      alert("Please select a folder.");
       return;
     }
 
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const arrayBuffer = e.target.result;
-        const byteArray = Array.from(new Uint8Array(arrayBuffer));
-        const date = new Date().toISOString().split("T")[0];
-        fileList.push({
-          name: file.name,
-          date,
-          type: file.type || "application/octet-stream",
-          binaryData: byteArray
-        });
-        saveFiles();
-        loadFiles();
-      };
-      reader.readAsArrayBuffer(file);
+    rawFiles = [];
+    groupedFolders = {};
+
+    const readFile = (file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const byteArray = Array.from(new Uint8Array(e.target.result));
+          const date = new Date().toISOString().split("T")[0];
+          const path = file.webkitRelativePath || file.name;
+          const [folderName, ...rest] = path.split("/");
+          const fileName = rest.join("/") || file.name;
+
+          const fileData = {
+            name: fileName,
+            date,
+            type: file.type || "application/octet-stream",
+            binaryData: byteArray
+          };
+
+          if (!groupedFolders[folderName]) groupedFolders[folderName] = [];
+          groupedFolders[folderName].push(fileData);
+          rawFiles.push(fileData);
+          resolve();
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    };
+
+    Promise.all(Array.from(files).map(readFile)).then(() => {
+      saveFiles();
+      loadFiles();
+      input.value = "";
     });
-    input.value = "";
   }
 
   function showOperationPanel() {
@@ -202,33 +309,51 @@
   }
 
   function selectAllFiles() {
-    checkboxesVisible = true;
-    loadFiles();
-    document.querySelectorAll(".file-checkbox").forEach(cb => cb.checked = true);
+    document.querySelectorAll(".file-checkbox, .folder-checkbox").forEach(cb => cb.checked = true);
   }
 
   function deleteSelectedFiles() {
-    if (!checkboxesVisible) return alert("Use Select All first.");
-    const selected = Array.from(document.querySelectorAll(".file-checkbox"))
-      .filter(cb => cb.checked)
-      .map(cb => parseInt(cb.dataset.index));
-    if (selected.length === 0) return alert("No files selected.");
-    if (confirm(t.confirmDelete(selected.length + " file(s)"))) {
-      fileList = fileList.filter((_, idx) => !selected.includes(idx));
-      saveFiles();
-      loadFiles();
+    const fileSelections = Array.from(document.querySelectorAll(".file-checkbox:checked"))
+      .map(cb => cb.dataset.index);
+    const folderSelections = Array.from(document.querySelectorAll(".folder-checkbox:checked"))
+      .map(cb => cb.dataset.folder);
+
+    if (fileSelections.length === 0 && folderSelections.length === 0) {
+      return alert("No files or folders selected.");
     }
+
+    if (!confirm("Are you sure you want to delete selected files/folders?")) return;
+
+    // Delete selected files
+    fileSelections.forEach(key => {
+      const [folder, fileIdx] = key.split("|");
+      const fileToDelete = groupedFolders[folder][fileIdx];
+      groupedFolders[folder] = groupedFolders[folder].filter(file => file !== fileToDelete);
+      if (groupedFolders[folder].length === 0) {
+        delete groupedFolders[folder];
+      }
+    });
+
+    // Delete selected folders
+    folderSelections.forEach(folder => {
+      delete groupedFolders[folder];
+    });
+
+    rawFiles = [].concat(...Object.values(groupedFolders));
+    saveFiles();
+    loadFiles();
   }
 
   function renameSelectedFile() {
-    if (!checkboxesVisible) return alert("Use Select All first.");
-    const selected = Array.from(document.querySelectorAll(".file-checkbox"))
-      .filter(cb => cb.checked)
-      .map(cb => parseInt(cb.dataset.index));
+    const selected = Array.from(document.querySelectorAll(".file-checkbox:checked"))
+      .map(cb => cb.dataset.index);
+
     if (selected.length !== 1) return alert("Select only one file to rename.");
-    const newName = prompt("Enter new name:");
+
+    const [folder, fileIdx] = selected[0].split("|");
+    const newName = prompt("Enter new file name:");
     if (newName) {
-      fileList[selected[0]].name = newName;
+      groupedFolders[folder][fileIdx].name = newName;
       saveFiles();
       loadFiles();
     }
@@ -239,11 +364,24 @@
   }
 
   function lastPage() {
-    alert("Go to last page.");
+    document.querySelectorAll(`[class^="folder-files-"]`).forEach(row => {
+      row.style.display = "none";
+    });
   }
 
   function nextPage() {
-    alert("Go to next page.");
+    document.querySelectorAll(`[class^="folder-files-"]`).forEach(row => {
+      row.style.display = "table-row";
+    });
+  }
+
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  if (localStorage.getItem("otdrFilesGrouped")) {
+    groupedFolders = JSON.parse(localStorage.getItem("otdrFilesGrouped"));
+    rawFiles = [].concat(...Object.values(groupedFolders));
+    loadFiles();
   }
 
   // Brightness Control
