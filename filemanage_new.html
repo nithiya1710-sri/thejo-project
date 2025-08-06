@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
+  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <title>OTDR File Management</title>
   <style>
     body {
@@ -118,26 +118,13 @@
           <th>File Name</th>
           <th>Date</th>
           <th>Open</th>
+          <th>Delete</th>
         </tr>
         </thead>
         <tbody id="fileTableBody"></tbody>
       </table>
     </div>
     <div class="file-operations">
-      
-      <!-- Default Buttons -->
-<!--       <div id="defaultButtons">
-        <input type="file" id="fileInput" accept=".pdf,.txt,.jpg,.jpeg,.png,.svg,.img" />
-        <button onclick="uploadFile()">Upload</button>
-        <button onclick="showOperationPanel()">File Operation</button>
-        <button onclick="saveSettings()">Save Settings</button>
-        <button onclick="lastPage()">Last Page</button>
-        <button onclick="nextPage()">Next Page</button>
-        <button onclick="exitApp()">Exit</button>
-        <button onclick="window.location.href='export_report.html'">Export Report</button>
-      </div>
- -->
-
       <div id="defaultButtons">
         <input type="file" id="fileInput" webkitdirectory directory multiple />
         <button onclick="uploadFile()">Upload Folder</button>
@@ -148,7 +135,6 @@
         <button onclick="window.location.href='home.html'">Exit</button>
         <button onclick="window.location.href='export_report.html'">Export Reports</button> 
       </div>
-      <!-- Operation Buttons -->
       <div id="operationPanel" class="operation-panel">
         <button onclick="selectAllFiles()">Select All</button>
         <button onclick="deleteSelectedFiles()">Delete</button>
@@ -173,92 +159,39 @@
     localStorage.setItem("otdrFiles", JSON.stringify(fileList));
   }
 
-  function loadFiles() {
-    const fileTableBody = document.getElementById("fileTableBody");
-    fileTableBody.innerHTML = "";
-
-    fileList.forEach((file, index) => {
-      let row = document.createElement("tr");
-      if (checkboxesVisible) row.classList.add("checkbox-visible");
-
-      // checkbox
-      let cell0 = document.createElement("td");
-      cell0.className = "checkbox-col";
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "file-checkbox";
-      checkbox.dataset.index = index;
-      cell0.appendChild(checkbox);
-
-      // index
-      let cell1 = document.createElement("td");
-      cell1.textContent = index + 1;
-
-      // name
-      let cell2 = document.createElement("td");
-      cell2.textContent = file.name;
-
-      // date
-      let cell3 = document.createElement("td");
-      cell3.textContent = file.date;
-
-      // open
-      let cell4 = document.createElement("td");
-      let openLink = document.createElement("span");
-      openLink.textContent = "Open";
-      openLink.className = "open-link";
-      openLink.onclick = () => {
-        try {
-          const byteArray = Uint8Array.from(file.binaryData);
-          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
-          const url = URL.createObjectURL(blob);
-          window.open(url, "_blank");
-        } catch (err) {
-          alert("Failed to open file.");
-        }
-      };
-      cell4.appendChild(openLink);
-
-      row.appendChild(cell0);
-      row.appendChild(cell1);
-      row.appendChild(cell2);
-      row.appendChild(cell3);
-      row.appendChild(cell4);
-      fileTableBody.appendChild(row);
-    });
-
-    document.getElementById("totalFiles").textContent = fileList.length;
-  }
-
   function uploadFile() {
     const input = document.getElementById("fileInput");
-    const file = input.files[0];
-    if (!file) {
-      alert("Please select a file.");
+    const files = Array.from(input.files);
+    if (files.length === 0) {
+      alert("Please select at least one file or folder.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const arrayBuffer = e.target.result;
-      const byteArray = Array.from(new Uint8Array(arrayBuffer));
-      const date = new Date().toISOString().split("T")[0];
-      fileList.push({
-        name: file.name,
-        date,
-        type: file.type || "application/octet-stream",
-        binaryData: byteArray
-      });
-      saveFiles();
-      loadFiles();
-      input.value = "";
-    };
-    reader.readAsArrayBuffer(file);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const arrayBuffer = e.target.result;
+        const byteArray = Array.from(new Uint8Array(arrayBuffer));
+        const date = new Date().toISOString().split("T")[0];
+        fileList.push({
+          name: file.name,
+          date,
+          type: file.type || "application/octet-stream",
+          binaryData: byteArray
+        });
+        saveFiles();
+        loadFiles();
+      };
+      reader.readAsArrayBuffer(file);
+    });
+    input.value = "";
   }
 
   function showOperationPanel() {
     document.getElementById("operationPanel").style.display = "block";
     document.getElementById("defaultButtons").style.display = "none";
+    checkboxesVisible = true;
+    loadFiles();
   }
 
   function hideOperationPanel() {
@@ -280,7 +213,7 @@
       .filter(cb => cb.checked)
       .map(cb => parseInt(cb.dataset.index));
     if (selected.length === 0) return alert("No files selected.");
-    if (confirm("Are you sure to delete selected files?")) {
+    if (confirm(t.confirmDelete(selected.length + " file(s)"))) {
       fileList = fileList.filter((_, idx) => !selected.includes(idx));
       saveFiles();
       loadFiles();
@@ -313,178 +246,226 @@
     alert("Go to next page.");
   }
 
-  
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
-  loadFiles();
-</script>
-
-
-
-
-<script src="system.js?v=2"></script>
-<script>
   // Brightness Control
-const brightnessLevels = {
-  '0%': 0,
-  '20%': 0.2,
-  '40%': 0.4,
-  '60%': 0.6,
-  '80%': 0.8,
-  '100%': 1
-};
-const savedBrightness = localStorage.getItem("brightness") || "100%";
-document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
+  const brightnessLevels = {
+    '0%': 0,
+    '20%': 0.2,
+    '40%': 0.4,
+    '60%': 0.6,
+    '80%': 0.8,
+    '100%': 1
+  };
+  const savedBrightness = localStorage.getItem("brightness") || "100%";
+  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
 
-// Language Translations
-const translations = {
-  en: {
-    management: "OTDR File Management",
-    upload: "Upload",
-    save: "Save Settings",
-    last: "Last Page",
-    next: "Next Page",
-    exit: "Exit",
-    total: "Total Files:",
-    open: "Open",
-    del: "Delete",
-    confirmDelete: name => `Are you sure you want to delete "${name}"?`
-  },
-  es: {
-    management: "Gestión de archivos OTDR",
-    upload: "Subir",
-    save: "Guardar configuración",
-    last: "Página anterior",
-    next: "Página siguiente",
-    exit: "Salir",
-    total: "Archivos totales:",
-    open: "Abrir",
-    del: "Eliminar",
-    confirmDelete: name => `¿Estás seguro de que deseas eliminar "${name}"?`
-  },
-  fr: {
-    management: "Gestion de fichiers OTDR",
-    upload: "Téléverser",
-    save: "Enregistrer les paramètres",
-    last: "Page précédente",
-    next: "Page suivante",
-    exit: "Quitter",
-    total: "Fichiers au total :",
-    open: "Ouvrir",
-    del: "Supprimer",
-    confirmDelete: name => `Êtes-vous sûr de vouloir supprimer "${name}" ?`
-  },
-  nl: {
-    management: "OTDR-bestandsbeheer",
-    upload: "Uploaden",
-    save: "Instellingen opslaan",
-    last: "Vorige pagina",
-    next: "Volgende pagina",
-    exit: "Afsluiten",
-    total: "Totaal bestanden:",
-    open: "Openen",
-    del: "Verwijderen",
-    confirmDelete: name => `Weet je zeker dat je "${name}" wilt verwijderen?`
-  },
-  it: {
-    management: "Gestione file OTDR",
-    upload: "Carica",
-    save: "Salva impostazioni",
-    last: "Pagina precedente",
-    next: "Pagina successiva",
-    exit: "Esci",
-    total: "File totali:",
-    open: "Apri",
-    del: "Elimina",
-    confirmDelete: name => `Sei sicuro di voler eliminare "${name}"?`
-  },
-  pt: {
-    management: "Gerenciamento de arquivos OTDR",
-    upload: "Enviar",
-    save: "Salvar configurações",
-    last: "Página anterior",
-    next: "Próxima página",
-    exit: "Sair",
-    total: "Total de arquivos:",
-    open: "Abrir",
-    del: "Excluir",
-    confirmDelete: name => `Tem certeza de que deseja excluir "${name}"?`
-  }
-};
+  // Language Translations
+  const translations = {
+    en: {
+      management: "OTDR File Management",
+      upload: "Upload Folder",
+      save: "Save Settings",
+      last: "Last Page",
+      next: "Next Page",
+      exit: "Exit",
+      export: "Export Reports",
+      total: "Total Files:",
+      open: "Open",
+      del: "Delete",
+      selectAll: "Select All",
+      delete: "Delete",
+      rename: "Rename",
+      back: "Back",
+      confirmDelete: name => `Are you sure you want to delete "${name}"?`
+    },
+    es: {
+      management: "Gestión de archivos OTDR",
+      upload: "Subir carpeta",
+      save: "Guardar configuración",
+      last: "Página anterior",
+      next: "Página siguiente",
+      exit: "Salir",
+      export: "Exportar informes",
+      total: "Archivos totales:",
+      open: "Abrir",
+      del: "Eliminar",
+      selectAll: "Seleccionar todo",
+      delete: "Eliminar",
+      rename: "Renombrar",
+      back: "Volver",
+      confirmDelete: name => `¿Estás seguro de que deseas eliminar "${name}"?`
+    },
+    fr: {
+      management: "Gestion de fichiers OTDR",
+      upload: "Téléverser dossier",
+      save: "Enregistrer les paramètres",
+      last: "Page précédente",
+      next: "Page suivante",
+      exit: "Quitter",
+      export: "Exporter les rapports",
+      total: "Fichiers au total :",
+      open: "Ouvrir",
+      del: "Supprimer",
+      selectAll: "Tout sélectionner",
+      delete: "Supprimer",
+      rename: "Renommer",
+      back: "Retour",
+      confirmDelete: name => `Êtes-vous sûr de vouloir supprimer "${name}" ?`
+    },
+    nl: {
+      management: "OTDR-bestandsbeheer",
+      upload: "Map uploaden",
+      save: "Instellingen opslaan",
+      last: "Vorige pagina",
+      next: "Volgende pagina",
+      exit: "Afsluiten",
+      export: "Rapporten exporteren",
+      total: "Totaal bestanden:",
+      open: "Openen",
+      del: "Verwijderen",
+      selectAll: "Alles selecteren",
+      delete: "Verwijderen",
+      rename: "Hernoemen",
+      back: "Terug",
+      confirmDelete: name => `Weet je zeker dat je "${name}" wilt verwijderen?`
+    },
+    it: {
+      management: "Gestione file OTDR",
+      upload: "Carica cartella",
+      save: "Salva impostazioni",
+      last: "Pagina precedente",
+      next: "Pagina successiva",
+      exit: "Esci",
+      export: "Esporta rapporti",
+      total: "File totali:",
+      open: "Apri",
+      del: "Elimina",
+      selectAll: "Seleziona tutto",
+      delete: "Elimina",
+      rename: "Rinomina",
+      back: "Indietro",
+      confirmDelete: name => `Sei sicuro di voler eliminare "${name}"?`
+    },
+    pt: {
+      management: "Gerenciamento de arquivos OTDR",
+      upload: "Enviar pasta",
+      save: "Salvar configurações",
+      last: "Página anterior",
+      next: "Próxima página",
+      exit: "Sair",
+      export: "Exportar relatórios",
+      total: "Total de arquivos:",
+      open: "Abrir",
+      del: "Excluir",
+      selectAll: "Selecionar tudo",
+      delete: "Excluir",
+      rename: "Renomear",
+      back: "Voltar",
+      confirmDelete: name => `Tem certeza de que deseja excluir "${name}"?`
+    }
+  };
 
+  const lang = localStorage.getItem("language") || "en";
+  const t = translations[lang] || translations.en;
 
-const lang = localStorage.getItem("language") || "en";
-const t = translations[lang] || translations.en;
+  // Apply Translations
+  document.querySelector(".header span").textContent = t.management;
+  document.querySelector("#defaultButtons input[type='file']").nextElementSibling.textContent = t.upload;
+  document.querySelectorAll("#defaultButtons button")[1].textContent = t.save;
+  document.querySelectorAll("#defaultButtons button")[2].textContent = t.last;
+  document.querySelectorAll("#defaultButtons button")[3].textContent = t.next;
+  document.querySelectorAll("#defaultButtons button")[4].textContent = t.exit;
+  document.querySelectorAll("#defaultButtons button")[5].textContent = t.export;
+  document.querySelector(".footer").firstChild.textContent = t.total + " ";
 
-// Apply Translations
-document.querySelector(".header span").textContent = t.management;
-document.querySelectorAll(".file-operations button")[0].textContent = t.upload;
-document.querySelectorAll(".file-operations button")[1].textContent = t.save;
-document.querySelectorAll(".file-operations button")[2].textContent = t.last;
-document.querySelectorAll(".file-operations button")[3].textContent = t.next;
-document.querySelectorAll(".file-operations button")[4].textContent = t.exit;
-document.querySelector(".footer").firstChild.textContent = t.total + " ";
+  // Translate operationPanel buttons
+  document.querySelectorAll("#operationPanel button")[0].textContent = t.selectAll;
+  document.querySelectorAll("#operationPanel button")[1].textContent = t.delete;
+  document.querySelectorAll("#operationPanel button")[2].textContent = t.rename;
+  document.querySelectorAll("#operationPanel button")[3].textContent = t.back;
 
-// Modify Open/Delete labels dynamically
-function loadFilesTranslated() {
-  const fileTableBody = document.getElementById("fileTableBody");
-  fileTableBody.innerHTML = "";
+  function loadFilesTranslated() {
+    const fileTableBody = document.getElementById("fileTableBody");
+    fileTableBody.innerHTML = "";
 
-  fileList.forEach((file, index) => {
-    let row = document.createElement("tr");
+    fileList.forEach((file, index) => {
+      let row = document.createElement("tr");
+      if (checkboxesVisible) row.classList.add("checkbox-visible");
 
-    let cell1 = document.createElement("td");
-    cell1.textContent = index + 1;
+      // Checkbox
+      let cell0 = document.createElement("td");
+      cell0.className = "checkbox-col";
+      let checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "file-checkbox";
+      checkbox.dataset.index = index;
+      cell0.appendChild(checkbox);
 
-    let cell2 = document.createElement("td");
-    cell2.contentEditable = true;
-    cell2.textContent = file.name;
-    cell2.addEventListener("blur", function () {
-      fileList[index].name = this.textContent;
-      saveFiles();
+      // Index
+      let cell1 = document.createElement("td");
+      cell1.textContent = index + 1;
+
+      // Name
+      let cell2 = document.createElement("td");
+      cell2.contentEditable = true;
+      cell2.textContent = file.name;
+      cell2.addEventListener("blur", function () {
+        fileList[index].name = this.textContent;
+        saveFiles();
+      });
+
+      // Date
+      let cell3 = document.createElement("td");
+      cell3.textContent = file.date;
+
+      // Open
+      let cell4 = document.createElement("td");
+      let openLink = document.createElement("span");
+      openLink.textContent = t.open;
+      openLink.className = "open-link";
+      openLink.onclick = () => {
+        try {
+          const byteArray = Uint8Array.from(file.binaryData);
+          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
+        } catch (err) {
+          alert("Failed to open file.");
+        }
+      };
+      cell4.appendChild(openLink);
+
+      // Delete
+      let cell5 = document.createElement("td");
+      let deleteBtn = document.createElement("button");
+      deleteBtn.textContent = t.del;
+      deleteBtn.className = "delete-btn";
+      deleteBtn.onclick = () => {
+        if (confirm(t.confirmDelete(file.name))) {
+          fileList.splice(index, 1);
+          saveFiles();
+          loadFilesTranslated();
+        }
+      };
+      cell5.appendChild(deleteBtn);
+
+      row.appendChild(cell0);
+      row.appendChild(cell1);
+      row.appendChild(cell2);
+      row.appendChild(cell3);
+      row.appendChild(cell4);
+      row.appendChild(cell5);
+      fileTableBody.appendChild(row);
     });
 
-    let cell3 = document.createElement("td");
-    cell3.textContent = file.date;
+    document.getElementById("totalFiles").textContent = fileList.length;
+  }
 
-    let cell4 = document.createElement("td");
-    let openLink = document.createElement("span");
-    openLink.textContent = t.open;
-    openLink.className = "open-link";
-    openLink.onclick = () => {
-      const win = window.open();
-      win.document.write(`<iframe src="${file.content}" width="100%" height="100%"></iframe>`);
-    };
-    cell4.appendChild(openLink);
+  // Override default loader with translation-aware loader
+  loadFiles = loadFilesTranslated;
+  loadFiles();
 
-    let cell5 = document.createElement("td");
-    let deleteBtn = document.createElement("button");
-    deleteBtn.textContent = t.del;
-    deleteBtn.className = "delete-btn";
-    deleteBtn.onclick = () => {
-      if (confirm(t.confirmDelete(file.name))) {
-        fileList.splice(index, 1);
-        saveFiles();
-        loadFilesTranslated();
-      }
-    };
-    cell5.appendChild(deleteBtn);
-
-    row.appendChild(cell1);
-    row.appendChild(cell2);
-    row.appendChild(cell3);
-    row.appendChild(cell4);
-    row.appendChild(cell5);
-    fileTableBody.appendChild(row);
-  });
-
-  document.getElementById("totalFiles").textContent = fileList.length;
-}
-
-// Override default loader with translation-aware loader
-loadFiles = loadFilesTranslated;
-loadFiles();
-
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
 </script>
 </body>
 </html>
