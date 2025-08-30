@@ -203,6 +203,10 @@
             cursor: pointer;
             font-size: 18px;
             border-bottom: 1px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
         }
         .sidebar-button:hover {
             background: #555;
@@ -235,7 +239,7 @@
             <div class="progress-bar-fill"></div>
         </div>
         <div id="progressValue">0 km</div>
-        <a href="event-map-pass.html">
+        <a href="#">
             <button class="start-button">Start</button>
         </a>    
         <div class="event-section">
@@ -251,167 +255,12 @@
         <div class="test-condition">Test Condition:</div>
     </div>
     <div class="right-sidebar">
-        <button class="sidebar-button">Test</button>
-        <button class="sidebar-button" onclick="window.location.href='setindex.html'">Settings</button>
+        <a href="event-map-pass.html" class="sidebar-button">Test</a>
+        <button class="sidebar-button">Settings</button>
         <button class="sidebar-button">Event Map</button>
         <button class="sidebar-button">Files</button>
         <button class="sidebar-button">Save</button>
         <button class="sidebar-button">Fast Save</button>
     </div>
-    <script>
-  // Brightness
-  const brightnessMap = {
-    '0%': 0, '20%': 0.2, '40%': 0.4, '60%': 0.6, '80%': 0.8, '100%': 1
-  };
-  const savedBrightness = localStorage.getItem('brightness') || '100%';
-  document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
-
-  // Language
-  const lang = localStorage.getItem('language') || 'en';
-  const translations = {
-    en: {
-      totalLength: "Total Length",
-      totalL: "Total-L",
-      avgL: "Avg.L",
-      totalEvents: "Total Events",
-      start: "Start",
-      lastEvent: "Last Event",
-      nextEvent: "Next Event",
-      loss: "Loss",
-      avgLoss: "Avg-Loss",
-      reflection: "Reflection",
-      totalLoss: "Total Loss",
-      testCondition: "Test Condition:",
-      sidebar: ["Test", "Settings", "Event Map", "Files", "Save", "Fast Save"]
-    },
-    fr: {
-      totalLength: "Longueur Totale",
-      totalL: "Total-L",
-      avgL: "Moy. L",
-      totalEvents: "Événements Totaux",
-      start: "Démarrer",
-      lastEvent: "Événement Précédent",
-      nextEvent: "Événement Suivant",
-      loss: "Perte",
-      avgLoss: "Perte Moyenne",
-      reflection: "Réflexion",
-      totalLoss: "Perte Totale",
-      testCondition: "Condition de Test :",
-      sidebar: ["Test", "Paramètres", "Carte Événement", "Fichiers", "Sauvegarder", "Sauvegarde Rapide"]
-    },
-    pt: {
-      totalLength: "Comprimento Total",
-      totalL: "Total-L",
-      avgL: "Méd. L",
-      totalEvents: "Eventos Totais",
-      start: "Iniciar",
-      lastEvent: "Último Evento",
-      nextEvent: "Próximo Evento",
-      loss: "Perda",
-      avgLoss: "Perda Média",
-      reflection: "Reflexão",
-      totalLoss: "Perda Total",
-      testCondition: "Condição de Teste:",
-      sidebar: ["Teste", "Configurações", "Mapa de Eventos", "Arquivos", "Salvar", "Salvamento Rápido"]
-    },
-    it: {
-      totalLength: "Lunghezza Totale",
-      totalL: "Totale-L",
-      avgL: "Media L",
-      totalEvents: "Eventi Totali",
-      start: "Avvia",
-      lastEvent: "Evento Precedente",
-      nextEvent: "Evento Successivo",
-      loss: "Perdita",
-      avgLoss: "Perdita Media",
-      reflection: "Riflessione",
-      totalLoss: "Perdita Totale",
-      testCondition: "Condizione di Test:",
-      sidebar: ["Test", "Impostazioni", "Mappa Eventi", "File", "Salva", "Salvataggio Rapido"]
-    },
-    es: {
-      totalLength: "Longitud Total",
-      totalL: "Total-L",
-      avgL: "Prom. L",
-      totalEvents: "Eventos Totales",
-      start: "Iniciar",
-      lastEvent: "Evento Anterior",
-      nextEvent: "Siguiente Evento",
-      loss: "Pérdida",
-      avgLoss: "Pérdida Promedio",
-      reflection: "Reflexión",
-      totalLoss: "Pérdida Total",
-      testCondition: "Condición de Prueba:",
-      sidebar: ["Prueba", "Ajustes", "Mapa de Eventos", "Archivos", "Guardar", "Guardar Rápido"]
-    },
-    nl: {
-      totalLength: "Totale Lengte",
-      totalL: "Totaal-L",
-      avgL: "Gem. L",
-      totalEvents: "Totale Gebeurtenissen",
-      start: "Start",
-      lastEvent: "Laatste Gebeurtenis",
-      nextEvent: "Volgende Gebeurtenis",
-      loss: "Verlies",
-      avgLoss: "Gemiddeld Verlies",
-      reflection: "Reflectie",
-      totalLoss: "Totaal Verlies",
-      testCondition: "Testconditie:",
-      sidebar: ["Test", "Instellingen", "Gebeurteniskaart", "Bestanden", "Opslaan", "Snel Opslaan"]
-    },
-    de: {
-  totalLength: "Gesamtlänge",
-  totalL: "Gesamt-L",
-  avgL: "Durchschn. L",
-  totalEvents: "Gesamtereignisse",
-  start: "Start",
-  lastEvent: "Letztes Ereignis",
-  nextEvent: "Nächstes Ereignis",
-  loss: "Verlust",
-  avgLoss: "Durchschn. Verlust",
-  reflection: "Reflexion",
-  totalLoss: "Gesamtverlust",
-  testCondition: "Testbedingung:",
-  sidebar: ["Test", "Einstellungen", "Ereigniskarte", "Dateien", "Speichern", "Schnellspeichern"]
-}
-  
-  };
-
-  const t = translations[lang] || translations.en;
-
-  // Apply Translations
-  document.addEventListener("DOMContentLoaded", () => {
-    const labels = document.querySelectorAll(".top-bar > div");
-    if (labels.length >= 4) {
-      labels[0].textContent = t.totalLength;
-      labels[1].textContent = t.totalL;
-      labels[2].textContent = t.avgL;
-      labels[3].textContent = t.totalEvents;
-    }
-
-    document.querySelector(".start-button").textContent = t.start;
-    document.querySelector(".event-section .event-button:first-child").textContent = t.lastEvent;
-    document.querySelector(".event-section .event-button:last-child").textContent = t.nextEvent;
-
-    const eventBox = document.querySelector(".event-box");
-    if (eventBox) {
-      eventBox.innerHTML = `
-        <p>${t.loss}: <span id="loss">----</span></p>
-        <p>${t.avgLoss}: <span id="avgLoss">----</span></p>
-        <p>${t.reflection}: <span id="reflection">----</span></p>
-        <p>${t.totalLoss}: <span id="totalLoss">----</span></p>
-      `;
-    }
-
-    const condition = document.querySelector(".test-condition");
-    if (condition) condition.textContent = t.testCondition;
-
-    const sidebarButtons = document.querySelectorAll(".sidebar-button");
-    sidebarButtons.forEach((btn, i) => {
-      btn.textContent = t.sidebar[i] || btn.textContent;
-    });
-  });
-</script>
-<script src="system.js"></script>
 </body>
 </html>
