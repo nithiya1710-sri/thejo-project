@@ -4,22 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard UI 1</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAzERmHT8d8hq8AqXAZ1qJm_tT4HdSQn5I",
-      authDomain: "test-afbb6.firebaseapp.com",
-      projectId: "test-afbb6",
-      storageBucket: "test-afbb6.appspot.com",
-      messagingSenderId: "1019803721815",
-      appId: "1:1019803721815:web:7cdbe37f41cbebd94ac312",
-      measurementId: "G-5GSJ7QQ3GW"
-    };
+    // const firebaseConfig = {
+//   apiKey: "AIzaSyAzERmHT8d8hq8AqXAZ1qJm_tT4HdSQn5I",
+//   authDomain: "test-afbb6.firebaseapp.com",
+//   projectId: "test-afbb6",
+//   storageBucket: "test-afbb6.appspot.com",
+//   messagingSenderId: "1019803721815",
+//   appId: "1:1019803721815:web:7cdbe37f41cbebd94ac312",
+//   measurementId: "G-5GSJ7QQ3GW"
+// };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
@@ -430,7 +429,13 @@
       </div>
     </div>
 
-   
+    <div class="bottom-buttons">
+      <button class="bottom-btn"><i class="fas fa-chart-line"></i> Curve</button>
+      <button class="bottom-btn"><i class="fas fa-list"></i> List</button>
+      <button class="bottom-btn"><i class="fas fa-map"></i> Event Map</button>
+      <button class="bottom-btn"><i class="fas fa-save"></i> Fast Save</button>
+      <button class="bottom-btn"><i class="fas fa-cog"></i> Settings</button>
+    </div>
   </div>
 
   <div class="right-sidebar">
@@ -439,243 +444,7 @@
     <button class="sidebar-button">Next Event</button>
     <button class="sidebar-button">Files</button>
     <button class="sidebar-button">Save</button>
-    <button onclick="window.location.href = 'Event-map-3.html'" class="sidebar-button">Exit</button>
+    <button class="sidebar-button">Exit</button>
   </div>
-  <script src="system.js"></script>
-  <script>
-  // 🔆 Brightness Control
-  const brightnessLevels = {
-    '0%': 0,
-    '20%': 0.2,
-    '40%': 0.4,
-    '60%': 0.6,
-    '80%': 0.8,
-    '100%': 1
-  };
-  const savedBrightness = localStorage.getItem('brightness') || '100%';
-  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
-
-  // 🌐 Language Translations
-  const lang = localStorage.getItem("language") || "en";
-  const translations = {
-    en: {
-      settings: "Settings",
-      lastEvent: "Last Event",
-      nextEvent: "Next Event",
-      files: "Files",
-      save: "Save",
-      exit: "Exit",
-      curve: "Curve",
-      list: "List",
-      map: "Event Map",
-      fastSave: "Fast Save",
-      totalLength: "Total Length",
-      totalL: "Total-L",
-      avgL: "Avg.L",
-      totalEvents: "Total Events",
-      pass: "Pass",
-      fail: "Fail",
-      passEvent: "Pass Event",
-      distance: "Distance from last event point",
-      loss: "Loss",
-      avgLoss: "Avg-Loss",
-      reflection: "Reflection",
-      totalLoss: "Total Loss",
-      statusPass: "✔ Pass",
-      statusFail: "✖ Fail",
-      statusUnknown: "Status Unknown"
-    },
-    fr: {
-      settings: "Paramètres",
-      lastEvent: "Dernier événement",
-      nextEvent: "Événement suivant",
-      files: "Fichiers",
-      save: "Enregistrer",
-      exit: "Quitter",
-      curve: "Courbe",
-      list: "Liste",
-      map: "Carte d'événement",
-      fastSave: "Sauvegarde rapide",
-      totalLength: "Longueur totale",
-      totalL: "Longueur-L",
-      avgL: "Moy-L",
-      totalEvents: "Événements totaux",
-      pass: "Réussite",
-      fail: "Échec",
-      passEvent: "Événement réussi",
-      distance: "Distance depuis le dernier point",
-      loss: "Perte",
-      avgLoss: "Perte moyenne",
-      reflection: "Réflexion",
-      totalLoss: "Perte totale",
-      statusPass: "✔ Réussi",
-      statusFail: "✖ Échoué",
-      statusUnknown: "Statut inconnu"
-    },
-    es: {
-      settings: "Configuración",
-      lastEvent: "Último evento",
-      nextEvent: "Siguiente evento",
-      files: "Archivos",
-      save: "Guardar",
-      exit: "Salir",
-      curve: "Curva",
-      list: "Lista",
-      map: "Mapa de eventos",
-      fastSave: "Guardado rápido",
-      totalLength: "Longitud total",
-      totalL: "Longitud-L",
-      avgL: "Prom-L",
-      totalEvents: "Eventos totales",
-      pass: "Aprobado",
-      fail: "Fallado",
-      passEvent: "Evento aprobado",
-      distance: "Distancia desde el último punto",
-      loss: "Pérdida",
-      avgLoss: "Pérdida media",
-      reflection: "Reflexión",
-      totalLoss: "Pérdida total",
-      statusPass: "✔ Aprobado",
-      statusFail: "✖ Fallado",
-      statusUnknown: "Estado desconocido"
-    },
-    nl: {
-      settings: "Instellingen",
-      lastEvent: "Laatste gebeurtenis",
-      nextEvent: "Volgende gebeurtenis",
-      files: "Bestanden",
-      save: "Opslaan",
-      exit: "Afsluiten",
-      curve: "Curve",
-      list: "Lijst",
-      map: "Gebeurteniskaart",
-      fastSave: "Snel opslaan",
-      totalLength: "Totale lengte",
-      totalL: "Totaal-L",
-      avgL: "Gem-L",
-      totalEvents: "Totale gebeurtenissen",
-      pass: "Geslaagd",
-      fail: "Mislukt",
-      passEvent: "Geslaagd evenement",
-      distance: "Afstand tot laatste punt",
-      loss: "Verlies",
-      avgLoss: "Gemiddeld verlies",
-      reflection: "Reflectie",
-      totalLoss: "Totaal verlies",
-      statusPass: "✔ Geslaagd",
-      statusFail: "✖ Mislukt",
-      statusUnknown: "Status onbekend"
-    },
-    de: {
-      settings: "Einstellungen",
-      lastEvent: "Letztes Ereignis",
-      nextEvent: "Nächstes Ereignis",
-      files: "Dateien",
-      save: "Speichern",
-      exit: "Beenden",
-      curve: "Kurve",
-      list: "Liste",
-      map: "Ereigniskarte",
-      fastSave: "Schnellspeicherung",
-      totalLength: "Gesamtlänge",
-      totalL: "Gesamt-L",
-      avgL: "Durchschn-L",
-      totalEvents: "Gesamtanzahl Ereignisse",
-      pass: "Bestanden",
-      fail: "Nicht bestanden",
-      passEvent: "Bestandenes Ereignis",
-      distance: "Abstand vom letzten Punkt",
-      loss: "Verlust",
-      avgLoss: "Durchschn. Verlust",
-      reflection: "Reflexion",
-      totalLoss: "Gesamtverlust",
-      statusPass: "✔ Bestanden",
-      statusFail: "✖ Nicht bestanden",
-      statusUnknown: "Status unbekannt"
-    },
-    it: {
-      settings: "Impostazioni",
-      lastEvent: "Ultimo evento",
-      nextEvent: "Evento successivo",
-      files: "File",
-      save: "Salva",
-      exit: "Esci",
-      curve: "Curva",
-      list: "Lista",
-      map: "Mappa eventi",
-      fastSave: "Salvataggio rapido",
-      totalLength: "Lunghezza totale",
-      totalL: "Totale-L",
-      avgL: "Media-L",
-      totalEvents: "Eventi totali",
-      pass: "Superato",
-      fail: "Fallito",
-      passEvent: "Evento superato",
-      distance: "Distanza dall'ultimo punto",
-      loss: "Perdita",
-      avgLoss: "Perdita media",
-      reflection: "Riflessione",
-      totalLoss: "Perdita totale",
-      statusPass: "✔ Superato",
-      statusFail: "✖ Fallito",
-      statusUnknown: "Stato sconosciuto"
-    },
-    pt: {
-      settings: "Configurações",
-      lastEvent: "Último evento",
-      nextEvent: "Próximo evento",
-      files: "Arquivos",
-      save: "Salvar",
-      exit: "Sair",
-      curve: "Curva",
-      list: "Lista",
-      map: "Mapa de eventos",
-      fastSave: "Salvar rápido",
-      totalLength: "Comprimento total",
-      totalL: "Total-L",
-      avgL: "Média-L",
-      totalEvents: "Eventos totais",
-      pass: "Aprovado",
-      fail: "Reprovado",
-      passEvent: "Evento aprovado",
-      distance: "Distância do último ponto",
-      loss: "Perda",
-      avgLoss: "Perda média",
-      reflection: "Reflexão",
-      totalLoss: "Perda total",
-      statusPass: "✔ Aprovado",
-      statusFail: "✖ Reprovado",
-      statusUnknown: "Status desconhecido"
-    }
-  };
-
-  const t = translations[lang] || translations.en;
-
-  function applyDashboardTranslation() {
-    const sidebarLabels = [
-      t.settings, t.lastEvent, t.nextEvent, t.files, t.save, t.exit
-    ];
-    document.querySelectorAll('.sidebar-button').forEach((btn, i) => {
-      if (sidebarLabels[i]) btn.innerText = sidebarLabels[i];
-    });
-
-   
-    const topBarItems = document.querySelectorAll('.top-bar div');
-    topBarItems[0].innerText = t.totalLength;
-    topBarItems[1].innerText = t.totalL;
-    topBarItems[2].innerText = t.avgL;
-    topBarItems[3].innerText = t.totalEvents;
-
-    document.querySelector('#event-box p:nth-of-type(1)').innerHTML = `${t.distance}: <span id="distance">----</span>m`;
-    document.querySelector('#event-box p:nth-of-type(2)').innerText = t.passEvent;
-    document.querySelector('#event-box p:nth-of-type(3)').innerHTML = `${t.loss}: <span id="loss">----</span>`;
-    document.querySelector('#event-box p:nth-of-type(4)').innerHTML = `${t.avgLoss}: <span id="avgLoss">----</span>`;
-    document.querySelector('#event-box p:nth-of-type(5)').innerHTML = `${t.reflection}: <span id="reflection">----</span>`;
-    document.querySelector('#event-box p:nth-of-type(6)').innerHTML = `${t.totalLoss}: <span id="totalLoss">----</span>`;
-  }
-
-  document.addEventListener('DOMContentLoaded', applyDashboardTranslation);
-</script>
-
 </body>
 </html>
