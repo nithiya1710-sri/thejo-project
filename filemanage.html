@@ -6,384 +6,239 @@
   <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <title>OTDR File Management</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      background: #ffffff;
-      padding: 20px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      background: #007bff;
-      color: white;
-      padding: 10px;
-      border-radius: 5px 5px 0 0;
-    }
-    .file-container {
-      display: flex;
-      border: 1px solid #ddd;
-      height: 400px;
-      overflow-y: auto;
-    }
-    .file-list {
-      width: 70%;
-      border-right: 1px solid #ddd;
-      padding: 10px;
-    }
-    .file-list table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .file-list th, .file-list td {
-      padding: 8px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    .file-operations {
-      width: 30%;
-      padding: 10px;
-      background: #f8f9fa;
-    }
-    .operation-panel {
-      display: none;
-      margin-top: 10px;
-      border-top: 1px solid #ccc;
-      padding-top: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .operation-panel button {
-      background: #6c757d;
-    }
-    .operation-panel button:hover {
-      background: #5a6268;
-    }
-    input[type="file"] {
-      margin-bottom: 10px;
-    }
-    .footer {
-      margin-top: 10px;
-      font-weight: bold;
-      text-align: right;
-    }
-    .open-link {
-      color: #007bff;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    .checkbox-col {
-      display: none;
-    }
-    .checkbox-visible .checkbox-col {
-      display: table-cell;
-    }
-    #operationPanel {
-      display: none;
-    }
+   html, body { margin:0; padding:0; height:100%; width:100%; font-family: Arial, sans-serif; }
+body { display:flex; justify-content:center; align-items:stretch; background:#f4f4f4; }
+.container { flex:1; display:flex; flex-direction:column; height:100%; width:100%; background:#fff; }
+.header { display:flex; justify-content:space-between; align-items:center; background:#007bff; color:white; padding:10px; }
+.content { display:flex; flex:1; overflow:hidden; }
+.folders, .files, .operations { padding:10px; overflow-y:auto; border-right:1px solid #ddd; }
+.folders { width:25%; background:#f9f9f9; }
+.files { width:50%; }
+.operations { width:25%; border-right:none; background:#f8f9fa; }
+.folder-item { padding:8px; cursor:pointer; border-bottom:1px solid #ddd; }
+.folder-item:hover { background:#e9ecef; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:6px; text-align:left; }
+button { width:100%; padding:10px; margin-bottom:10px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer; }
+button:hover { background:#0056b3; }
+.operation-panel button { background:#6c757d; }
+.operation-panel button:hover { background:#5a6268; }
+.pagination { margin-top:10px; text-align:center; font-weight:bold; }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <span>OTDR File Management</span>
-    <span id="date-time"></span>
+    <span>Total Files: <span id="totalFiles">0</span> | <span id="date-time"></span></span>
   </div>
-  <div class="file-container">
-    <div class="file-list">
+  <div class="content">
+    <div class="folders">
+      <h3>Folders</h3>
+      <div id="folderList"></div>
+    </div>
+    <div class="files">
+      <h3>Files</h3>
       <table>
         <thead>
-        <tr id="fileTableHeaderRow">
-          <th class="checkbox-col">✔</th>
-          <th>No.</th>
-          <th>File Name (Folder/File)</th>
-          <th>Date</th>
-          <th>Open</th>
-        </tr>
+          <tr id="tableHeader">
+            <th>No.</th>
+            <th>File Name</th>
+            <th>Date</th>
+          </tr>
         </thead>
         <tbody id="fileTableBody"></tbody>
       </table>
+      <div class="pagination" id="pagination"></div>
     </div>
-    <div class="file-operations">
+    <div class="operations">
+      <h3>Operations</h3>
       <div id="defaultButtons">
-        <input type="file" id="fileInput" webkitdirectory directory multiple />
-        <button onclick="uploadFile()">Upload Folder</button>
+        <input type="file" id="folderInput" webkitdirectory multiple hidden/>
+        <button onclick="document.getElementById('folderInput').click()">Upload Folders</button>
         <button onclick="showOperationPanel()">File Operation</button>
-        <button onclick="saveSettings()">Save Settings</button>
-        <button onclick="lastPage()">Last Page</button>
+        <button onclick="prevPage()">Last Page</button>
         <button onclick="nextPage()">Next Page</button>
+        <!-- <button onclick="lastPage()">Last Page</button> -->
+        <button onclick="saveSettings()">Save Settings</button>
         <button onclick="window.location.href='home.html'">Exit</button>
         <button onclick="window.location.href='export_report.html'">Export Reports</button>
       </div>
-
-      <div id="operationPanel" class="operation-panel">
+      <div id="operationPanel" class="operation-panel" style="display:none;">
         <button onclick="selectAllFiles()">Select All</button>
         <button onclick="deleteSelectedFiles()">Delete</button>
         <button onclick="renameSelectedFile()">Rename</button>
+        <button onclick="openSelectedFile()">Open</button>
         <button onclick="hideOperationPanel()">Back</button>
       </div>
     </div>
   </div>
-  <div class="footer">Total Files: <span id="totalFiles">0</span></div>
 </div>
-
 <script>
-  let rawFiles = [];
-  let groupedFolders = {};
-  let checkboxesVisible = false;
+ let groupedFolders = {};
+let checkboxesVisible = false;
+let currentFolder = null;
+let currentPage = 1;
+const pageSize = 10;
 
-  function updateDateTime() {
-    const now = new Date();
-    document.getElementById("date-time").textContent = now.toLocaleString();
+// --- LocalStorage Persistence ---
+function saveToLocalStorage() {
+  localStorage.setItem("groupedFolders", JSON.stringify(groupedFolders));
+}
+function loadFromLocalStorage() {
+  const data = localStorage.getItem("groupedFolders");
+  if (data) {
+    groupedFolders = JSON.parse(data);
+    loadFolders();
+    updateTotalFiles();
   }
-
-  function saveFiles() {
-    localStorage.setItem("otdrFilesGrouped", JSON.stringify(groupedFolders));
-  }
-
-  function loadFiles() {
-    const tableBody = document.getElementById("fileTableBody");
-    tableBody.innerHTML = "";
-
-    let fileIndex = 1;
-
-    Object.entries(groupedFolders).forEach(([folder, files], folderIndex) => {
-      const folderRow = document.createElement("tr");
-      folderRow.classList.add("folder-row");
-      folderRow.style.background = "#f0f0f0";
-      folderRow.style.fontWeight = "bold";
-      folderRow.onclick = () => toggleFolder(folderIndex);
-
-      if (checkboxesVisible) {
-        const folderCheckboxCell = document.createElement("td");
-        const folderCheckbox = document.createElement("input");
-        folderCheckbox.type = "checkbox";
-        folderCheckbox.className = "folder-checkbox";
-        folderCheckbox.dataset.folder = folder;
-        folderCheckboxCell.appendChild(folderCheckbox);
-        folderRow.appendChild(folderCheckboxCell);
-      } else {
-        const emptyCell = document.createElement("td");
-        folderRow.appendChild(emptyCell);
-      }
-
-      const folderCell = document.createElement("td");
-      folderCell.colSpan = 4;
-      folderCell.innerHTML = `<span>📁 ${folder}</span>`;
-      folderRow.appendChild(folderCell);
-      tableBody.appendChild(folderRow);
-
-      files.forEach((file, fileIdx) => {
-        const row = document.createElement("tr");
-        row.classList.add(`folder-files-${folderIndex}`);
-        row.style.display = "none";
-
-        const cell0 = document.createElement("td");
-        cell0.className = "checkbox-col";
-        if (checkboxesVisible) cell0.style.display = "table-cell";
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.className = "file-checkbox";
-        checkbox.dataset.index = `${folder}|${fileIdx}`;
-        cell0.appendChild(checkbox);
-
-        const cell1 = document.createElement("td");
-        cell1.textContent = fileIndex++;
-
-        const cell2 = document.createElement("td");
-        cell2.textContent = file.name;
-
-        const cell3 = document.createElement("td");
-        cell3.textContent = file.date;
-
-        const cell4 = document.createElement("td");
-        const openLink = document.createElement("span");
-        openLink.textContent = "Open";
-        openLink.className = "open-link";
-        openLink.onclick = (e) => {
-          e.stopPropagation();
-          const byteArray = Uint8Array.from(file.binaryData);
-          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
-          const url = URL.createObjectURL(blob);
-          window.open(url, "_blank");
-        };
-        cell4.appendChild(openLink);
-
-        row.appendChild(cell0);
-        row.appendChild(cell1);
-        row.appendChild(cell2);
-        row.appendChild(cell3);
-        row.appendChild(cell4);
-
-        tableBody.appendChild(row);
-      });
-    });
-
-    document.getElementById("totalFiles").textContent = rawFiles.length;
-  }
-
-  function toggleFolder(index) {
-    document.querySelectorAll(`.folder-files-${index}`).forEach(row => {
-      row.style.display = row.style.display === "none" ? "table-row" : "none";
-    });
-  }
-
-  function uploadFile() {
-    const input = document.getElementById("fileInput");
-    const files = input.files;
-    if (!files || files.length === 0) {
-      alert("Please select a folder.");
-      return;
-    }
-
-    rawFiles = [];
-    groupedFolders = {};
-
-    const readFile = (file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const byteArray = Array.from(new Uint8Array(e.target.result));
-          const date = new Date().toISOString().split("T")[0];
-          const path = file.webkitRelativePath || file.name;
-          const [folderName, ...rest] = path.split("/");
-          const fileName = rest.join("/") || file.name;
-
-          const fileData = {
-            name: fileName,
-            date,
-            type: file.type || "application/octet-stream",
-            binaryData: byteArray
-          };
-
-          if (!groupedFolders[folderName]) groupedFolders[folderName] = [];
-          groupedFolders[folderName].push(fileData);
-          rawFiles.push(fileData);
-          resolve();
-        };
-        reader.readAsArrayBuffer(file);
-      });
-    };
-
-    Promise.all(Array.from(files).map(readFile)).then(() => {
-      saveFiles();
-      loadFiles();
-      input.value = "";
-    });
-  }
-
-  function showOperationPanel() {
-    document.getElementById("operationPanel").style.display = "block";
-    document.getElementById("defaultButtons").style.display = "none";
-    checkboxesVisible = true;
-    loadFiles();
-  }
-
-  function hideOperationPanel() {
-    document.getElementById("operationPanel").style.display = "none";
-    document.getElementById("defaultButtons").style.display = "block";
-    checkboxesVisible = false;
-    loadFiles();
-  }
-
-  function selectAllFiles() {
-    document.querySelectorAll(".file-checkbox, .folder-checkbox").forEach(cb => cb.checked = true);
-  }
-
-  function deleteSelectedFiles() {
-    const fileSelections = Array.from(document.querySelectorAll(".file-checkbox:checked"))
-      .map(cb => cb.dataset.index);
-    const folderSelections = Array.from(document.querySelectorAll(".folder-checkbox:checked"))
-      .map(cb => cb.dataset.folder);
-
-    if (fileSelections.length === 0 && folderSelections.length === 0) {
-      return alert("No files or folders selected.");
-    }
-
-    if (!confirm("Are you sure you want to delete selected files/folders?")) return;
-
-    // Delete selected files
-    fileSelections.forEach(key => {
-      const [folder, fileIdx] = key.split("|");
-      const fileToDelete = groupedFolders[folder][fileIdx];
-      groupedFolders[folder] = groupedFolders[folder].filter(file => file !== fileToDelete);
-      if (groupedFolders[folder].length === 0) {
-        delete groupedFolders[folder];
-      }
-    });
-
-    // Delete selected folders
-    folderSelections.forEach(folder => {
-      delete groupedFolders[folder];
-    });
-
-    rawFiles = [].concat(...Object.values(groupedFolders));
-    saveFiles();
-    loadFiles();
-  }
-
-  function renameSelectedFile() {
-    const selected = Array.from(document.querySelectorAll(".file-checkbox:checked"))
-      .map(cb => cb.dataset.index);
-
-    if (selected.length !== 1) return alert("Select only one file to rename.");
-
-    const [folder, fileIdx] = selected[0].split("|");
-    const newName = prompt("Enter new file name:");
-    if (newName) {
-      groupedFolders[folder][fileIdx].name = newName;
-      saveFiles();
-      loadFiles();
-    }
-  }
-
-  function saveSettings() {
-    alert("Settings saved.");
-  }
-
-  function lastPage() {
-    document.querySelectorAll(`[class^="folder-files-"]`).forEach(row => {
-      row.style.display = "none";
-    });
-  }
-
-  function nextPage() {
-    document.querySelectorAll(`[class^="folder-files-"]`).forEach(row => {
-      row.style.display = "table-row";
-    });
-  }
-
-  setInterval(updateDateTime, 1000);
+}
+window.onload = () => {
+  loadFromLocalStorage();
   updateDateTime();
+  setInterval(updateDateTime,1000);
+};
 
-  if (localStorage.getItem("otdrFilesGrouped")) {
-    groupedFolders = JSON.parse(localStorage.getItem("otdrFilesGrouped"));
-    rawFiles = [].concat(...Object.values(groupedFolders));
-    loadFiles();
+// Update date-time
+function updateDateTime() {
+  document.getElementById("date-time").textContent = new Date().toLocaleString();
+}
+
+// Upload folders
+document.getElementById("folderInput").addEventListener("change", function(event){
+  const files = event.target.files;
+  for(let file of files){
+    const folderName = file.webkitRelativePath.split("/")[0];
+    if(!groupedFolders[folderName]) groupedFolders[folderName] = [];
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const byteArray = Array.from(new Uint8Array(e.target.result));
+      groupedFolders[folderName].push({
+        name:file.name,
+        date:new Date(file.lastModified).toISOString().split("T")[0],
+        type:file.type || "application/octet-stream",
+        binaryData: byteArray
+      });
+      updateTotalFiles();
+      loadFolders();
+      if(currentFolder === folderName) loadFiles();
+      saveToLocalStorage(); // persist
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  event.target.value = "";
+});
+
+// Update total files
+function updateTotalFiles(){
+  let total = 0;
+  Object.values(groupedFolders).forEach(arr => total += arr.length);
+  document.getElementById("totalFiles").textContent = total;
+}
+
+// Load folder list
+function loadFolders(){
+  const folderList = document.getElementById("folderList");
+  folderList.innerHTML = "";
+  Object.keys(groupedFolders).forEach(folder=>{
+    const div = document.createElement("div");
+    div.textContent = `📁 ${folder}`;
+    div.className="folder-item";
+    div.onclick=()=>{currentFolder=folder; currentPage=1; loadFiles();}
+    folderList.appendChild(div);
+  });
+}
+
+// Load files
+function loadFiles(){
+  if(!currentFolder) return;
+  const files = groupedFolders[currentFolder] || [];
+  const tableBody = document.getElementById("fileTableBody");
+  tableBody.innerHTML="";
+  const header = document.getElementById("tableHeader");
+
+  // Checkbox header
+  if(checkboxesVisible && !document.getElementById("checkboxHeader")){
+    const th = document.createElement("th");
+    th.id="checkboxHeader";
+    th.textContent="✔";
+    header.insertBefore(th, header.firstChild);
+  } else if(!checkboxesVisible && document.getElementById("checkboxHeader")){
+    document.getElementById("checkboxHeader").remove();
   }
 
+  const totalPages = Math.ceil(files.length/pageSize) || 1;
+  if(currentPage>totalPages) currentPage = totalPages;
+  if(currentPage<1) currentPage=1;
+
+  const start=(currentPage-1)*pageSize;
+  const paginatedFiles=files.slice(start,start+pageSize);
+
+  paginatedFiles.forEach((file,idx)=>{
+    const row=document.createElement("tr");
+    if(checkboxesVisible){
+      const cbCell=document.createElement("td");
+      const cb=document.createElement("input");
+      cb.type="checkbox";
+      cb.className="file-checkbox";
+      cb.dataset.index=`${currentFolder}|${start+idx}`;
+      cbCell.appendChild(cb);
+      row.appendChild(cbCell);
+    }
+    const noCell=document.createElement("td");
+    noCell.textContent=start+idx+1;
+    row.appendChild(noCell);
+
+    const nameCell=document.createElement("td");
+    nameCell.textContent=file.name;
+    row.appendChild(nameCell);
+
+    const dateCell=document.createElement("td");
+    dateCell.textContent=file.date;
+    row.appendChild(dateCell);
+
+    tableBody.appendChild(row);
+  });
+
+  document.getElementById("pagination").textContent=`Page ${currentPage}-${totalPages}`;
+}
+
+// File operation panel
+function showOperationPanel(){document.getElementById("operationPanel").style.display="block"; document.getElementById("defaultButtons").style.display="none"; checkboxesVisible=true; loadFiles();}
+function hideOperationPanel(){document.getElementById("operationPanel").style.display="none"; document.getElementById("defaultButtons").style.display="block"; checkboxesVisible=false; loadFiles();}
+
+// File operations
+function selectAllFiles(){document.querySelectorAll(".file-checkbox").forEach(cb=>cb.checked=true);}
+function deleteSelectedFiles(){
+  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
+  if(!selected.length) return alert("No files selected.");
+  if(!confirm("Delete selected files?")) return;
+  selected.forEach(key=>{const [folder,fileIdx]=key.split("|"); groupedFolders[folder].splice(fileIdx,1);});
+  updateTotalFiles(); loadFiles(); saveToLocalStorage();
+}
+function renameSelectedFile(){
+  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
+  if(selected.length!==1) return alert("Select one file to rename.");
+  const [folder,fileIdx]=selected[0].split("|");
+  const newName=prompt("Enter new name:");
+  if(newName){groupedFolders[folder][fileIdx].name=newName; loadFiles(); saveToLocalStorage();}
+}
+function openSelectedFile(){
+  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
+  if(selected.length!==1) return alert("Select one file to open.");
+  const [folder,fileIdx]=selected[0].split("|");
+  const file=groupedFolders[folder][fileIdx];
+  const byteArray=Uint8Array.from(file.binaryData);
+  const blob=new Blob([byteArray],{type:file.type});
+  const url=URL.createObjectURL(blob);
+  window.open(url,"_blank");
+}
+function saveSettings(){alert("Settings saved.");}
+
+// Pagination
+function nextPage(){if(!currentFolder) return; const totalFiles=groupedFolders[currentFolder].length; const totalPages=Math.ceil(totalFiles/pageSize)||1; if(currentPage<totalPages){currentPage++; loadFiles();}}
+function prevPage(){if(!currentFolder) return; if(currentPage>1){currentPage--; loadFiles();}}
+function lastPage(){if(!currentFolder) return; const totalFiles=groupedFolders[currentFolder].length; currentPage=Math.ceil(totalFiles/pageSize)||1; loadFiles();}
   // Brightness Control
   const brightnessLevels = {
     '0%': 0,
