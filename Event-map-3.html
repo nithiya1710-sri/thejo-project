@@ -4,81 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard UI</title>
-    <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
-    
-    <script type="module">
-        
-        // Function to fetch real-time data
-        function fetchData() {
-            const docRef = doc(db, "dashboard", "metrics");
-
-            onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    let data = docSnap.data();
-
-                    document.getElementById("totalLength").innerText = data.totalLength || "----";
-                    if (data.totalLength) {
-                        updateProgressBarWithLength(data.totalLength);
-                    }
-
-                    document.getElementById("totalL").innerText = data.totalL || "----";
-                    document.getElementById("avgL").innerText = data.avgL || "----";
-                    document.getElementById("totalEvents").innerText = `Pass: ${data.pass || "--"}  Fail: ${data.fail || "--"}`;
-                    document.getElementById("loss").innerText = data.loss || "----";
-                    document.getElementById("avgLoss").innerText = data.avgLoss || "----";
-                    document.getElementById("reflection").innerText = data.reflection || "----";
-                    document.getElementById("totalLoss").innerText = data.totalLoss || "----";
-
-                    if (data.progress) {
-                        updateProgressBar(data.progress);
-                    }
-
-                    // Get elements to change color
-                    const progressBarFill = document.querySelector('.progress-bar-fill');
-                    const testConditionText = document.querySelector('.test-condition');
-
-                    if (data.fail == 1 && data.pass == 0) {
-                        // Change colors to red for fail
-                        progressBarFill.style.background = '#ff0000';
-                        testConditionText.style.color = '#ff0000';
-                        testConditionText.textContent = "Test Condition: FAIL";
-                    } else if (data.fail == 0 && data.pass == 1) {
-                        // Change colors to green for pass
-                        progressBarFill.style.background = '#0a0';
-                        testConditionText.style.color = '#0a0';
-                        testConditionText.textContent = "Test Condition: PASS";
-                    } else {
-                        // Default colors
-                        progressBarFill.style.background = '#0a0';
-                        testConditionText.style.color = 'white';
-                        testConditionText.textContent = "Test Condition:";
-                    }
-
-                } else {
-                    console.log("No data found!");
-                }
-            }, (error) => {
-                console.error("Error fetching data:", error);
-            });
-        }
-
-        // Function to update progress bar with length in km
-        function updateProgressBarWithLength(lengthStr) {
-            const progressBarFill = document.querySelector('.progress-bar-fill');
-            const progressValue = document.getElementById('progressValue');
-
-            const kmValue = parseFloat(lengthStr.replace(/[^\d.]/g, ''));
-            if (isNaN(kmValue)) return;
-
-            const progressPercentage = Math.min((kmValue / 1) * 100, 100);
-
-            progressBarFill.style.width = `${progressPercentage}%`;
-            progressValue.textContent = `${kmValue.toFixed(4)} km`;
-        }
-
-        // Call fetchData when page loads
-        window.onload = fetchData;
-    </script>
     <style>
         * {
             margin: 0;
@@ -222,6 +147,74 @@
             font-size: 18px;
             transition: all 0.3s ease;
         }
+        
+        /* Lazy Loader Styles */
+        .lazy-loader {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #13141a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .loader-progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: #333;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loader-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff3333);
+            width: 0%;
+            border-radius: 15px;
+            transition: width 1s linear;
+        }
+        
+        .loader-timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff3333;
+            margin: 10px 0;
+        }
+        
+        .danger-image {
+            width: 80px;
+            height: 80px;
+            background-color: #ff3333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2px 0;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .loader-text {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #ff3333;
+        }
+        
+        .warning-text {
+            font-size: 14px;
+            color: #ff6666;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -240,28 +233,96 @@
             <div class="progress-bar-fill"></div>
         </div>
         <div id="progressValue">0 km</div>
-        <a href="#">
-            <button class="start-button">Start</button>
-        </a>    
-        <div class="event-section">
-            <button class="event-button">Last Event</button>
-            <div class="event-box">
-                <p>Loss: <span id="loss">----</span></p>
-                <p>Avg-Loss: <span id="avgLoss">----</span></p>
-                <p>Reflection: <span id="reflection">----</span></p>
-                <p>Total Loss: <span id="totalLoss">----</span></p>
+        
+        <!-- Lazy Loader Section -->
+        <div class="lazy-loader" id="lazyLoader">
+            <div class="loader-text">Filter testing...</div>
+            <div class="danger-image">DANGER<br>Avoid looking at how</div>
+            <div class="loader-progress-container">
+                <div class="loader-progress-bar" id="loaderProgressBar"></div>
             </div>
-            <button class="event-button">Next Event</button>
+            <div class="loader-timer" id="loaderTimer">60s</div>
+            <div class="warning-text">Please wait while the test completes</div>
         </div>
+        
+        <!-- Original content that will be hidden when lazy loader is active -->
+        <div id="mainContent">
+            <a href="#">
+                <button class="start-button">Start</button>
+            </a>    
+            <div class="event-section">
+                <button class="event-button">Last Event</button>
+                <div class="event-box">
+                    <p>Loss: <span id="loss">----</span></p>
+                    <p>Avg-Loss: <span id="avgLoss">----</span></p>
+                    <p>Reflection: <span id="reflection">----</span></p>
+                    <p>Total Loss: <span id="totalLoss">----</span></p>
+                </div>
+                <button class="event-button">Next Event</button>
+            </div>
+        </div>
+        
         <div class="test-condition">Test Condition:</div>
     </div>
     <div class="right-sidebar">
-        <a href="event-map-pass.html" class="sidebar-button">Test</a>
-        <button class="sidebar-button" onclick="window.location.href='setindex.html'">Settings</button>
+        <button class="sidebar-button" id="testButton">Test</button>
+        <button class="sidebar-button">Settings</button>
         <button class="sidebar-button">Event Map</button>
-        <button class="sidebar-button" onclick="window.location.href='filemanage.html'">Files</button>
+        <button class="sidebar-button">Files</button>
         <button class="sidebar-button">Save</button>
         <button class="sidebar-button">Fast Save</button>
     </div>
+
+    <script>
+        // Function to update progress bar with length in km
+        function updateProgressBarWithLength(lengthStr) {
+            const progressBarFill = document.querySelector('.progress-bar-fill');
+            const progressValue = document.getElementById('progressValue');
+
+            const kmValue = parseFloat(lengthStr.replace(/[^\d.]/g, ''));
+            if (isNaN(kmValue)) return;
+
+            const progressPercentage = Math.min((kmValue / 1) * 100, 100);
+
+            progressBarFill.style.width = `${progressPercentage}%`;
+            progressValue.textContent = `${kmValue.toFixed(4)} km`;
+        }
+
+        // Lazy loader functionality
+        document.getElementById('testButton').addEventListener('click', function() {
+            // Show lazy loader and hide other content
+            const lazyLoader = document.getElementById('lazyLoader');
+            const mainContent = document.getElementById('mainContent');
+            
+            lazyLoader.style.display = 'flex';
+            mainContent.style.display = 'none';
+            
+            // Start the timer and progress bar
+            let timeLeft = 60;
+            const loaderTimer = document.getElementById('loaderTimer');
+            const loaderProgressBar = document.getElementById('loaderProgressBar');
+            
+            const countdown = setInterval(() => {
+                timeLeft--;
+                loaderTimer.textContent = `${timeLeft}s`;
+                
+                // Update progress bar
+                const progressPercentage = ((60 - timeLeft) / 60) * 100;
+                loaderProgressBar.style.width = `${progressPercentage}%`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    
+                    // Immediately navigate to event-map-pass.html without showing anything else
+                    window.location.href = 'event-map-pass.html';
+                }
+            }, 1000);
+        });
+
+        // Function to fetch real-time data
+        
+        // Call fetchData when page loads
+        window.onload = fetchData;
+    </script>
 </body>
 </html>
