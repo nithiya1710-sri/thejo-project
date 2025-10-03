@@ -419,3 +419,29 @@ canvas {
 }
 
 }
+.event-table {
+  background: #2a2a40;
+  border-top: 1px solid #615f5f;
+  padding: 15px;
+  flex: 0 0 auto; /* only takes needed height */
+  overflow: visible; /* no scroll */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 4px;
+  text-align: center;
+  color: #fff;
+}
+
+th {
+  background: #222;
+  font-weight: bold;
+}
+
