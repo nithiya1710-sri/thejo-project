@@ -61,6 +61,12 @@ body {
     display: flex;
 }
 
+.graph-section canvas {
+  width: 100% !important;
+  height: 300px !important;
+  background: #222;
+}
+
 canvas {
     flex: 1;
     width: 100%;
@@ -444,4 +450,5 @@ th {
   background: #222;
   font-weight: bold;
 }
+
 
