@@ -382,12 +382,16 @@ function renameSelectedFile() {
   }
 }
 
-// --- THIS IS THE CORRECTED DOWNLOAD FUNCTION ---
+// --- THIS IS THE DOWNLOAD FUNCTION ---
+// It is called by the "Open" button
 function downloadSelectedFile() {
   if (!currentFolder) return;
 
   const selected = Array.from(document.querySelectorAll(".file-checkbox:checked"));
-  if (selected.length !== 1) return alert("Select exactly one file to download.");
+  if (selected.length !== 1) {
+    alert("Select exactly one file to download.");
+    return;
+  }
   
   const fileIdx = parseInt(selected[0].dataset.index);
   const file = groupedFolders[currentFolder][fileIdx];
@@ -441,10 +445,6 @@ function prevPage() {
     loadFiles();
   }
 }
-
-// Note: I removed the broken/conflicting translation script
-// that was at the end of your original file.
-
 </script>
 </body>
 </html>
