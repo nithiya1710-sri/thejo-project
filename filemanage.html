@@ -6,24 +6,98 @@
   <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon" />
   <title>OTDR File Management</title>
   <style>
-   html, body { margin:0; padding:0; height:100%; width:100%; font-family: Arial, sans-serif; }
-body { display:flex; justify-content:center; align-items:stretch; background:#f4f4f4; }
-.container { flex:1; display:flex; flex-direction:column; height:100%; width:100%; background:#fff; }
-.header { display:flex; justify-content:space-between; align-items:center; background:#007bff; color:white; padding:10px; }
-.content { display:flex; flex:1; overflow:hidden; }
-.folders, .files, .operations { padding:10px; overflow-y:auto; border-right:1px solid #ddd; }
-.folders { width:25%; background:#f9f9f9; }
-.files { width:50%; }
-.operations { width:25%; border-right:none; background:#f8f9fa; }
-.folder-item { padding:8px; cursor:pointer; border-bottom:1px solid #ddd; }
-.folder-item:hover { background:#e9ecef; }
-table { width:100%; border-collapse:collapse; }
-th, td { border:1px solid #ddd; padding:6px; text-align:left; }
-button { width:100%; padding:10px; margin-bottom:10px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer; }
-button:hover { background:#0056b3; }
-.operation-panel button { background:#6c757d; }
-.operation-panel button:hover { background:#5a6268; }
-.pagination { margin-top:10px; text-align:center; font-weight:bold; }
+    html, body { 
+      margin: 0; 
+      padding: 0; 
+      height: 100%; 
+      width: 100%; 
+      font-family: Arial, sans-serif; 
+    }
+    body { 
+      display: flex; 
+      justify-content: center; 
+      align-items: stretch; 
+      background: #f4f4f4; 
+    }
+    .container { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      height: 100%; 
+      width: 100%; 
+      background: #fff; 
+    }
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      background: #007bff; 
+      color: white; 
+      padding: 10px; 
+    }
+    .content { 
+      display: flex; 
+      flex: 1; 
+      overflow: hidden; 
+    }
+    .folders, .files, .operations { 
+      padding: 10px; 
+      overflow-y: auto; 
+      border-right: 1px solid #ddd; 
+    }
+    .folders { 
+      width: 25%; 
+      background: #f9f9f9; 
+    }
+    .files { 
+      width: 50%; 
+    }
+    .operations { 
+      width: 25%; 
+      border-right: none; 
+      background: #f8f9fa; 
+    }
+    .folder-item { 
+      padding: 8px; 
+      cursor: pointer; 
+      border-bottom: 1px solid #ddd; 
+    }
+    .folder-item:hover { 
+      background: #e9ecef; 
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 6px; 
+      text-align: left; 
+    }
+    button { 
+      width: 100%; 
+      padding: 10px; 
+      margin-bottom: 10px; 
+      background: #007bff; 
+      color: white; 
+      border: none; 
+      border-radius: 4px; 
+      cursor: pointer; 
+    }
+    button:hover { 
+      background: #0056b3; 
+    }
+    .operation-panel button { 
+      background: #6c757d; 
+    }
+    .operation-panel button:hover { 
+      background: #5a6268; 
+    }
+    .pagination { 
+      margin-top: 10px; 
+      text-align: center; 
+      font-weight: bold; 
+    }
   </style>
 </head>
 <body>
@@ -59,7 +133,6 @@ button:hover { background:#0056b3; }
         <button onclick="showOperationPanel()">File Operation</button>
         <button onclick="prevPage()">Last Page</button>
         <button onclick="nextPage()">Next Page</button>
-        <!-- <button onclick="lastPage()">Last Page</button> -->
         <button onclick="saveSettings()">Save Settings</button>
         <button onclick="window.location.href='home.html'">Exit</button>
         <button onclick="window.location.href='export_report.html'">Export Reports</button>
@@ -68,14 +141,14 @@ button:hover { background:#0056b3; }
         <button onclick="selectAllFiles()">Select All</button>
         <button onclick="deleteSelectedFiles()">Delete</button>
         <button onclick="renameSelectedFile()">Rename</button>
-        <button onclick="openSelectedFile()">Open</button>
+        <button onclick="downloadSelectedFile()">Open</button>
         <button onclick="hideOperationPanel()">Back</button>
       </div>
     </div>
   </div>
 </div>
 <script>
- let groupedFolders = {};
+let groupedFolders = {};
 let checkboxesVisible = false;
 let currentFolder = null;
 let currentPage = 1;
@@ -85,6 +158,7 @@ const pageSize = 10;
 function saveToLocalStorage() {
   localStorage.setItem("groupedFolders", JSON.stringify(groupedFolders));
 }
+
 function loadFromLocalStorage() {
   const data = localStorage.getItem("groupedFolders");
   if (data) {
@@ -93,373 +167,284 @@ function loadFromLocalStorage() {
     updateTotalFiles();
   }
 }
+
+// --- Page Load ---
 window.onload = () => {
   loadFromLocalStorage();
   updateDateTime();
-  setInterval(updateDateTime,1000);
+  setInterval(updateDateTime, 1000);
+  
+  // Apply saved brightness
+  const savedBrightness = localStorage.getItem("brightness") || "100%";
+  applyBrightness(savedBrightness);
 };
 
-// Update date-time
+// --- Brightness Control (Helper) ---
+function applyBrightness(level) {
+  const brightnessLevels = {
+    '0%': 0.2, '20%': 0.4, '40%': 0.6,
+    '60%': 0.8, '80%': 0.9, '100%': 1
+  };
+  document.body.style.filter = `brightness(${brightnessLevels[level] || 1})`;
+}
+
+// --- Date/Time ---
 function updateDateTime() {
   document.getElementById("date-time").textContent = new Date().toLocaleString();
 }
 
-// Upload folders
-document.getElementById("folderInput").addEventListener("change", function(event){
+// --- File Upload ---
+document.getElementById("folderInput").addEventListener("change", function(event) {
   const files = event.target.files;
-  for(let file of files){
+  if (!files.length) return;
+
+  for (let file of files) {
+    // Use webkitRelativePath to find the root folder name
     const folderName = file.webkitRelativePath.split("/")[0];
-    if(!groupedFolders[folderName]) groupedFolders[folderName] = [];
+    
+    if (!groupedFolders[folderName]) {
+      groupedFolders[folderName] = [];
+    }
+    
     const reader = new FileReader();
-    reader.onload = function(e){
+    
+    // Read the file as raw binary data
+    reader.onload = function(e) {
+      // Store the binary data as an Array
       const byteArray = Array.from(new Uint8Array(e.target.result));
+      
       groupedFolders[folderName].push({
-        name:file.name,
-        date:new Date(file.lastModified).toISOString().split("T")[0],
-        type:file.type || "application/octet-stream",
-        binaryData: byteArray
+        name: file.name,
+        date: new Date(file.lastModified).toISOString().split("T")[0],
+        type: file.type || "application/octet-stream", // Use octet-stream for unknown types like .sor
+        binaryData: byteArray // This is the raw file data
       });
+      
+      // Update UI
       updateTotalFiles();
       loadFolders();
-      if(currentFolder === folderName) loadFiles();
-      saveToLocalStorage(); // persist
+      // If we just uploaded to the currently viewed folder, refresh the file list
+      if (currentFolder === folderName) {
+        loadFiles();
+      }
+      saveToLocalStorage();
     };
+    
     reader.readAsArrayBuffer(file);
   }
+  
+  // Clear the input to allow re-uploading the same folder
   event.target.value = "";
 });
 
-// Update total files
-function updateTotalFiles(){
+// --- UI Updates ---
+function updateTotalFiles() {
   let total = 0;
   Object.values(groupedFolders).forEach(arr => total += arr.length);
   document.getElementById("totalFiles").textContent = total;
 }
 
-// Load folder list
-function loadFolders(){
+function loadFolders() {
   const folderList = document.getElementById("folderList");
   folderList.innerHTML = "";
-  Object.keys(groupedFolders).forEach(folder=>{
+  Object.keys(groupedFolders).forEach(folder => {
     const div = document.createElement("div");
     div.textContent = `📁 ${folder}`;
-    div.className="folder-item";
-    div.onclick=()=>{currentFolder=folder; currentPage=1; loadFiles();}
+    div.className = "folder-item";
+    div.onclick = () => {
+      currentFolder = folder;
+      currentPage = 1;
+      loadFiles();
+    }
     folderList.appendChild(div);
   });
 }
 
-// Load files
-function loadFiles(){
-  if(!currentFolder) return;
+function loadFiles() {
+  if (!currentFolder) return;
+  
   const files = groupedFolders[currentFolder] || [];
   const tableBody = document.getElementById("fileTableBody");
-  tableBody.innerHTML="";
+  tableBody.innerHTML = "";
   const header = document.getElementById("tableHeader");
 
-  // Checkbox header
-  if(checkboxesVisible && !document.getElementById("checkboxHeader")){
+  // Add/Remove Checkbox column header
+  const checkboxHeader = document.getElementById("checkboxHeader");
+  if (checkboxesVisible && !checkboxHeader) {
     const th = document.createElement("th");
-    th.id="checkboxHeader";
-    th.textContent="✔";
+    th.id = "checkboxHeader";
+    th.textContent = "✔";
     header.insertBefore(th, header.firstChild);
-  } else if(!checkboxesVisible && document.getElementById("checkboxHeader")){
-    document.getElementById("checkboxHeader").remove();
+  } else if (!checkboxesVisible && checkboxHeader) {
+    checkboxHeader.remove();
   }
 
-  const totalPages = Math.ceil(files.length/pageSize) || 1;
-  if(currentPage>totalPages) currentPage = totalPages;
-  if(currentPage<1) currentPage=1;
+  // Pagination logic
+  const totalPages = Math.ceil(files.length / pageSize) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
 
-  const start=(currentPage-1)*pageSize;
-  const paginatedFiles=files.slice(start,start+pageSize);
+  const start = (currentPage - 1) * pageSize;
+  const paginatedFiles = files.slice(start, start + pageSize);
 
-  paginatedFiles.forEach((file,idx)=>{
-    const row=document.createElement("tr");
-    if(checkboxesVisible){
-      const cbCell=document.createElement("td");
-      const cb=document.createElement("input");
-      cb.type="checkbox";
-      cb.className="file-checkbox";
-      cb.dataset.index=`${currentFolder}|${start+idx}`;
+  // Populate file table
+  paginatedFiles.forEach((file, idx) => {
+    const row = document.createElement("tr");
+    
+    // This is the file's index in the *full* array, not the paginated one
+    const globalIndex = start + idx; 
+    
+    if (checkboxesVisible) {
+      const cbCell = document.createElement("td");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.className = "file-checkbox";
+      // Store the global index, not the paginated one
+      cb.dataset.index = globalIndex; 
       cbCell.appendChild(cb);
       row.appendChild(cbCell);
     }
-    const noCell=document.createElement("td");
-    noCell.textContent=start+idx+1;
+    
+    const noCell = document.createElement("td");
+    noCell.textContent = globalIndex + 1;
     row.appendChild(noCell);
 
-    const nameCell=document.createElement("td");
-    nameCell.textContent=file.name;
+    const nameCell = document.createElement("td");
+    nameCell.textContent = file.name;
     row.appendChild(nameCell);
 
-    const dateCell=document.createElement("td");
-    dateCell.textContent=file.date;
+    const dateCell = document.createElement("td");
+    dateCell.textContent = file.date;
     row.appendChild(dateCell);
 
     tableBody.appendChild(row);
   });
 
-  document.getElementById("pagination").textContent=`Page ${currentPage}-${totalPages}`;
+  document.getElementById("pagination").textContent = `Page ${currentPage} / ${totalPages}`;
 }
 
-// File operation panel
-function showOperationPanel(){document.getElementById("operationPanel").style.display="block"; document.getElementById("defaultButtons").style.display="none"; checkboxesVisible=true; loadFiles();}
-function hideOperationPanel(){document.getElementById("operationPanel").style.display="none"; document.getElementById("defaultButtons").style.display="block"; checkboxesVisible=false; loadFiles();}
-
-// File operations
-function selectAllFiles(){document.querySelectorAll(".file-checkbox").forEach(cb=>cb.checked=true);}
-function deleteSelectedFiles(){
-  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
-  if(!selected.length) return alert("No files selected.");
-  if(!confirm("Delete selected files?")) return;
-  selected.forEach(key=>{const [folder,fileIdx]=key.split("|"); groupedFolders[folder].splice(fileIdx,1);});
-  updateTotalFiles(); loadFiles(); saveToLocalStorage();
+// --- Operation Panel ---
+function showOperationPanel() {
+  document.getElementById("operationPanel").style.display = "block";
+  document.getElementById("defaultButtons").style.display = "none";
+  checkboxesVisible = true;
+  loadFiles(); // Reload files to show checkboxes
 }
-function renameSelectedFile(){
-  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
-  if(selected.length!==1) return alert("Select one file to rename.");
-  const [folder,fileIdx]=selected[0].split("|");
-  const newName=prompt("Enter new name:");
-  if(newName){groupedFolders[folder][fileIdx].name=newName; loadFiles(); saveToLocalStorage();}
+
+function hideOperationPanel() {
+  document.getElementById("operationPanel").style.display = "none";
+  document.getElementById("defaultButtons").style.display = "block";
+  checkboxesVisible = false;
+  loadFiles(); // Reload files to hide checkboxes
 }
-function openSelectedFile(){
-  const selected=Array.from(document.querySelectorAll(".file-checkbox:checked")).map(cb=>cb.dataset.index);
-  if(selected.length!==1) return alert("Select one file to open.");
-  const [folder,fileIdx]=selected[0].split("|");
-  const file=groupedFolders[folder][fileIdx];
-  const byteArray=Uint8Array.from(file.binaryData);
-  const blob=new Blob([byteArray],{type:file.type});
-  const url=URL.createObjectURL(blob);
-  window.open(url,"_blank");
+
+// --- File Operations ---
+function selectAllFiles() {
+  document.querySelectorAll(".file-checkbox").forEach(cb => cb.checked = true);
 }
-function saveSettings(){alert("Settings saved.");}
 
-// Pagination
-function nextPage(){if(!currentFolder) return; const totalFiles=groupedFolders[currentFolder].length; const totalPages=Math.ceil(totalFiles/pageSize)||1; if(currentPage<totalPages){currentPage++; loadFiles();}}
-function prevPage(){if(!currentFolder) return; if(currentPage>1){currentPage--; loadFiles();}}
-function lastPage(){if(!currentFolder) return; const totalFiles=groupedFolders[currentFolder].length; currentPage=Math.ceil(totalFiles/pageSize)||1; loadFiles();}
-  // Brightness Control
-  const brightnessLevels = {
-    '0%': 0,
-    '20%': 0.2,
-    '40%': 0.4,
-    '60%': 0.6,
-    '80%': 0.8,
-    '100%': 1
-  };
-  const savedBrightness = localStorage.getItem("brightness") || "100%";
-  document.body.style.filter = `brightness(${brightnessLevels[savedBrightness] || 1})`;
+function deleteSelectedFiles() {
+  if (!currentFolder) return;
+  
+  const selectedIndices = Array.from(document.querySelectorAll(".file-checkbox:checked"))
+    .map(cb => parseInt(cb.dataset.index)); // Get the global indices
+    
+  if (!selectedIndices.length) return alert("No files selected.");
+  if (!confirm(`Delete ${selectedIndices.length} selected files?`)) return;
 
-  // Language Translations
-  const translations = {
-    en: {
-      management: "OTDR File Management",
-      upload: "Upload Folder",
-      save: "Save Settings",
-      last: "Last Page",
-      next: "Next Page",
-      exit: "Exit",
-      export: "Export Reports",
-      total: "Total Files:",
-      open: "Open",
-      del: "Delete",
-      selectAll: "Select All",
-      delete: "Delete",
-      rename: "Rename",
-      back: "Back",
-      confirmDelete: name => `Are you sure you want to delete "${name}"?`
-    },
-    es: {
-      management: "Gestión de archivos OTDR",
-      upload: "Subir carpeta",
-      save: "Guardar configuración",
-      last: "Página anterior",
-      next: "Página siguiente",
-      exit: "Salir",
-      export: "Exportar informes",
-      total: "Archivos totales:",
-      open: "Abrir",
-      del: "Eliminar",
-      selectAll: "Seleccionar todo",
-      delete: "Eliminar",
-      rename: "Renombrar",
-      back: "Volver",
-      confirmDelete: name => `¿Estás seguro de que deseas eliminar "${name}"?`
-    },
-    fr: {
-      management: "Gestion de fichiers OTDR",
-      upload: "Téléverser dossier",
-      save: "Enregistrer les paramètres",
-      last: "Page précédente",
-      next: "Page suivante",
-      exit: "Quitter",
-      export: "Exporter les rapports",
-      total: "Fichiers au total :",
-      open: "Ouvrir",
-      del: "Supprimer",
-      selectAll: "Tout sélectionner",
-      delete: "Supprimer",
-      rename: "Renommer",
-      back: "Retour",
-      confirmDelete: name => `Êtes-vous sûr de vouloir supprimer "${name}" ?`
-    },
-    nl: {
-      management: "OTDR-bestandsbeheer",
-      upload: "Map uploaden",
-      save: "Instellingen opslaan",
-      last: "Vorige pagina",
-      next: "Volgende pagina",
-      exit: "Afsluiten",
-      export: "Rapporten exporteren",
-      total: "Totaal bestanden:",
-      open: "Openen",
-      del: "Verwijderen",
-      selectAll: "Alles selecteren",
-      delete: "Verwijderen",
-      rename: "Hernoemen",
-      back: "Terug",
-      confirmDelete: name => `Weet je zeker dat je "${name}" wilt verwijderen?`
-    },
-    it: {
-      management: "Gestione file OTDR",
-      upload: "Carica cartella",
-      save: "Salva impostazioni",
-      last: "Pagina precedente",
-      next: "Pagina successiva",
-      exit: "Esci",
-      export: "Esporta rapporti",
-      total: "File totali:",
-      open: "Apri",
-      del: "Elimina",
-      selectAll: "Seleziona tutto",
-      delete: "Elimina",
-      rename: "Rinomina",
-      back: "Indietro",
-      confirmDelete: name => `Sei sicuro di voler eliminare "${name}"?`
-    },
-    pt: {
-      management: "Gerenciamento de arquivos OTDR",
-      upload: "Enviar pasta",
-      save: "Salvar configurações",
-      last: "Página anterior",
-      next: "Próxima página",
-      exit: "Sair",
-      export: "Exportar relatórios",
-      total: "Total de arquivos:",
-      open: "Abrir",
-      del: "Excluir",
-      selectAll: "Selecionar tudo",
-      delete: "Excluir",
-      rename: "Renomear",
-      back: "Voltar",
-      confirmDelete: name => `Tem certeza de que deseja excluir "${name}"?`
-    }
-  };
+  // **FIX:** Delete from highest index to lowest
+  // This prevents the array from re-indexing while we are deleting
+  selectedIndices.sort((a, b) => b - a); 
+  
+  selectedIndices.forEach(index => {
+    groupedFolders[currentFolder].splice(index, 1);
+  });
 
-  const lang = localStorage.getItem("language") || "en";
-  const t = translations[lang] || translations.en;
+  updateTotalFiles();
+  loadFiles(); // Reload the current page
+  saveToLocalStorage();
+}
 
-  // Apply Translations
-  document.querySelector(".header span").textContent = t.management;
-  document.querySelector("#defaultButtons input[type='file']").nextElementSibling.textContent = t.upload;
-  document.querySelectorAll("#defaultButton button")[1].textContent=t.operation;
-  document.querySelectorAll("#defaultButtons button")[2].textContent = t.save;
-  document.querySelectorAll("#defaultButtons button")[3].textContent = t.last;
-  document.querySelectorAll("#defaultButtons button")[4].textContent = t.next;
-  document.querySelectorAll("#defaultButtons button")[5].textContent = t.exit;
-  document.querySelectorAll("#defaultButtons button")[6].textContent = t.export;
-  document.querySelector(".footer").firstChild.textContent = t.total + " ";
-
-  // Translate operationPanel buttons
-  document.querySelectorAll("#operationPanel button")[0].textContent = t.selectAll;
-  document.querySelectorAll("#operationPanel button")[1].textContent = t.delete;
-  document.querySelectorAll("#operationPanel button")[2].textContent = t.rename;
-  document.querySelectorAll("#operationPanel button")[3].textContent = t.back;
-
-  function loadFilesTranslated() {
-    const fileTableBody = document.getElementById("fileTableBody");
-    fileTableBody.innerHTML = "";
-
-    fileList.forEach((file, index) => {
-      let row = document.createElement("tr");
-      if (checkboxesVisible) row.classList.add("checkbox-visible");
-
-      // Checkbox
-      let cell0 = document.createElement("td");
-      cell0.className = "checkbox-col";
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "file-checkbox";
-      checkbox.dataset.index = index;
-      cell0.appendChild(checkbox);
-
-      // Index
-      let cell1 = document.createElement("td");
-      cell1.textContent = index + 1;
-
-      // Name
-      let cell2 = document.createElement("td");
-      cell2.contentEditable = true;
-      cell2.textContent = file.name;
-      cell2.addEventListener("blur", function () {
-        fileList[index].name = this.textContent;
-        saveFiles();
-      });
-
-      // Date
-      let cell3 = document.createElement("td");
-      cell3.textContent = file.date;
-
-      // Open
-      let cell4 = document.createElement("td");
-      let openLink = document.createElement("span");
-      openLink.textContent = t.open;
-      openLink.className = "open-link";
-      openLink.onclick = () => {
-        try {
-          const byteArray = Uint8Array.from(file.binaryData);
-          const blob = new Blob([byteArray], { type: file.type || "application/octet-stream" });
-          const url = URL.createObjectURL(blob);
-          window.open(url, "_blank");
-        } catch (err) {
-          alert("Failed to open file.");
-        }
-      };
-      cell4.appendChild(openLink);
-
-      // Delete
-      let cell5 = document.createElement("td");
-      let deleteBtn = document.createElement("button");
-      deleteBtn.textContent = t.del;
-      deleteBtn.className = "delete-btn";
-      deleteBtn.onclick = () => {
-        if (confirm(t.confirmDelete(file.name))) {
-          fileList.splice(index, 1);
-          saveFiles();
-          loadFilesTranslated();
-        }
-      };
-      cell5.appendChild(deleteBtn);
-
-      row.appendChild(cell0);
-      row.appendChild(cell1);
-      row.appendChild(cell2);
-      row.appendChild(cell3);
-      row.appendChild(cell4);
-      row.appendChild(cell5);
-      fileTableBody.appendChild(row);
-    });
-
-    document.getElementById("totalFiles").textContent = fileList.length;
+function renameSelectedFile() {
+  if (!currentFolder) return;
+  
+  const selected = Array.from(document.querySelectorAll(".file-checkbox:checked"));
+  if (selected.length !== 1) return alert("Select exactly one file to rename.");
+  
+  const fileIdx = parseInt(selected[0].dataset.index);
+  const oldName = groupedFolders[currentFolder][fileIdx].name;
+  const newName = prompt("Enter new name:", oldName);
+  
+  if (newName && newName !== oldName) {
+    groupedFolders[currentFolder][fileIdx].name = newName;
+    loadFiles();
+    saveToLocalStorage();
   }
+}
 
-  // Override default loader with translation-aware loader
-  loadFiles = loadFilesTranslated;
-  loadFiles();
+// --- THIS IS THE CORRECTED DOWNLOAD FUNCTION ---
+function downloadSelectedFile() {
+  if (!currentFolder) return;
 
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
+  const selected = Array.from(document.querySelectorAll(".file-checkbox:checked"));
+  if (selected.length !== 1) return alert("Select exactly one file to download.");
+  
+  const fileIdx = parseInt(selected[0].dataset.index);
+  const file = groupedFolders[currentFolder][fileIdx];
+  
+  // Convert the stored simple array back into a binary-compatible Uint8Array
+  const byteArray = Uint8Array.from(file.binaryData);
+  
+  // Create a Blob (Binary Large Object) from the raw binary data
+  const blob = new Blob([byteArray], { type: file.type });
+  
+  // Create a URL that points to the Blob in the browser's memory
+  const url = URL.createObjectURL(blob);
+  
+  // 1. Create a temporary link element
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  
+  // 2. Set the 'download' attribute to the file's original name (e.g., "test.sor")
+  //    This is what forces the browser to download it.
+  a.download = file.name; 
+  
+  // 3. Add the link to the page, click it, and then remove it
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  
+  // 4. Clean up the blob URL to free up memory
+  URL.revokeObjectURL(url);
+}
+
+function saveSettings() {
+  alert("Settings saved.");
+}
+
+// --- Pagination ---
+function nextPage() {
+  if (!currentFolder) return;
+  const totalFiles = groupedFolders[currentFolder].length;
+  const totalPages = Math.ceil(totalFiles / pageSize) || 1;
+  if (currentPage < totalPages) {
+    currentPage++;
+    loadFiles();
+  }
+}
+
+function prevPage() {
+  if (!currentFolder) return;
+  if (currentPage > 1) {
+    currentPage--;
+    loadFiles();
+  }
+}
+
+// Note: I removed the broken/conflicting translation script
+// that was at the end of your original file.
+
 </script>
 </body>
 </html>
