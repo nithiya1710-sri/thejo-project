@@ -287,12 +287,18 @@
 <div class="container">
 
 <nav class="responsive-container">
-  <!-- Left: Logo and Toggle -->
-    <div style="display: flex; align-items: center; gap: 15px;">
-      <div style="padding: 5px 10px; display: flex; align-items: center;">
-        <img src="/thejo.png" alt="Thejo Logo" style="height: 30px;">
+      <!-- Left: Back Arrow + Logo -->
+      <div style="display: flex; align-items: center; gap: 20px; padding: 8px 0; color: #1a1a1a;">
+        <!-- Back Arrow -->
+        <div class="back-arrow" onclick="history.back()" title="Go Back">
+          ←
+        </div>
+
+        <!-- Logo -->
+        <div style="padding: 5px 10px; display: flex; align-items: center;">
+          <img src="./thejo.png" alt="Thejo Logo" style="height: 30px;">
+        </div>
       </div>
-    </div>
 
 
     <!-- Right: -->
@@ -559,5 +565,6 @@ window.addEventListener("click", function (e) {
 
 </body>
 </html>
+
 
 
