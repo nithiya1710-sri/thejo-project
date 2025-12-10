@@ -1,49 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laser Source</title>
-  <link rel="icon" href="https://media.licdn.com/dms/image/v2/C510BAQE0Bl7hf7aScw/company-logo_200_200/company-logo_200_200/0/1630600313094?e=2147483647&v=beta&t=FZ8EuFLC6bjx0ri55MlDLMQKr-rrqm0hhXqXo1mHjt0" type="image/x-icon"/>
+
   <style>
     * {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #030b1a;
+      background: #030b1a;
       color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
+    /* Header */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #002020;
+      background: #002020;
       padding: 10px 20px;
       font-size: 16px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
-    .icons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .icon {
-      font-size: 24px;
-    }
-
+    /* CENTERED MAIN CONTAINER */
     .main {
       display: flex;
       justify-content: center;
+      /* center horizontally */
       align-items: center;
+      /* center vertically */
       width: 100%;
       max-width: 1200px;
-      min-height: calc(100vh - 80px);
-      margin: 0 auto;
-      background-color: #00111f;
-      padding: 40px 20px;
+      height: calc(100vh - 80px);
+      padding: 20px;
+      margin-top: 40px;
+      background: #00111f;
       border-radius: 10px;
       gap: 20px;
       flex-wrap: wrap;
@@ -53,145 +58,173 @@
       width: 65%;
     }
 
+    /* Title bar */
     .panel-title {
-      background-color: white;
+      background: white;
       color: black;
+      padding: 12px;
       display: flex;
       justify-content: space-between;
-      padding: 10px;
       font-weight: bold;
-      font-size: 18px;
       cursor: pointer;
     }
 
+    /* Blue wavelength panel */
     .panel.blue {
-      background-color: #2fa7df;
+      background: #2fa7df;
       padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 48px;
       color: white;
-      margin-bottom: 10px;
-    }
-
-    .wavelength {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .unit {
-      font-size: 20px;
-    }
-
-    .power {
-      font-size: 20px;
-      margin-top: 20px;
-    }
-
-    .danger-panel {
-      background-color: white;
-      color: black;
-      padding: 20px;
+      font-size: 48px;
       text-align: center;
     }
 
-    .danger-title {
-      color: red;
+    .mode-display,
+    .power-display {
+      font-size: 22px;
       font-weight: bold;
-      font-size: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+      margin-top: 15px;
     }
 
-    .warning-text {
-      font-size: 14px;
+    /* Danger */
+    .danger-panel {
+      background: white;
+      color: black;
+      padding: 20px;
+      text-align: center;
       margin-top: 10px;
     }
 
-    .laser-icon {
-      font-size: 28px;
-    }
-
-    .red {
+    .danger-title {
+      font-size: 32px;
       color: red;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
 
+    /* Right button panel */
     .right-panel {
       width: 180px;
       background: #333;
       display: flex;
       flex-direction: column;
-      height: 100%;
-      position: relative;
     }
 
     .right-panel button {
-      flex: 1;
       padding: 20px;
       background: #444;
       color: white;
       border: none;
-      text-align: center;
       cursor: pointer;
-      font-size: 18px;
       border-bottom: 1px solid #555;
+      font-size: 18px;
     }
 
     .right-panel button:hover {
       background: #555;
     }
 
+    /* Blink animation */
     .blink-red {
       color: red;
-      animation: blink-red 1s infinite;
+      animation: blink 1s infinite;
     }
 
-    @keyframes blink-red {
-      0% { color: red; }
-      50% { color: #2fa7df; }
-      100% { color: red; }
+    @keyframes blink {
+      0% {
+        color: red;
+      }
+
+      50% {
+        color: #2fa7df;
+      }
+
+      100% {
+        color: red;
+      }
+    }
+
+    /* Horizontal OTDR slider */
+    .power-slider-container {
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 15px;
+    }
+
+    #powerSlider {
+      -webkit-appearance: none;
+      width: 95%;
+      height: 6px;
+      background: #6a7a89;
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    #powerSlider::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #6a7a89;
+      border-radius: 10px;
+    }
+
+    #powerSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #8dc7f7;
+      border-radius: 5px;
+      margin-top: -7px;
     }
   </style>
 </head>
+
 <body>
+
+  <!-- HEADER -->
   <div class="header">
     <span class="title">Laser Source</span>
-    <span class="datetime" id="timestamp"></span>
-    <div class="icons">
-      <span class="icon">🔋</span>
-      <span class="icon">▾</span>
-    </div>
+    <span id="timestamp"></span>
+
   </div>
 
+  <!-- MAIN CENTERED PANEL -->
   <div class="main">
+
+    <!-- LEFT PANEL -->
     <div class="left-panel">
-      <div class="panel-title" id="status-toggle">
+
+      <div class="panel-title">
         <span>Laser Source</span>
-        <span class="status" id="status-text">OFF</span>
+        <span id="status-text">OFF</span>
       </div>
+
       <div class="panel blue">
-        <div class="wavelength">
-          <span class="laser-icon" id="laser-icon">☀</span>
-          <span class="value">1550</span><span class="unit">nm</span>
+        <div>
+          <span id="laser-icon">☀</span>
+          <span class="value">1550</span> nm
         </div>
-       
+
+        <div class="mode-display">Mode: <span id="modeValue">CW</span></div>
+        <div class="power-display">Power: <span id="powerValue">10</span> dBm</span></div>
       </div>
+
       <div class="danger-panel">
         <div class="danger-title">
-          <span class="laser-icon red">☀</span>
-          <span>DANGER</span>
+          <span>☀</span><span>DANGER</span>
         </div>
-        <p class="warning-text">Looking directly at laser output<br>may cause damage to human eyes!</p>
+        <p>Looking directly at laser output<br>may cause damage to human eyes!</p>
       </div>
-      
+
+      <!-- CENTERED SLIDER -->
+      <div class="power-slider-container">
+        <input type="range" id="powerSlider" min="0" max="30" value="10">
+      </div>
+
     </div>
 
-          
-  
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
       <button id="open-btn">Open</button>
       <button id="wave-btn">Wave</button>
@@ -200,180 +233,254 @@
       <button id="power-minus">Power -</button>
       <button onclick="window.location.href='home.html'">Exit</button>
     </div>
-  
-            
-  </div>
-  <!--Power bar-->>
-      <div class="power-bar" style="margin-top: 20px; text-align: center;">
-        <label for="powerSlider" style="font-size: 16px;">Adjust Power:</label><br>
-        <input type="range" id="powerSlider" min="0" max="30" value="10" style="width: 80%; margin-top: 10px;" disabled />
-      </div>
 
+  </div>
+
+  <!-- JAVASCRIPT -->
   <script>
-    const timestampEl = document.getElementById("timestamp");
+
+    /* Clock */
+    const timestamp = document.getElementById("timestamp");
+    function updateClock() {
+      const now = new Date();
+      timestamp.textContent =
+        `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`
+        + " " + now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* Elements */
     const statusText = document.getElementById("status-text");
     const laserIcon = document.getElementById("laser-icon");
-    const wavelengthValue = document.querySelector(".value");
-    const powerValue = document.getElementById("power-value");
+    const waveValue = document.querySelector(".value");
 
     const openBtn = document.getElementById("open-btn");
     const waveBtn = document.getElementById("wave-btn");
     const modeBtn = document.getElementById("mode-btn");
+    const plusBtn = document.getElementById("power-plus");
+    const minusBtn = document.getElementById("power-minus");
     const powerSlider = document.getElementById("powerSlider");
-    const powerPlus = document.getElementById("power-plus");
-    const powerMinus = document.getElementById("power-minus");
 
+    const modeValue = document.getElementById("modeValue");
+    const powerValue = document.getElementById("powerValue");
+
+    /* States */
     let isLaserOn = false;
-    let waveAt1310 = false;
+    let wave1310 = false;
     let modeIndex = 0;
-    let powerLevel = 10; // dBm
     const modes = ["CW", "270 Hz", "330 Hz", "1000 Hz", "2000 Hz"];
+    let powerLevel = 10;
 
-    // Clock
-    function updateTimestamp() {
-      const now = new Date();
-      const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${now.toLocaleTimeString()}`;
-      timestampEl.textContent = formatted;
-    }
-    setInterval(updateTimestamp, 1000);
-    updateTimestamp();
-
-    // Open / Close Laser
+    /* Laser Open/Close */
     openBtn.addEventListener("click", () => {
       isLaserOn = !isLaserOn;
+
       if (isLaserOn) {
         statusText.textContent = "CW";
-        laserIcon.classList.add("blink-red");
+        modeValue.textContent = "CW";
         openBtn.textContent = "Close";
+        laserIcon.classList.add("blink-red");
       } else {
         statusText.textContent = "OFF";
-        laserIcon.classList.remove("blink-red");
         openBtn.textContent = "Open";
+        laserIcon.classList.remove("blink-red");
         modeIndex = 0;
+        modeValue.textContent = "CW";
       }
     });
 
-    // Toggle Wavelength
+    /* Wavelength */
     waveBtn.addEventListener("click", () => {
-      waveAt1310 = !waveAt1310;
-      wavelengthValue.textContent = waveAt1310 ? "1310" : "1550";
+      wave1310 = !wave1310;
+      waveValue.textContent = wave1310 ? "1310" : "1550";
     });
 
-    // Cycle Modes
+    /* Mode */
     modeBtn.addEventListener("click", () => {
       if (!isLaserOn) return;
       modeIndex = (modeIndex + 1) % modes.length;
+      modeValue.textContent = modes[modeIndex];
       statusText.textContent = modes[modeIndex];
     });
 
-   // Slider → Power Display
-  powerSlider.addEventListener("input", () => {
-    powerLevel = parseInt(powerSlider.value);
-    powerValue.textContent = powerLevel;
-  });
-    // Power + button
-    powerPlus.addEventListener("click", () => {
-    if (isLaserOn && powerLevel < 30) {
-      powerLevel++;
-      powerSlider.value = powerLevel;
+    /* Power Slider */
+    powerSlider.addEventListener("input", () => {
+      if (!isLaserOn) return;
+      powerLevel = parseInt(powerSlider.value);
       powerValue.textContent = powerLevel;
-    }
-  });
+    });
 
-  // Power - button
-  powerMinus.addEventListener("click", () => {
-    if (isLaserOn && powerLevel > 0) {
-      powerLevel--;
-      powerSlider.value = powerLevel;
-      powerValue.textContent = powerLevel;
-    }
-  });
+    /* Power+ */
+    plusBtn.addEventListener("click", () => {
+      if (!isLaserOn) return;
+      if (powerLevel < 30) {
+        powerLevel++;
+        powerSlider.value = powerLevel;
+        powerValue.textContent = powerLevel;
+      }
+    });
+
+    /* Power- */
+    minusBtn.addEventListener("click", () => {
+      if (!isLaserOn) return;
+      if (powerLevel > 0) {
+        powerLevel--;
+        powerSlider.value = powerLevel;
+        powerValue.textContent = powerLevel;
+      }
+    });
+
   </script>
-  <script src="system.js"></script>
   <script>
-  // Brightness Control
-const brightnessMap = {
-  '0%': 0,
-  '20%': 0.2,
-  '40%': 0.4,
-  '60%': 0.6,
-  '80%': 0.8,
-  '100%': 1
-};
-const savedBrightness = localStorage.getItem('brightness') || '100%';
-document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
+    /* -------------------- BRIGHTNESS CONTROL -------------------- */
+    const brightnessMap = {
+      '0%': 0,
+      '20%': 0.2,
+      '40%': 0.4,
+      '60%': 0.6,
+      '80%': 0.8,
+      '100%': 1
+    };
+    const savedBrightness = localStorage.getItem('brightness') || '100%';
+    document.body.style.filter = `brightness(${brightnessMap[savedBrightness] || 1})`;
 
-// Language Translation
-const translations = {
-  en: {
-    title: "Laser Source",
-    open: "Open",
-    close: "Close",
-    wave: "Wave",
-    mode: "Mode",
-    powerPlus: "Power +",
-    powerMinus: "Power -",
-    exit: "Exit",
-    danger: "DANGER",
-    warning: "Looking directly at laser output\nmay cause damage to human eyes!",
-    cw: "CW",
-    off: "OFF"
-  },
-  fr: {
-    title: "Source Laser",
-    open: "Ouvrir",
-    close: "Fermer",
-    wave: "Longueur d’onde",
-    mode: "Mode",
-    powerPlus: "Puissance +",
-    powerMinus: "Puissance -",
-    exit: "Quitter",
-    danger: "DANGER",
-    warning: "Regarder directement le laser\npeut endommager les yeux humains !",
-    cw: "CW",
-    off: "ARRÊT"
-  },
-  es: {
-    title: "Fuente Láser",
-    open: "Abrir",
-    close: "Cerrar",
-    wave: "Longitud de onda",
-    mode: "Modo",
-    powerPlus: "Potencia +",
-    powerMinus: "Potencia -",
-    exit: "Salir",
-    danger: "PELIGRO",
-    warning: "Mirar directamente al láser\npuede dañar los ojos humanos.",
-    cw: "CW",
-    off: "APAGADO"
-  }
-  // Add more as needed (de, it, pt, nl)
-};
+    /* -------------------- LANGUAGE TRANSLATIONS -------------------- */
+    const translations = {
+      en: {
+        title: "Laser Source",
+        open: "Open",
+        close: "Close",
+        wave: "Wave",
+        mode: "Mode",
+        powerPlus: "Power +",
+        powerMinus: "Power -",
+        exit: "Exit",
+        danger: "DANGER",
+        warning: "Looking directly at laser output\nmay cause damage to human eyes!",
+        cw: "CW",
+        off: "OFF"
+      },
+      fr: {
+        title: "Source Laser",
+        open: "Ouvrir",
+        close: "Fermer",
+        wave: "Longueur d’onde",
+        mode: "Mode",
+        powerPlus: "Puissance +",
+        powerMinus: "Puissance -",
+        exit: "Quitter",
+        danger: "DANGER",
+        warning: "Regarder directement le laser\npeut endommager les yeux humains !",
+        cw: "CW",
+        off: "ARRÊT"
+      },
+      es: {
+        title: "Fuente Láser",
+        open: "Abrir",
+        close: "Cerrar",
+        wave: "Longitud de onda",
+        mode: "Modo",
+        powerPlus: "Potencia +",
+        powerMinus: "Potencia -",
+        exit: "Salir",
+        danger: "PELIGRO",
+        warning: "Mirar directamente al láser\npuede dañar los ojos humanos.",
+        cw: "CW",
+        off: "APAGADO"
+      },
+      de: {
+        title: "Laserquelle",
+        open: "Öffnen",
+        close: "Schließen",
+        wave: "Wellenlänge",
+        mode: "Modus",
+        powerPlus: "Leistung +",
+        powerMinus: "Leistung -",
+        exit: "Beenden",
+        danger: "GEFAHR",
+        warning: "Direkter Blick in den Laser\nkann Augenschäden verursachen!",
+        cw: "CW",
+        off: "AUS"
+      },
 
-// Apply Language
-const lang = localStorage.getItem("language") || "en";
-const t = translations[lang] || translations.en;
+      it: {
+        title: "Sorgente Laser",
+        open: "Apri",
+        close: "Chiudi",
+        wave: "Lunghezza d'onda",
+        mode: "Modalità",
+        powerPlus: "Potenza +",
+        powerMinus: "Potenza -",
+        exit: "Esci",
+        danger: "PERICOLO",
+        warning: "Guardare direttamente il laser\npuò danneggiare gli occhi!",
+        cw: "CW",
+        off: "SPENTO"
+      },
 
-document.querySelector(".title").textContent = t.title;
-document.getElementById("open-btn").textContent = isLaserOn ? t.close : t.open;
-document.getElementById("wave-btn").textContent = t.wave;
-document.getElementById("mode-btn").textContent = t.mode;
-document.getElementById("power-plus").textContent = t.powerPlus;
-document.getElementById("power-minus").textContent = t.powerMinus;
-document.querySelector(".right-panel button:last-child").textContent = t.exit;
-document.querySelector(".danger-title span:last-child").textContent = t.danger;
-document.querySelector(".warning-text").textContent = t.warning;
+      pt: {
+        title: "Fonte Laser",
+        open: "Abrir",
+        close: "Fechar",
+        wave: "Comprimento",
+        mode: "Modo",
+        powerPlus: "Potência +",
+        powerMinus: "Potência -",
+        exit: "Sair",
+        danger: "PERIGO",
+        warning: "Olhar diretamente para o laser\npode causar danos aos olhos!",
+        cw: "CW",
+        off: "DESLIGADO"
+      },
 
-// Update Open/Close and CW/OFF text dynamically
-openBtn.addEventListener("click", () => {
-  if (isLaserOn) {
-    statusText.textContent = t.off;
-    openBtn.textContent = t.open;
-  } else {
-    statusText.textContent = t.cw;
-    openBtn.textContent = t.close;
-  }
-});
-</script>
+      nl: {
+        title: "Laserbron",
+        open: "Openen",
+        close: "Sluiten",
+        wave: "Golflengte",
+        mode: "Modus",
+        powerPlus: "Vermogen +",
+        powerMinus: "Vermogen -",
+        exit: "Afsluiten",
+        danger: "GEVAAR",
+        warning: "Rechtstreeks in de laser kijken\nkan oogschade veroorzaken!",
+        cw: "CW",
+        off: "UIT"
+      }
+    };
+
+    /* --------- APPLY LANGUAGE --------- */
+    const lang = localStorage.getItem("language") || "en";
+    const t = translations[lang] || translations.en;
+
+    document.querySelector(".title").textContent = t.title;
+    document.getElementById("wave-btn").textContent = t.wave;
+    document.getElementById("mode-btn").textContent = t.mode;
+    document.getElementById("power-plus").textContent = t.powerPlus;
+    document.getElementById("power-minus").textContent = t.powerMinus;
+    document.querySelector(".right-panel button:last-child").textContent = t.exit;
+    document.querySelector(".danger-title span:last-child").textContent = t.danger;
+
+    /* Fix missing class warning-text */
+    const warn = document.querySelector(".danger-panel p");
+    if (warn) warn.textContent = t.warning;
+
+    /* --------- UPDATE BUTTON TEXT BASED ON LASER STATE --------- */
+    function updateOpenButtonLabel() {
+      openBtn.textContent = isLaserOn ? t.close : t.open;
+      statusText.textContent = isLaserOn ? t.cw : t.off;
+    }
+
+    /* Patch into existing logic */
+    updateOpenButtonLabel();
+
+    openBtn.addEventListener("click", () => {
+      setTimeout(updateOpenButtonLabel, 10);
+    });
+  </script>
+
+
 </body>
+
 </html>
